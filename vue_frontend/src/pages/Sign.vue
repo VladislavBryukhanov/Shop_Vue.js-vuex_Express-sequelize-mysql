@@ -54,15 +54,15 @@
         validationRules: {
           username: [
             (v) => !!v || 'Username is required field!',
-            (v) => (v.length >= 3 && v.length <= 20) || 'Username must be longer then 3 and less then 20 characters!',
+            (v) => (v.length >= 1 && v.length <= 20) || 'Username must be longer then 3 and less then 20 characters!',
           ],
           login: [
             (v) => !!v || 'Login is required field!',
-            (v) => (v.length >= 3 && v.length <= 20) || 'Login must be longer then 3 and less then 20 characters!',
+            (v) => (v.length >= 4 && v.length <= 20) || 'Login must be longer then 3 and less then 20 characters!',
           ],
           password: [
             (v) => !!v || 'Password is required field!',
-            (v) => (v.length >= 3 && v.length <= 20) || 'Password must be longer then 3 and less then 20 characters!',
+            (v) => (v.length >= 8 && v.length <= 20) || 'Password must be longer then 3 and less then 20 characters!',
           ],
         },
         user: {

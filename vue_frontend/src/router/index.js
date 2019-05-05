@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store';
-// const Sign = () => import ('../pages/Sign.vue');
-import Sign from '../pages/Sign.vue';
+const Sign = () => import ('../pages/Sign.vue');
+// import Sign from '../pages/Sign.vue';
 const Toolbar = () => import ('../components/Toolbar.vue');
 
 Vue.use(Router);
