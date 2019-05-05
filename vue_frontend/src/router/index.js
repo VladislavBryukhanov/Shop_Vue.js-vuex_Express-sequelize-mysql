@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store';
-const Sign = () => import ('../pages/Sign.vue');
-// import Sign from '../pages/Sign.vue';
-const Toolbar = () => import ('../components/Toolbar.vue');
+import Toolbar from '@/components/Toolbar.vue';
+const Sign = () => import ('@/pages/Sign.vue');
+const Shop = () => import ('@/pages/Shop.vue');
 
 Vue.use(Router);
 
@@ -16,7 +16,7 @@ const routes = [
     },
     children: [
       {
-        path: '',
+        path: '/',
         name: 'sign_in',
         component: Sign,
       },
@@ -32,17 +32,21 @@ const routes = [
   },
   {
     path: '/shop',
+    component: Toolbar,
     meta: {
+      authorized: true,
+    },
+    props: {
       authorized: true,
     },
     children: [
       {
         path: '',
         name: 'shop',
-        component: Sign,
+        component: Shop,
       }
     ]
-  }
+  },
 ];
 
 const router = new Router({

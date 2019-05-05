@@ -1,41 +1,47 @@
 <template>
   <v-flex xl4 offset-xl4 lg4 offset-lg4 md6 offset-md3 sm8 offset-sm2 sx10 offset-sx-1>
     <v-sheet elevation="6">
-      <form @submit.prevent="signUp"
-            v-if="isSignUp">
-        <v-text-field v-model="user.username"
-                      :counter="20"
-                      label="Username"
-                      :rules="validationRules.username"/>
-        <v-text-field v-model="user.login"
-                      :counter="20"
-                      label="Login"
-                      :rules="validationRules.login"/>
-        <v-text-field v-model="user.password"
-                      :counter="20"
-                      label="Password"
-                      :rules="validationRules.password"/>
-        <v-btn type="submit">
-          Sign up
-        </v-btn>
-      </form>
-      <v-form @submit.prevent="signIn"
-              v-else>
-        <v-text-field v-model="user.login"
-                      :counter="20"
-                      label="Login"
-                      :rules="validationRules.login"/>
-        <v-text-field v-model="user.password"
-                      :counter="20"
-                      label="Password"
-                      :rules="validationRules.password"/>
-        <v-btn type="submit">
-          Sign in
-        </v-btn>
-        <v-btn :to="{ name: 'sign_up' }" flat>
-          Sign up
-        </v-btn>
-      </v-form>
+      <div class="sign">
+        <form @submit.prevent="signUp"
+              ref="form"
+              v-model="isValid"
+              v-if="isSignUp">
+          <v-text-field v-model="user.username"
+                        :counter="20"
+                        label="Username"
+                        :rules="validationRules.username"/>
+          <v-text-field v-model="user.login"
+                        :counter="20"
+                        label="Login"
+                        :rules="validationRules.login"/>
+          <v-text-field v-model="user.password"
+                        :counter="20"
+                        label="Password"
+                        :rules="validationRules.password"/>
+          <v-btn type="submit">
+            Sign up
+          </v-btn>
+        </form>
+        <v-form @submit.prevent="signIn"
+                ref="form"
+                v-model="isValid"
+                v-else>
+          <v-text-field v-model="user.login"
+                        :counter="20"
+                        label="Login"
+                        :rules="validationRules.login"/>
+          <v-text-field v-model="user.password"
+                        :counter="20"
+                        label="Password"
+                        :rules="validationRules.password"/>
+          <v-btn type="submit">
+            Sign in
+          </v-btn>
+          <v-btn :to="{ name: 'sign_up' }" flat>
+            Sign up
+          </v-btn>
+        </v-form>
+      </div>
     </v-sheet>
   </v-flex>
 </template>
@@ -65,6 +71,7 @@
             (v) => (v.length >= 8 && v.length <= 20) || 'Password must be longer then 3 and less then 20 characters!',
           ],
         },
+        isValid: false,
         user: {
           username: '',
           login: '',
@@ -74,10 +81,24 @@
     },
 
     methods: {
-      ...mapActions('Auth', [
-        'signIn',
-        'signUp',
-      ])
+      ...mapActions('Auth', {
+        signInActions: 'signIn',
+        signUpActions: 'signUp',
+      }),
+      signIn() {
+        if (this.$refs.form.validate()) {
+          this.signInActions(this.user);
+        }
+      },
+      signUp() {
+        if (this.$refs.form.validate()) {
+          this.signUpActions(this.user);
+        }
+      }
     }
   }
 </script>
+
+<style lang="scss">
+  @import url('~@/assets/scss/pages/Sign.scss');
+</style>
