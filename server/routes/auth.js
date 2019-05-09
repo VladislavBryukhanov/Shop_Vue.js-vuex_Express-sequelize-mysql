@@ -1,29 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth');
+const authMV = require('../middlewares/checkAuth');
+const passport = require('../auth/passport');
 
 router.post('/sign_up', async (request, response) => {
-
-    // const signIn = App.get('Services.Auth.signIn');
-
     try {
-        const res = await authController.signUp(request.body);
-        response.send(res);
+        const { body, logIn } = request;
+        const user = await authController.signUp(body, logIn);
+
+        response.send(user);
     } catch(err) {
-        console.error(err);
-        response
-            .status(400)
-            .send(err);
+        response.send(err);
     }
 });
 
-router.post('/sign_in', (req, res) => {
-
+router.post('/sign_in', passport.authenticate('local'), async (request, response) => {
+    try {
+        response.send(request.user);
+    } catch(err) {
+        response.send(err);
+    }
 });
 
-router.get('/me', (req, res) => {
-    console.log('test')
-    res.send({Ti:1})
+router.post('/sign_out', (request, response) => {
+    request.logOut();
+    response.send(200);
+});
+
+router.get('/me', authMV, (request, response) => {
+    response.send(request.user);
 });
 
 module.exports = router;

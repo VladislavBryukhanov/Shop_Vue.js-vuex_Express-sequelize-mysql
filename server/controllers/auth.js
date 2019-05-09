@@ -1,13 +1,11 @@
 const User = require('../models/User');
 
-exports.signIn = () => {
-
-};
-
-exports.signUp = async (user) => {
-    return User.create(user);
-};
-
-exports.getMe = () => {
-
+exports.signUp = async (body, logIn) => {
+    const user = await User.create(body);
+    return new Promise((reject, resolve) => {
+        logIn(user, (err) => {
+            if (err) { reject(err); }
+            resolve(user);
+        });
+    });
 };

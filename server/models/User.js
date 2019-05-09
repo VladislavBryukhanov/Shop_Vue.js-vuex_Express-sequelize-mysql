@@ -29,7 +29,7 @@ const User = sequelize.define('user', {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    birthData: {
+    birthDay: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
@@ -44,7 +44,5 @@ const User = sequelize.define('user', {
         allowNull: false,
     }
 });
-
-User.sync(true);
 
 module.exports = User;

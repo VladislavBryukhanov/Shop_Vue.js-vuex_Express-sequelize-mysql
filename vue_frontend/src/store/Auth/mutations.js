@@ -1,11 +1,17 @@
+import { AuthState } from '../../models/constants';
+
 export default {
-  signIn() {
-
+  signIn(state) {
+    state.authState = AuthState.SignedIn;
   },
-  signUp() {
-
+  signUp(state) {
+    state.authState = AuthState.SignedIn;
   },
-  getMe() {
-
-  }
+  signOut(state) {
+    state.me = null;
+    state.authState = AuthState.SignedOut;
+  },
+  getMe(state, me) {
+    state.me = me;
+  },
 };
