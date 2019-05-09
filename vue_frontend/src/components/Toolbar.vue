@@ -9,6 +9,7 @@
         </template>
         <template v-else>
           <v-btn :to="{ name: 'shop' }" flat>Shop</v-btn>
+          <v-btn @click="signOut">Sign out</v-btn>
         </template>
       </v-toolbar-items>
     </v-toolbar>
@@ -17,13 +18,24 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex';
+
   export default {
     props: {
       authorized: Boolean
+    },
+    methods: {
+      ...mapActions({
+        signOutAction: 'Auth/signOut'
+      }),
+      signOut() {
+        this.signOutAction()
+          .then(() => this.$router.push('/'));
+      }
     }
   }
 </script>
-
+<!--
 <style lang="scss">
   @import url('~@/assets/scss/components/Toolbar.scss');
-</style>
+</style>-->

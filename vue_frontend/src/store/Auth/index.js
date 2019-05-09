@@ -3,6 +3,7 @@ import mutations from './mutations';
 
 export const state = {
   me: null,
+  authState: null,
 };
 
 export const Auth =  {

@@ -11,9 +11,8 @@ exports.signIn = async ({ login }) => {
     });*/
 };
 
-exports.signUp = async ({ body, login }) => {
-    const user = await User.create(body);
-    login(user);
+exports.signUp = async ({ body }) => {
+    return User.create(body);
 };
 
 exports.signOut = async ({ logout }) => {

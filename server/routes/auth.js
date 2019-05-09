@@ -5,10 +5,15 @@ const authMV = require('../middlewares/AuthMV');
 // const passport = require('passport');
 const passport = require('../auth/passport');
 
-router.post('/sign_up', authMV, async (request, response) => {
+router.post('/sign_up', async (request, response) => {
     try {
-        const res = await authController.signUp(request);
-        response.send(res);
+        const user = await authController.signUp(request);
+        request.logIn(user, (err) => {
+           if (err) {
+               throw err;
+           }
+            response.send(user);
+        });
     } catch(err) {
         response.send(err);
     }
@@ -17,19 +22,19 @@ router.post('/sign_up', authMV, async (request, response) => {
 router.post('/sign_in', passport.authenticate('local'), async (request, response) => {
     try {
         const res = await authController.signIn(request);
-        console.error(request.sessionID);
-        console.error(response.sessionID);
-        // console.error(request.isAuthenticated());
         response.send(res);
     } catch(err) {
         response.send(err);
     }
 });
 
-router.get('/me', authMV, (req, res) => {
-    console.log('test')
-    req.logout();
-    res.send({Ti:1})
+router.get('/me', authMV, (request, response) => {
+    response.send(request.user);
+});
+
+router.post('/sign_out', (request, response) => {
+    request.logOut();
+    response.send(200);
 });
 
 module.exports = router;

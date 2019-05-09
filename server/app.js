@@ -26,16 +26,6 @@ app.use(logger('dev'));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-app.all("*", (req,res, next) => {
-    // cookie doesn't exist redirect to login
-    if(req.headers.cookie){
-        console.error('@@@@@@@@@@@@@@@@@@@@@@@@@@@@-')
-        console.error(req.headers.cookie)
-        console.error('@@@@@@@@@@@@@@@@@@@@@@@@@@@@=')
-    }
-    next();
-})
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));

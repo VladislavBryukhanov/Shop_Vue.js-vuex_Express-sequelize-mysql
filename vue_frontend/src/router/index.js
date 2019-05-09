@@ -54,26 +54,26 @@ const router = new Router({
   routes
 });
 
-/*router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   let redirectParams = {};
 
-  if (!store.state.me) {
+  if (!store.state.Auth.authState) {
     await store.dispatch('Auth/getMe');
   }
 
   if (to.matched.some(route => route.meta.unauthorized)) {
-    if (store.state.me) {
+    if (store.state.Auth.me) {
       redirectParams = { path: '/shop' };
     }
   }
 
   if (to.matched.some(route => route.meta.authorized)) {
-    if (!store.state.me) {
+    if (!store.state.Auth.me) {
       redirectParams = { path: '/' };
     }
   }
 
   next(redirectParams);
-});*/
+});
 
 export default router;
