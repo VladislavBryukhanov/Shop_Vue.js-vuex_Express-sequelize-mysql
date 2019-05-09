@@ -166,7 +166,8 @@
       signIn() {
         if (this.$refs.signInForm.validate()) {
           const user = _.pickBy(this.user, _.identity);
-          this.signInActions(user);
+          this.signInActions(user)
+            .then(() => this.$router.push('shop'));
         }
       },
       signUp() {
@@ -176,7 +177,7 @@
           this.signUpActions({
             ...user,
             birthDay: moment(user.birthDay).unix()
-          });
+          }).then(() => this.$router.push('shop'));
         }
       }
     }

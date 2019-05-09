@@ -5,15 +5,13 @@ const axiosAuth = axios.create({
 });
 
 const errorHandler = (err, action, commit) => {
-  console.error(err);
-
-  commit('Common/showSnackbar', {
-    message: `${action}: ${err.message}`,
-    duration: 2000
-  }, { root: true });
-
-  if (err.status === 401) {
-    commit('sign_out');
+  if (err.response.status === 401) {
+    commit('signOut');
+  } else {
+    commit('Common/showSnackbar', {
+      message: `${action}: ${err.message}`,
+      duration: 2000
+    }, { root: true });
   }
 };
 
@@ -21,7 +19,7 @@ export default {
   async signIn({ commit, dispatch }, credentials) {
     try {
       await axiosAuth.post('/sign_in', credentials);
-      dispatch('getMe');
+      await dispatch('getMe');
     } catch (err) {
       errorHandler(err, 'SignIn', commit);
     }
@@ -29,9 +27,17 @@ export default {
   async signUp({ commit, dispatch }, user) {
     try {
       await axiosAuth.post('/sign_up', user);
-      dispatch('getMe');
+      await dispatch('getMe');
     } catch (err) {
       errorHandler(err, 'SignUp', commit);
+    }
+  },
+  async signOut({ commit }) {
+    try {
+      await axiosAuth.post('/sign_out');
+      commit('signOut');
+    } catch (err) {
+      errorHandler(err, 'signOut', commit);
     }
   },
   async getMe({ commit }) {
@@ -41,14 +47,6 @@ export default {
       commit('getMe', me);
     } catch (err) {
       errorHandler(err, 'getMe', commit);
-    }
-  },
-  async signOut({ commit }) {
-    try {
-      await axiosAuth.post('/sign_out');
-      commit('sign_out');
-    } catch (err) {
-      errorHandler(err, 'signOut', commit);
     }
   },
 };

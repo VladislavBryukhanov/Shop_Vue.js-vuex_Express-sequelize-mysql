@@ -29,7 +29,7 @@ const User = sequelize.define('user', {
         type: Sequelize.BOOLEAN,
         allowNull: true,
     },
-    birthData: {
+    birthDay: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
@@ -45,17 +45,4 @@ const User = sequelize.define('user', {
     }
 });
 
-User.sync(true);
-
 module.exports = User;
-
-var Session = sequelize.define('Session', {
-    sid: {
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    userId: Sequelize.STRING,
-    expires: Sequelize.DATE,
-    data: Sequelize.STRING(50000)
-});
-Session.sync(true);

@@ -1,4 +1,4 @@
-import AuthState from '@/models/constants';
+import { AuthState } from '../../models/constants';
 
 export default {
   signIn(state) {
@@ -7,11 +7,11 @@ export default {
   signUp(state) {
     state.authState = AuthState.SignedIn;
   },
-  getMe(state, me) {
-    state.me = me;
-  },
   signOut(state) {
     state.me = null;
     state.authState = AuthState.SignedOut;
+  },
+  getMe(state, me) {
+    state.me = me;
   },
 };
