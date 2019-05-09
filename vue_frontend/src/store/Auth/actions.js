@@ -1,9 +1,12 @@
 import axios from 'axios';
+const axiosAuth = axios.create({
+  baseURL: 'http://localhost:3000'
+});
 
 export default {
   async signIn({ commit, dispatch }, credentials) {
     try {
-      await axios.post('sign_in', credentials);
+      await axiosAuth.post('/sign_in', credentials);
       dispatch('getMe');
     } catch (err) {
       commit('Common/showSnackbar', {
@@ -14,7 +17,7 @@ export default {
   },
   async signUp({ commit, dispatch }, user) {
     try {
-      await axios.post('sign_up', user);
+      await axiosAuth.post('/sign_up', user);
       dispatch('getMe');
     } catch (err) {
       commit('Common/showSnackbar', {
@@ -25,8 +28,8 @@ export default {
   },
   async getMe({ commit }) {
     try {
-      const me = await axios.get('me');
-      commit('me', me);
+      const me = await axiosAuth.get('me');
+      commit('/me', me);
     } catch (err) {
       commit('Common/showSnackbar', {
         message: `getMe: ${err.message}`,
