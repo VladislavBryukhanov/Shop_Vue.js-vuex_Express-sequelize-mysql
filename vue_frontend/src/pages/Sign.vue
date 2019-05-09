@@ -108,6 +108,7 @@
   import Vue from 'vue';
   import { mapActions } from 'vuex';
   import moment from 'moment';
+  import _ from 'lodash';
 
   export default {
     props: {
@@ -163,12 +164,13 @@
       }),
       signIn() {
         if (this.$refs.signInForm.validate()) {
-          this.signInActions(this.user);
+          const user = _.pickBy(this.user, _.identity);
+          this.signInActions(user);
         }
       },
       signUp() {
         if (this.$refs.signUpForm.validate()) {
-          const { user } = this;
+          const user = _.pickBy(this.user, _.identity);
 
           this.signUpActions({
             ...user,
@@ -179,7 +181,9 @@
     }
   }
 </script>
+<!--
 
 <style lang="scss">
   @import url('~@/assets/scss/pages/Sign.scss');
 </style>
+-->

@@ -48,3 +48,14 @@ const User = sequelize.define('user', {
 User.sync(true);
 
 module.exports = User;
+
+var Session = sequelize.define('Session', {
+    sid: {
+        type: Sequelize.STRING,
+        primaryKey: true
+    },
+    userId: Sequelize.STRING,
+    expires: Sequelize.DATE,
+    data: Sequelize.STRING(50000)
+});
+Session.sync(true);

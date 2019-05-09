@@ -1,12 +1,14 @@
 import axios from 'axios';
 const axiosAuth = axios.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: 'http://localhost:3000',
+  withCredentials: true,
 });
 
 export default {
   async signIn({ commit, dispatch }, credentials) {
     try {
       await axiosAuth.post('/sign_in', credentials);
+      dispatch('getMe');
       dispatch('getMe');
     } catch (err) {
       commit('Common/showSnackbar', {
