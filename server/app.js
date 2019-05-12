@@ -13,8 +13,8 @@ const cors = require('cors');
 const corsOptions = { origin : true, credentials : true };
 
 const sequelize = require('./db/connection');
-const initDB = require('./db/initDB');
 sequelize.authenticate();
+const initDB = require('./db/initDB');
 initDB(true);
 
 const session = require('express-session');

@@ -4,7 +4,11 @@ const sequelize = require('../db/connection');
 const User = sequelize.define('user', {
     email: {
         type: Sequelize.STRING,
-        isUnique: true,
+        // FIXME не работает!!!!!!!!!!!!!!!!!!
+        unique: {
+            args: true,
+            msg: 'Email address already in use!'
+        },
         validate: {
             isEmail: true,
         },
@@ -12,9 +16,10 @@ const User = sequelize.define('user', {
     },
     password: {
         type: Sequelize.STRING,
-        validate: {
-            len: [8, 32],
-        },
+        // it is hash and validation useless
+        // validate: {
+        //     len: [8, 32],
+        // },
         allowNull: false,
     },
     firstName: {

@@ -9,7 +9,7 @@ const errorHandler = (err, action, commit) => {
     commit('signOut');
   } else {
     commit('Common/showSnackbar', {
-      message: `${action}: ${err.message}`,
+      message: `${action}: ${err.response.data}`,
       duration: 2000
     }, { root: true });
   }
