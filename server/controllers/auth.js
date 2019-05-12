@@ -4,21 +4,26 @@ const saltRounds = 10; //2-3 hashes/sec
 const passport = require('passport');
 
 exports.signUp = async (request, response) => {
-    const { body } = request;
-    const salt = await bcrypt.genSalt(saltRounds);
-    body.password = await bcrypt.hash(body.password, salt);
+    try {
+        const { body } = request;
+        const salt = await bcrypt.genSalt(saltRounds);
+        body.password = await bcrypt.hash(body.password, salt);
 
-    const user = await User.create(body);
+        const user = await User.create(body);
 
-    request.logIn(user, err => {
-        if (err) {
-            console.error(err);
-            return response
-                .status(400)
-                .send("Can't create new user");
-        }
-        response.send(201);
-    });
+        request.logIn(user, err => {
+            if (err) {
+                return response
+                    .status(400)
+                    .send("Can't authorize new user");
+            }
+            response.send(201);
+        });
+    } catch (err) {
+        return response
+            .status(400)
+            .send(err.message);
+    }
 };
 
 exports.signIn = async (request, response, next) => {
