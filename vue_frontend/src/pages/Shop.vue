@@ -1,9 +1,15 @@
 <template>
-  <div>SHOP</div>
+  <div>
+    <ProductBuilder></ProductBuilder>
+  </div>
 </template>
 
 <script>
-  export default {
+  import ProductBuilder from '../components/admin/ProductBuilder';
 
+  export default {
+    components: {
+      ProductBuilder
+    }
   }
 </script>

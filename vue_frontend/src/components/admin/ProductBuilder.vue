@@ -1,0 +1,148 @@
+<template>
+  <v-container>
+    <v-layout>
+      <v-flex class="text-xs-center"
+              xl4 offset-xl4
+              lg6 offset-lg3
+              md8 offset-md2
+              sm10 offset-sm1
+              sx12>
+        <v-sheet elevation="6">
+          <v-form @submit.prevent="addProduct"
+                  ref="productBuilder">
+            <v-container>
+              <v-hover>
+                <v-card slot-scope="{ hover }"
+                        :aspect-ratio="16/9"
+                        :class="`elevation-${hover ? 10 : 2}`">
+                  <v-container>
+                    <label for="attachPhoto">
+                      <v-img :src="photoPreview"
+                             contain>
+                      </v-img>
+                    </label>
+                    <input type="file"
+                           id="attachPhoto"
+                           class="attachPhoto"
+                           accept="image/*"
+                           @change="onPhotoChange"/>
+                  </v-container>
+                </v-card>
+              </v-hover>
+              <v-text-field v-model="product.name"
+                            label="Product name"
+                            :rules="validationRules.name"/>
+              <v-text-field v-model="product.description"
+                            label="Description"
+                            :rules="validationRules.description"/>
+              <v-text-field v-model="product.price"
+                            type="number"
+                            label="Price"
+                            :rules="validationRules.price"/>
+              <v-select v-model="product.categories"
+                        :rules="validationRules.category"/>
+              <v-btn type="submit">
+                Save
+              </v-btn>
+            </v-container>
+          </v-form>
+        </v-sheet>
+
+        <v-dialog v-model="dialogShowed"
+                  max-width="350">
+          <v-card>
+            <v-card-title class="headline">
+              File maximal size exceeded
+            </v-card-title>
+            <v-card-text>
+              Maximum image size is 5MB. You have exceeded this restriction.
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="dialogShowed = !dialogShowed"
+                     flat>
+                Ok
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+  import { fileQuotas } from '../../models/constants'
+  import { mapActions } from 'vuex';
+  import _ from 'lodash';
+
+  export default {
+
+    created() {
+      this.fetchCategories();
+    },
+
+    data() {
+      return {
+        product: {
+          attachedPhoto: null,
+          name: '',
+          description: '',
+          price: 0,
+          category: '',
+        },
+        validationRules: {
+          name: [
+            (v) => !!v || 'Name is required',
+            (v) => (v.length >= 1 && v.length <= 64) || 'Name must be longer then 1 and less then 64 characters!',
+          ],
+          description: [
+            (v) => !!v || 'Description is required',
+            (v) => (v.length >= 1 && v.length <= 512) || 'Description must be longer then 1 and less then 512 characters!',
+          ],
+          price: [
+            (v) => !!v || 'Price is required',
+            (v) => (v > 0) || 'The price can not be less than 0',
+          ],
+          category: [
+            (v) => !!v || 'Category is required',
+          ]
+        },
+        dialogShowed: false,
+        photoPreview: require('../../assets/img/prod_preview.jpg'),
+      }
+    },
+    methods: {
+      ...mapActions('Product', {
+        addProductAction: 'addProduct',
+        fetchCategories: 'fetchCategories'
+      }),
+      onPhotoChange(e) {
+        const [ attachedPhoto ] = e.target.files;
+        if (attachedPhoto.size > fileQuotas.IMAGE_MAX_SIZE) {
+          this.dialogShowed = !this.dialogShowed;
+          return;
+        }
+
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+          this.photoPreview = fileReader.result;
+        };
+        fileReader.readAsDataURL(attachedPhoto);
+      },
+      addProduct() {
+        if (this.$refs.productBuilder.validate()) {
+          this.product.price = parseInt(this.product.price);
+          const product = new FormData();
+          _.each(this.product, (value, key) => {
+            product.append(key, value);
+          });
+          this.addProductAction(product);
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  @import "../../assets/scss/components/ProductBuilder.scss";
+</style>

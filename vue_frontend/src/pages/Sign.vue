@@ -106,7 +106,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
   import { mapActions } from 'vuex';
   import moment from 'moment';
   import _ from 'lodash';
