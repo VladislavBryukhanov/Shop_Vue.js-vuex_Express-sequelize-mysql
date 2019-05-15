@@ -30,7 +30,7 @@ module.exports = async (force) => {
     await Category.sync(force);
     // Product.hasOne(Category);
     await Product.sync(force);
-    initDefaultValues();
+    // initDefaultValues();
 
 /*    Promise.all([
        User.sync(force),

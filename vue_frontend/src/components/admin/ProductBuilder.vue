@@ -39,7 +39,7 @@
                             type="number"
                             label="Price"
                             :rules="validationRules.price"/>
-              <v-select v-model="product.category"
+              <v-select v-model="product.categoryId"
                         item-text="name"
                         item-value="id"
                         :items="categories"
@@ -99,7 +99,7 @@
           name: '',
           description: '',
           price: 0,
-          category: '',
+          categoryId: '',
         },
         validationRules: {
           name: [
@@ -114,7 +114,7 @@
             (v) => (!!v && v != 0) || 'Price is required',
             (v) => (v > 0) || 'The price can not be less than 0',
           ],
-          category: [
+          categoryId: [
             (v) => !!v || 'Category is required',
           ]
         },
@@ -134,6 +134,7 @@
           return;
         }
 
+        this.product.attachedPhoto = attachedPhoto;
         const fileReader = new FileReader();
         fileReader.onload = () => {
           this.photoPreview = fileReader.result;

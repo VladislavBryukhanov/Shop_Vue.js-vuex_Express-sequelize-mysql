@@ -17,7 +17,7 @@ const errorHandler = (err, action, commit) => {
 
 export default {
   async fetchCategories({ commit }, paging) {
-    const { page, limit } = paging;
+    // const { page, limit } = paging;
     try {
       // const categories = await axiosProduct.get(`/categories/${page * limit}&${limit}`)
       const categories = await axiosProduct.get(`/categories`)
