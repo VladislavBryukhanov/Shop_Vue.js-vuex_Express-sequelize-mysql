@@ -1,13 +1,12 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../connection');
 
-const User = sequelize.define('user', {
+const User = sequelize.define('Users', {
     email: {
         type: Sequelize.STRING,
-        // FIXME не работает!!!!!!!!!!!!!!!!!!
         unique: {
             args: true,
-            msg: 'Email address already in use!'
+            msg: 'Email address already in use'
         },
         validate: {
             isEmail: true,

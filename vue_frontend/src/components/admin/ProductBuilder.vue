@@ -83,7 +83,7 @@
     created() {
       // TODO select to infinity select component
       // this.fetchCategories({ page: 0, limit: 100 });
-      this.fetchCategories({ page: 0, limit: 2 });
+      this.fetchCategories();
     },
 
     computed: {
@@ -111,7 +111,7 @@
             (v) => (v.length >= 1 && v.length <= 512) || 'Description must be longer then 1 and less then 512 characters!',
           ],
           price: [
-            (v) => !!v || 'Price is required',
+            (v) => (!!v && v != 0) || 'Price is required',
             (v) => (v > 0) || 'The price can not be less than 0',
           ],
           category: [

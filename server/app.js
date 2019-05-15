@@ -14,7 +14,7 @@ const corsOptions = { origin : true, credentials : true };
 
 const sequelize = require('./db/connection');
 sequelize.authenticate();
-// require('./db/initDB')(true);
+require('./db/initDB')(true);
 
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
