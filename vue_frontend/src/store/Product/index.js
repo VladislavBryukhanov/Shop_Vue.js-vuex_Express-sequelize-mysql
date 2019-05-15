@@ -3,7 +3,7 @@ import mutations from './mutations';
 
 export const state = {
   products: null,
-  categories: [],
+  categories: {},
 };
 
 export const Product =  {

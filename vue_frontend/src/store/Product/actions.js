@@ -16,9 +16,11 @@ const errorHandler = (err, action, commit) => {
 };
 
 export default {
-  async fetchCategories({ commit }) {
+  async fetchCategories({ commit }, paging) {
+    const { page, limit } = paging;
     try {
-      const categories = await axiosProduct.get('/categories')
+      // const categories = await axiosProduct.get(`/categories/${page * limit}&${limit}`)
+      const categories = await axiosProduct.get(`/categories`)
         .then(res => res.data);
       commit('fetchCategories', categories);
     } catch (err) {
@@ -60,5 +62,4 @@ export default {
       errorHandler(err, 'FetchProducts', commit);
     }
   },
-
 };

@@ -1,6 +1,6 @@
-const User = require('../models/User');
+const User = require('../db/models/User');
 const bcrypt = require('bcrypt');
-const saltRounds = 10; //2-3 hashes/sec
+const saltRounds = 12; //2-3 hashes/sec
 const passport = require('passport');
 
 exports.signUp = async (request, response) => {
@@ -14,14 +14,14 @@ exports.signUp = async (request, response) => {
         request.logIn(user, err => {
             if (err) {
                 return response
-                    .status(400)
+                    .status(500)
                     .send("Can't authorize new user");
             }
             response.send(201);
         });
     } catch (err) {
         return response
-            .status(400)
+            .status(500)
             .send(err.message);
     }
 };
@@ -38,7 +38,7 @@ exports.signIn = async (request, response, next) => {
             // const errorMessage = 'Invalid username or password.';
 
             return response
-                .status(400)
+                .status(500)
                 .send(errorMessage);
         }
 

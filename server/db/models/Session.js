@@ -1,4 +1,4 @@
-const sequelize = require('../db/connection');
+const sequelize = require('../connection');
 const Sequelize = require('sequelize');
 
 const Session = sequelize.define('Session', {

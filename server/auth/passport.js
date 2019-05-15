@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User');
+const User = require('../db/models/User');
 const bcrypt = require('bcrypt');
 
 passport.use(new LocalStrategy({
@@ -33,7 +33,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    User.findOne({ where: { id }})
+    User.findByPk(id)
         .then(user => done(null, user));
 });
 

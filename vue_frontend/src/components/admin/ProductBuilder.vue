@@ -39,7 +39,10 @@
                             type="number"
                             label="Price"
                             :rules="validationRules.price"/>
-              <v-select v-model="product.categories"
+              <v-select v-model="product.category"
+                        item-text="name"
+                        item-value="id"
+                        :items="categories"
                         :rules="validationRules.category"/>
               <v-btn type="submit">
                 Save
@@ -72,13 +75,21 @@
 
 <script>
   import { fileQuotas } from '../../models/constants'
-  import { mapActions } from 'vuex';
+  import { mapActions, mapState } from 'vuex';
   import _ from 'lodash';
 
   export default {
 
     created() {
-      this.fetchCategories();
+      // TODO select to infinity select component
+      // this.fetchCategories({ page: 0, limit: 100 });
+      this.fetchCategories({ page: 0, limit: 2 });
+    },
+
+    computed: {
+      ...mapState('Product', {
+        categories: state => state.categories.rows
+      })
     },
 
     data() {

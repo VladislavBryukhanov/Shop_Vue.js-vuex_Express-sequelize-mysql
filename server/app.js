@@ -14,14 +14,14 @@ const corsOptions = { origin : true, credentials : true };
 
 const sequelize = require('./db/connection');
 sequelize.authenticate();
-const initDB = require('./db/initDB');
-initDB(true);
+// require('./db/initDB')(true);
 
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('./auth/passport');
 
 const authRouter = require('./routes/auth');
+const productRouter = require('./routes/products');
 // const authMV = require('./middlewares/AuthMV');
 
 app.use(logger('dev'));
@@ -47,5 +47,6 @@ app.use(passport.session());
 // app.use(authMV);
 
 app.use('/', authRouter);
+app.use('/products', productRouter);
 
 module.exports = app;
