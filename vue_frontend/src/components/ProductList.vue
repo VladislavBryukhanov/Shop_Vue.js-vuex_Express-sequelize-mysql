@@ -6,7 +6,6 @@
           <v-layout row wrap>
             <v-flex v-for="product in products">
               <v-container>
-
                 <v-hover>
                   <v-card elevation="6"
                           slot-scope="{ hover }"
@@ -26,15 +25,13 @@
 
                     <v-card-title primary-title
                                   style="position: relative;">
-                      <!--color="primary&#45;&#45;text"-->
                       <v-btn
-                        absolute
-                        dark
-                        color="outcomeMessage"
-                        fab
-                        right
-                        top
-                      >
+                          absolute
+                          dark
+                          color="outcomeMessage"
+                          fab
+                          right
+                          top>
                         <v-icon>shopping_cart</v-icon>
                       </v-btn>
                       <h3 class="display-1 font-weight-light primary--text">

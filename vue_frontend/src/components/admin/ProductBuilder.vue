@@ -75,7 +75,7 @@
 </template>
 
 <script>
-  import { fileQuotas } from '../../models/constants'
+  import { fileQuotas, defaultPreview } from '../../common/constants'
   import { mapActions, mapState } from 'vuex';
   import _ from 'lodash';
 
@@ -120,7 +120,7 @@
           ]
         },
         dialogShowed: false,
-        photoPreview: require('../../assets/img/prod_preview.jpg'),
+        photoPreview: defaultPreview,
       }
     },
     methods: {

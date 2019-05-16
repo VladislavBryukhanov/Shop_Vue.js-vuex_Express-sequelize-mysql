@@ -6,6 +6,9 @@ import router from './router';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
+import applyFilters from './common/filters/applyFilters';
+applyFilters();
+
 Vue.use(Vuetify, {
   theme: {
     primary: '#14aba8',
@@ -27,16 +30,6 @@ Vue.use(Vuetify, {
   },
 });
 Vue.config.productionTip = false;
-
-import { defaultPreview } from './models/constants';
-Vue.filter('imagePath', (path) => {
-  if (!path) {
-    // return './assets/img/prod_preview.jpg';
-    return defaultPreview;
-  }
-  // return `${HOST_URL}/${resource_type}/${path}`;
-  return `http://localhost:3000/preview_photo/${path}`;
-});
 
 new Vue({
   store,
