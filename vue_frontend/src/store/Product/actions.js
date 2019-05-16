@@ -29,7 +29,7 @@ export default {
   },
   async fetchProducts({ commit }) {
     try {
-      const products = await axiosProduct.get('/fetch_products')
+      const products = await axiosProduct.get('/products')
         .then(res => res.data);
       commit('fetchProducts', products);
     } catch (err) {

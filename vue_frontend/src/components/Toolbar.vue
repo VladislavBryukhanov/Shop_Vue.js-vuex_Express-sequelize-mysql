@@ -9,6 +9,7 @@
         </template>
         <template v-else>
           <v-btn :to="{ name: 'shop' }" flat>Shop</v-btn>
+          <v-btn :to="{ name: 'builder' }" flat>Product Builder</v-btn>
           <v-btn @click="signOut">Sign out</v-btn>
         </template>
       </v-toolbar-items>

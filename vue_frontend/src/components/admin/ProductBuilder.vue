@@ -13,6 +13,7 @@
             <v-container>
               <v-hover>
                 <v-card slot-scope="{ hover }"
+                        light
                         :aspect-ratio="16/9"
                         :class="`elevation-${hover ? 10 : 2}`">
                   <v-container>
@@ -39,7 +40,7 @@
                             type="number"
                             label="Price"
                             :rules="validationRules.price"/>
-              <v-select v-model="product.categoryId"
+              <v-select v-model="product.CategoryId"
                         item-text="name"
                         item-value="id"
                         :items="categories"
@@ -95,11 +96,11 @@
     data() {
       return {
         product: {
+          CategoryId: null,
           attachedPhoto: null,
           name: '',
           description: '',
           price: 0,
-          categoryId: '',
         },
         validationRules: {
           name: [
@@ -114,7 +115,7 @@
             (v) => (!!v && v != 0) || 'Price is required',
             (v) => (v > 0) || 'The price can not be less than 0',
           ],
-          categoryId: [
+          CategoryId: [
             (v) => !!v || 'Category is required',
           ]
         },

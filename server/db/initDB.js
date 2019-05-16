@@ -27,10 +27,11 @@ module.exports = async (force) => {
     // await Role.sync(force);
     await User.sync(force);
     await Session.sync(force);
-    await Category.sync(force);
     // Product.hasOne(Category);
+    await Category.sync(force);
+    Product.belongsTo(Category);
     await Product.sync(force);
-    // initDefaultValues();
+    initDefaultValues();
 
 /*    Promise.all([
        User.sync(force),

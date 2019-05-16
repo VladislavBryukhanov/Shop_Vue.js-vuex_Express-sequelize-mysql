@@ -1,12 +1,14 @@
 const Product = require('../db/models/Product');
+const Category = require('../db/models/Category');
 
 module.exports.fetchProduct = async (request, response) => {
     try {
         const product = await Product.findAndCountAll({
             include: [
-                { model: 'Categories' }
+                { model: Category }
             ]
         });
+        // product.getCategory();
         response.send(product);
     } catch (err) {
         response

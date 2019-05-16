@@ -26,15 +26,15 @@ const Product = sequelize.define('Products', {
         type: Sequelize.STRING,
         allowNull: true,
     },
-    categoryId: {
-        type: Sequelize.INTEGER,
-        foreignKey: true,
-        allowNull: false,
-        references: {
-            model: 'Categories',
-            key: 'id'
-        }
-    }
+    // categoryId: {
+    //     type: Sequelize.INTEGER,
+    //     foreignKey: true,
+    //     allowNull: false,
+    //     references: {
+    //         model: 'Categories',
+    //         key: 'id'
+    //     }
+    // }
 });
 
 module.exports = Product;

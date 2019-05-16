@@ -4,6 +4,9 @@ import store from '../store';
 import Toolbar from '@/components/Toolbar.vue';
 const Sign = () => import ('@/pages/Sign.vue');
 const Shop = () => import ('@/pages/Shop.vue');
+const ProductList = () => import ('@/components/ProductList.vue');
+
+const ProductBuilder = () => import ('@/components/admin/ProductBuilder.vue');
 
 Vue.use(Router);
 
@@ -43,7 +46,12 @@ const routes = [
       {
         path: '',
         name: 'shop',
-        component: Shop,
+        component: ProductList,
+      },
+      {
+        path: '/builder',
+        name: 'builder',
+        component: ProductBuilder,
       }
     ]
   },

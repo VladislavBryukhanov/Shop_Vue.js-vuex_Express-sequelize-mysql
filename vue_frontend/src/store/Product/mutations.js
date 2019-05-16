@@ -8,7 +8,7 @@ export default {
   },
   addProduct(state, product) {
     // FIXME ??? вроде реактивности не будет
-    state.products.push(product);
+    state.products.rows.push(product);
   },
   updateProduct(state, product) {
     state.products.splice(index, 1, product);

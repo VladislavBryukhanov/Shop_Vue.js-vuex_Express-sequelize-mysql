@@ -2,7 +2,7 @@ import actions from './actions';
 import mutations from './mutations';
 
 export const state = {
-  products: null,
+  products: {},
   categories: {},
 };
 
