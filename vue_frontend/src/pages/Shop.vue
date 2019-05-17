@@ -6,8 +6,8 @@
 </template>
 
 <script>
-  import ProductBuilder from '../components/admin/ProductBuilder';
-  import ProductList from '../components/ProductList';
+  import ProductBuilder from '@/components/admin/ProductBuilder';
+  import ProductList from '@/components/ProductList';
 
   export default {
     components: {

@@ -50,6 +50,23 @@
         </v-sheet>
       </v-flex>
     </v-layout>
+    <div class="text-xs-center">
+      <v-container>
+        <v-layout justify-center>
+          <v-flex xl4 lg6 md8 sm10 xs12>
+            <v-card>
+              <v-card-text>
+                <v-pagination
+                  v-model="currentPage"
+                  :total-visible="8"
+                  :length="15"
+                ></v-pagination>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
   </v-container>
 </template>
 
@@ -59,6 +76,11 @@
   export default {
     created() {
       this.fetchProducts();
+    },
+    data() {
+      return {
+        currentPage: 1,
+      }
     },
     computed: {
       ...mapState('Product', {

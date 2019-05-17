@@ -2,16 +2,16 @@
   <div>
     <v-toolbar class="toolbar">
       <v-toolbar-items>
+        <v-btn flat>
+          <v-img :src="logo"></v-img>
+        </v-btn>
+      </v-toolbar-items>
+
+      <v-spacer></v-spacer>
+      <v-toolbar-items>
         <!--<v-toolbar-side-icon></v-toolbar-side-icon>-->
-        <template v-if="!authorized">
-          <v-btn :to="{ name: 'sign_in' }" exact flat>Sign in</v-btn>
-          <v-btn :to="{ name: 'sign_up' }" flat>Sign up</v-btn>
-        </template>
-        <template v-else>
-          <v-btn :to="{ name: 'shop' }" flat>Shop</v-btn>
-          <v-btn :to="{ name: 'builder' }" flat>Product Builder</v-btn>
-          <v-btn @click="signOut">Sign out</v-btn>
-        </template>
+        <v-btn :to="{ name: 'sign_in' }" exact flat>Sign in</v-btn>
+        <v-btn :to="{ name: 'sign_up' }" flat>Sign up</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <router-view></router-view>
@@ -20,10 +20,13 @@
 
 <script>
   import { mapActions } from 'vuex';
+  import { FileResources } from '@/common/constants'
 
   export default {
-    props: {
-      authorized: Boolean
+    data() {
+      return {
+        logo: FileResources.logo
+      }
     },
     methods: {
       ...mapActions({

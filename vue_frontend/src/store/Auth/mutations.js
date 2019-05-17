@@ -1,4 +1,4 @@
-import { AuthState } from '../../common/constants';
+import { AuthState } from '@/common/constants';
 
 export default {
   signIn(state) {

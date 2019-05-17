@@ -9,6 +9,13 @@ export default {
   addProduct(state, product) {
     // FIXME ??? вроде реактивности не будет
     state.products.rows.push(product);
+    /*state.products = {
+      rows: [
+        ...state.products.rows,
+        product
+      ],
+      count: ++state.products.count
+    };*/
   },
   updateProduct(state, product) {
     state.products.splice(index, 1, product);

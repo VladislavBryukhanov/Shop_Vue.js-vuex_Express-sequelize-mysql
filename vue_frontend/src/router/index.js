@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from '../store';
+import store from '@/store';
 import Toolbar from '@/components/Toolbar.vue';
 const Sign = () => import ('@/pages/Sign.vue');
-const Shop = () => import ('@/pages/Shop.vue');
+// const Shop = () => import ('@/pages/Shop.vue');
+import NavigationBar from '@/components/NavigationBar.vue'
 const ProductList = () => import ('@/components/ProductList.vue');
 
 const ProductBuilder = () => import ('@/components/admin/ProductBuilder.vue');
@@ -35,11 +36,8 @@ const routes = [
   },
   {
     path: '/shop',
-    component: Toolbar,
+    component: NavigationBar,
     meta: {
-      authorized: true,
-    },
-    props: {
       authorized: true,
     },
     children: [

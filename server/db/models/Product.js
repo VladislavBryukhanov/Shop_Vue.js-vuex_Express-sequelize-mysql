@@ -10,7 +10,7 @@ const Product = sequelize.define('Products', {
         }
     },
     description: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         validation: {
             len: [1, 512]
         }

@@ -9,6 +9,13 @@
               sm8 offset-sm2
               sx10 offset-sx-1>
         <v-sheet elevation="6">
+          <v-toolbar flat>
+            <v-btn icon @click="navBack">
+              <v-icon>arrow_back</v-icon>
+            </v-btn>
+            <v-toolbar-title>Sign up</v-toolbar-title>
+          </v-toolbar>
+
           <v-form @submit.prevent="signUp"
                   ref="signUpForm">
             <v-container>
@@ -83,6 +90,10 @@
               sm6 offset-sm3
               sx8 offset-sx-2>
         <v-sheet elevation="6">
+          <v-toolbar flat>
+            <v-toolbar-title>Sign up</v-toolbar-title>
+          </v-toolbar>
+
           <v-container>
             <v-form @submit.prevent="signIn"
                     ref="signInForm">
@@ -162,6 +173,9 @@
         signInActions: 'signIn',
         signUpActions: 'signUp',
       }),
+      navBack() {
+        this.$router.push({name: 'sign_in'});
+      },
       signIn() {
         if (this.$refs.signInForm.validate()) {
           const user = _.pickBy(this.user, _.identity);

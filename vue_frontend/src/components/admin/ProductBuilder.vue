@@ -32,9 +32,11 @@
               </v-hover>
               <v-text-field v-model="product.name"
                             label="Product name"
+                            counter="64"
                             :rules="validationRules.name"/>
               <v-text-field v-model="product.description"
                             label="Description"
+                            counter="512"
                             :rules="validationRules.description"/>
               <v-text-field v-model="product.price"
                             type="number"
@@ -75,17 +77,11 @@
 </template>
 
 <script>
-  import { FileResources } from '../../common/constants'
+  import { FileResources } from '@/common/constants'
   import { mapActions, mapState } from 'vuex';
   import _ from 'lodash';
 
   export default {
-
-    created() {
-      // TODO select to infinity select component
-      // this.fetchCategories({ page: 0, limit: 100 });
-      this.fetchCategories();
-    },
 
     computed: {
       ...mapState('Product', {
@@ -126,7 +122,6 @@
     methods: {
       ...mapActions('Product', {
         addProductAction: 'addProduct',
-        fetchCategories: 'fetchCategories'
       }),
       onPhotoChange(e) {
         const [ attachedPhoto ] = e.target.files;
@@ -149,7 +144,8 @@
           _.each(this.product, (value, key) => {
             product.append(key, value);
           });
-          this.addProductAction(product);
+          this.addProductAction(product)
+            .then(() => this.$router.go(-1));
         }
       }
     }
