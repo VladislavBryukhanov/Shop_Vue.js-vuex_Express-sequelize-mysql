@@ -9,7 +9,6 @@
 
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <!--<v-toolbar-side-icon></v-toolbar-side-icon>-->
         <v-btn :to="{ name: 'sign_in' }" exact flat>Sign in</v-btn>
         <v-btn :to="{ name: 'sign_up' }" flat>Sign up</v-btn>
       </v-toolbar-items>
@@ -39,7 +38,3 @@
     }
   }
 </script>
-<!--
-<style lang="scss">
-  @import url('~@/assets/scss/components/Toolbar.scss');
-</style>-->

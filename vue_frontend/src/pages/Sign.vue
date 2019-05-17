@@ -180,7 +180,7 @@
         if (this.$refs.signInForm.validate()) {
           const user = _.pickBy(this.user, _.identity);
           this.signInActions(user)
-            .then(() => this.$router.push('shop'));
+            .then(() => this.$router.push('products'));
         }
       },
       signUp() {
@@ -190,7 +190,7 @@
           this.signUpActions({
             ...user,
             birthDay: moment(user.birthDay).unix()
-          }).then(() => this.$router.push('shop'));
+          }).then(() => this.$router.push('products'));
         }
       }
     }

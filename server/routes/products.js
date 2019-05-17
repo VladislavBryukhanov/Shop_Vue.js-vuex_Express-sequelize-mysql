@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoriesController = require('../controllers/categories');
-const productsCotroller = require('../controllers/products');
+const productsController = require('../controllers/products');
 
 const fileQuotas = require('../common/constants').fileQuotas;
 const path = require('path');
@@ -28,8 +28,8 @@ router.get('/categories', categoriesController.fetchCategories);
 
 router.get('/categories/:offset&:limit', categoriesController.fetchCategoriesPaginated);
 
-router.get('/products', productsCotroller.fetchProduct);
+router.get('/products/:offset&:limit', productsController.fetchProducts);
 
-router.post('/add_products', upload.single('attachedPhoto'), productsCotroller.addProduct);
+router.post('/add_products', upload.single('attachedPhoto'), productsController.addProduct);
 
 module.exports = router;

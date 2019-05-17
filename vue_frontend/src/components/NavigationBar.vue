@@ -8,9 +8,6 @@
           <v-list-tile-avatar>
             <v-img :src="logo"/>
           </v-list-tile-avatar>
-          <!--<v-list-tile-action>
-            <v-icon>add_shopping_cart</v-icon>
-          </v-list-tile-action>-->
           <v-list-tile-title>Shop</v-list-tile-title>
           <v-list-tile-action v-if="!minNavDraw">
             <v-btn icon @click.stop="minNavDraw = !minNavDraw">
@@ -19,7 +16,7 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-tile :to="{ name: 'shop' }">
+        <v-list-tile :to="{ name: 'products' }">
           <v-list-tile-action>
             <v-icon>grade</v-icon>
           </v-list-tile-action>

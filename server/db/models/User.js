@@ -20,6 +20,9 @@ const User = sequelize.define('Users', {
         //     len: [8, 32],
         // },
         allowNull: false,
+        get() {
+            return () => this.getDataValue('password');
+        },
     },
     firstName: {
         type: Sequelize.STRING,

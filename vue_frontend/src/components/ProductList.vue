@@ -59,7 +59,7 @@
                 <v-pagination
                   v-model="currentPage"
                   :total-visible="8"
-                  :length="15"
+                  :length="pageCount"
                 ></v-pagination>
               </v-card-text>
             </v-card>
@@ -72,20 +72,45 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
+  import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
 
   export default {
     created() {
-      this.fetchProducts();
+      const { limit, currentPage } = this;
+      const offset = (currentPage - 1) * limit;
+
+      this.fetchProducts({ offset, limit });
     },
-    data() {
-      return {
-        currentPage: 1,
+    beforeRouteUpdate(to, from, next) {
+      const { limit } = this;
+      const offset = limit * (to.query.page - 1);
+
+      this.fetchProducts({ offset, limit });
+      next();
+    },
+    watch: {
+      currentPage: function(val) {
+        this.$router.push(`/products?page=${val}`);
       }
     },
     computed: {
       ...mapState('Product', {
-        products: state => state.products.rows
-      })
+        products: state => state.products.rows,
+        productsCount: state => state.products.count
+      }),
+      pageCount: function() {
+        let pageCount = (this.productsCount / this.limit);
+        if (pageCount > parseInt(pageCount)) {
+          pageCount = parseInt(pageCount) + 1;
+        }
+        return pageCount || 1;
+      },
+    },
+    data() {
+      return {
+        limit: PRODUCTS_ONE_PAGE_LIMIT,
+        currentPage: parseInt(this.$route.query.page) || 1
+      }
     },
     methods: {
       ...mapActions('Product', [

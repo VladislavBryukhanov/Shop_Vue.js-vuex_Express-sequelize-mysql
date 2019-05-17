@@ -27,9 +27,10 @@ export default {
       errorHandler(err, 'FetchCategories', commit);
     }
   },
-  async fetchProducts({ commit }) {
+  async fetchProducts({ commit }, paging) {
+    const { offset, limit } = paging;
     try {
-      const products = await axiosProduct.get('/products')
+      const products = await axiosProduct.get(`/products/${offset}&${limit}`)
         .then(res => res.data);
       commit('fetchProducts', products);
     } catch (err) {

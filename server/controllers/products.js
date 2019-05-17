@@ -1,9 +1,14 @@
 const Product = require('../db/models/Product');
 const Category = require('../db/models/Category');
 
-module.exports.fetchProduct = async (request, response) => {
+module.exports.fetchProducts = async (request, response) => {
+    const offset = Number(request.params['offset']);
+    const limit = Number(request.params['limit']);
+
     try {
         const product = await Product.findAndCountAll({
+            offset,
+            limit,
             include: [
                 { model: Category }
             ]
