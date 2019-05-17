@@ -38,7 +38,7 @@ exports.signIn = async (request, response, next) => {
             // const errorMessage = 'Invalid username or password.';
 
             return response
-                .status(500)
+                .status(400)
                 .send(errorMessage);
         }
 

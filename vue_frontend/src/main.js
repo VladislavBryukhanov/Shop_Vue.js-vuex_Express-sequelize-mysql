@@ -6,7 +6,7 @@ import router from './router';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
-import applyFilters from './common/filters/applyFilters';
+import applyFilters from './common/applyFilters';
 applyFilters();
 
 Vue.use(Vuetify, {

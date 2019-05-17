@@ -6,11 +6,10 @@ const logger = require('morgan');
 require('dotenv').config();
 
 const cors = require('cors');
-/*const corsOptions = {
-    origins: 'http://localhost:8080',
-    credentials: true,
-};*/
-const corsOptions = { origin : true, credentials : true };
+const corsOptions = {
+    origin: process.env.CLIENT_URL,
+    credentials : true,
+};
 
 const sequelize = require('./db/connection');
 sequelize.authenticate();

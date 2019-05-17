@@ -1,6 +1,6 @@
 import axios from 'axios';
 const axiosProduct = axios.create({
-  baseURL: 'http://localhost:3000/products',
+  baseURL: `${process.env.VUE_APP_CORE_API}/products`,
   withCredentials: true,
 });
 

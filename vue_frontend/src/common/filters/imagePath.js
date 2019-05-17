@@ -1,13 +1,12 @@
-import { defaultPreview } from '../constants';
+import { FileResources } from '../constants';
+const fileBaseUrl = process.env.VUE_APP_CORE_API;
 
 export default {
   id: 'imagePath',
-  definition: (path) => {
+  definition: (path, resource_type) => {
     if (!path) {
-      return defaultPreview;
+      return FileResources.defaultPreview;
     }
-    // return `${HOST_URL}/${resource_type}/${path}`;
-    // return `${process.env.BASE_URL}/preview_photo/${path}`;
-    return `http://localhost:3000/preview_photo/${path}`;
+    return `${fileBaseUrl}/${resource_type}/${path}`;
   }
 }

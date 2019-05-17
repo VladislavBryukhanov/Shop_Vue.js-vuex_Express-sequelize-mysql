@@ -13,7 +13,9 @@ const initDefaultValues = () => {
         { name: 'Fastfood'},
         { name: 'Fruits' },
         { name: 'Vegetables' },
-        { name: 'Clothes' }
+        { name: 'Clothes' },
+        { name: 'Decorations'},
+        { name: 'Art' }
     ]);
   /*  Role.bulkCreate([
         { name: 'User' },

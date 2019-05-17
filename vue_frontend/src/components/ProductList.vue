@@ -12,13 +12,13 @@
                           width="250"
                           light
                           class="product">
-                    <v-img :src="product.previewPhoto | imagePath"
+                    <v-img :src="product.previewPhoto | imagePath('preview_photo')"
                            height="200">
                       <v-expand-transition>
                         <div v-if="hover"
                              style="height: 100%;"
                              class="d-flex transition-fast-in-fast-out outcomeMessage darken-2 v-card--reveal display-1 white--text">
-                          ${{product.price}}
+                          {{product.price | price('USD')}}
                         </div>
                       </v-expand-transition>
                     </v-img>

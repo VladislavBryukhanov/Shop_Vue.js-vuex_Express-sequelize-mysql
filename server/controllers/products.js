@@ -13,7 +13,7 @@ module.exports.fetchProduct = async (request, response) => {
     } catch (err) {
         response
             .status(500)
-            .send(err)
+            .send(err.message)
     }
 };
 
@@ -29,6 +29,6 @@ module.exports.addProduct = async (request, response) => {
     } catch (err) {
         response
             .status(500)
-            .send(err);
+            .send(err.message);
     }
 };

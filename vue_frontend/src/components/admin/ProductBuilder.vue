@@ -75,7 +75,7 @@
 </template>
 
 <script>
-  import { fileQuotas, defaultPreview } from '../../common/constants'
+  import { FileResources } from '../../common/constants'
   import { mapActions, mapState } from 'vuex';
   import _ from 'lodash';
 
@@ -120,7 +120,7 @@
           ]
         },
         dialogShowed: false,
-        photoPreview: defaultPreview,
+        photoPreview: FileResources.defaultPreview,
       }
     },
     methods: {
@@ -130,7 +130,7 @@
       }),
       onPhotoChange(e) {
         const [ attachedPhoto ] = e.target.files;
-        if (attachedPhoto.size > fileQuotas.IMAGE_MAX_SIZE) {
+        if (attachedPhoto.size > FileResources.IMAGE_MAX_SIZE) {
           this.dialogShowed = !this.dialogShowed;
           return;
         }
@@ -144,7 +144,7 @@
       },
       addProduct() {
         if (this.$refs.productBuilder.validate()) {
-          this.product.price = parseInt(this.product.price);
+          this.product.price = Number(this.product.price);
           const product = new FormData();
           _.each(this.product, (value, key) => {
             product.append(key, value);
