@@ -47,7 +47,7 @@ exports.signIn = async (request, response, next) => {
                 next(err);
             }
 
-            response.send(200);
+            response.sendStatus(200);
         });
     })(request, response, next);
 };

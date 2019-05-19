@@ -10,7 +10,7 @@ const uuid = require('uuid');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join( __dirname + '/../', 'public/preview_photo/'))
+        cb(null, path.join( __dirname, '/../public/preview_photo/'))
     },
     filename: (req, file, cb) => {
         cb(null, uuid.v1() + path.extname(file.originalname))
@@ -30,6 +30,8 @@ router.get('/categories/:offset&:limit', categoriesController.fetchCategoriesPag
 
 router.get('/products/:offset&:limit', productsController.fetchProducts);
 
-router.post('/add_products', upload.single('attachedPhoto'), productsController.addProduct);
+router.post('/create_products', upload.single('attachedPhoto'), productsController.createProduct);
+
+router.delete('/delete_product/:id', productsController.deleteProduct);
 
 module.exports = router;

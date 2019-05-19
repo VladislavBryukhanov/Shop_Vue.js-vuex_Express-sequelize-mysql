@@ -1,55 +1,5 @@
 <template>
   <v-container>
-    <v-layout>
-      <v-flex sm10 offset-sm1>
-        <v-sheet elevation="6">
-          <v-layout row wrap>
-            <v-flex v-for="product in products">
-              <v-container>
-                <v-hover>
-                  <v-card elevation="6"
-                          slot-scope="{ hover }"
-                          width="250"
-                          light
-                          class="product">
-                    <v-img :src="product.previewPhoto | imagePath('preview_photo')"
-                           height="200">
-                      <v-expand-transition>
-                        <div v-if="hover"
-                             style="height: 100%;"
-                             class="d-flex transition-fast-in-fast-out outcomeMessage darken-2 v-card--reveal display-1 white--text">
-                          {{product.price | price('USD')}}
-                        </div>
-                      </v-expand-transition>
-                    </v-img>
-
-                    <v-card-title primary-title
-                                  style="position: relative;">
-                      <v-btn
-                          absolute
-                          dark
-                          color="outcomeMessage"
-                          fab
-                          right
-                          top>
-                        <v-icon>shopping_cart</v-icon>
-                      </v-btn>
-                      <h3 class="display-1 font-weight-light primary--text">
-                        {{product.name}}
-                      </h3>
-                    </v-card-title>
-
-                    <v-card-text>
-                      {{product.description}}
-                    </v-card-text>
-                  </v-card>
-                </v-hover>
-              </v-container>
-            </v-flex>
-          </v-layout>
-        </v-sheet>
-      </v-flex>
-    </v-layout>
     <div class="text-xs-center">
       <v-container>
         <v-layout justify-center>
@@ -67,6 +17,76 @@
         </v-layout>
       </v-container>
     </div>
+    <v-layout>
+      <v-flex sm10 offset-sm1>
+        <v-sheet elevation="6">
+          <v-layout row wrap>
+            <v-flex v-for="product in products">
+              <v-container>
+                <v-hover>
+                  <v-card elevation="6"
+                          slot-scope="{ hover }"
+                          width="250"
+                          light
+                          class="product">
+                    <v-img :src="product.previewPhoto | imagePath('preview_photo')"
+                           height="200">
+                      <v-expand-transition>
+                        <div v-if="hover"
+                             style="height: 100%;"
+                             class="d-flex transition-fast-in-fast-out actionColor darken-2 v-card--reveal display-1 white--text">
+                          {{product.price | price('USD')}}
+                        </div>
+                      </v-expand-transition>
+                    </v-img>
+
+                    <v-card-title primary-title
+                                  style="position: relative;">
+                      <v-btn
+                          absolute
+                          dark
+                          color="actionColor"
+                          fab
+                          right
+                          top>
+                        <v-icon>shopping_cart</v-icon>
+                      </v-btn>
+                      <h3 class="display-1 font-weight-light primary--text">
+                        {{product.name}}
+                      </h3>
+                    </v-card-title>
+
+                    <v-card-text>
+                      {{product.description}}
+                    </v-card-text>
+
+                    <v-btn
+                      @click="deleteProduct(product.id)"
+                      absolute
+                      dark
+                      color="removingColor"
+                      fab
+                      right
+                      top>
+                      <v-icon>close</v-icon>
+                    </v-btn>
+                    <v-btn
+                      @click="editProduct(product)"
+                      absolute
+                      color="white"
+                      fab
+                      left
+                      top>
+                      <v-icon>edit</v-icon>
+                    </v-btn>
+                  </v-card>
+                </v-hover>
+              </v-container>
+            </v-flex>
+          </v-layout>
+        </v-sheet>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -77,20 +97,21 @@
   export default {
     created() {
       const { limit, currentPage } = this;
-      const offset = (currentPage - 1) * limit;
 
-      this.fetchProducts({ offset, limit });
+      this.fetchProducts({ currentPage, limit });
     },
     beforeRouteUpdate(to, from, next) {
       const { limit } = this;
-      const offset = limit * (to.query.page - 1);
 
-      this.fetchProducts({ offset, limit });
+      this.fetchProducts({ currentPage: to.query.page, limit });
       next();
     },
     watch: {
       currentPage: function(val) {
-        this.$router.push(`/products?page=${val}`);
+        this.$router.push({
+          name: 'products',
+          query: { page: val }
+        });
       }
     },
     computed: {
@@ -114,8 +135,18 @@
     },
     methods: {
       ...mapActions('Product', [
-        'fetchProducts'
-      ])
+        'fetchProducts',
+        'deleteProductById'
+      ]),
+      deleteProduct(id) {
+        this.deleteProductById(id);
+      },
+      editProduct(product) {
+        this.$router.push({
+          name: 'builder',
+          params: { editableProduct: product }
+        })
+      }
     }
   }
 </script>

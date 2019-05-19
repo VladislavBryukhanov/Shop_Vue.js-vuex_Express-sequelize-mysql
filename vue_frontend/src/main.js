@@ -12,6 +12,9 @@ applyFilters();
 Vue.use(Vuetify, {
   theme: {
     primary: '#14aba8',
+    removingColor: '#a43931',
+    actionColor: '#1A567B',
+    editColor: '#FFF171',
     // primary: '#558DC4',
     whiteShadow: '#f1f1f1',
     solid_dark: '#282828',
@@ -19,11 +22,8 @@ Vue.use(Vuetify, {
     onlineColor: '#558DC4',
     darkerGrey: '#aaa',
     offlineColor: '#ffffff',
-    afkColor: '#FFF171',
     incomingMessage: '#243443',
-    outcomeMessage: '#1A567B',
     lightBlue: '#6B9BC2',
-    darkRed: '#a43931',
     lightIonic: '#14aba8',
     lincIonicColor: '#00aca2',
     darkIonic: '#00726a',

@@ -24,7 +24,8 @@
         </v-list-tile>
 
         <v-list-group prepend-icon="dashboard"
-                      :value="!minNavDraw"
+                      @click="selectGroup(groups.CATEGORIES)"
+                      :value="openedGroup === groups.CATEGORIES && !minNavDraw"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -38,7 +39,8 @@
         </v-list-group>
 
         <v-list-group prepend-icon="settings_applications"
-                      :value="!minNavDraw"
+                      @click="selectGroup(groups.ADMIN)"
+                      :value="openedGroup === groups.ADMIN && !minNavDraw"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -90,16 +92,23 @@
 
     data() {
       return {
+        groups: {
+          CATEGORIES: 'CATEGORIES',
+          ADMIN: 'ADMIN',
+        },
+        openedGroup: '',
         minNavDraw: true,
         logo: FileResources.logo
       }
     },
-
     methods: {
       ...mapActions({
         fetchCategories: 'Product/fetchCategories',
         signOutAction: 'Auth/signOut',
       }),
+      selectGroup(group) {
+        this.openedGroup = this.openedGroup === group ? '' : group;
+      },
       signOut() {
         this.signOutAction()
           .then(() => this.$router.push('/'));

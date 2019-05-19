@@ -4,24 +4,37 @@ export default {
     state.categories = categories;
   },
   fetchProducts(state, products) {
+    // TODO caching all loaded products
     state.products = products;
   },
-  addProduct(state, product) {
-    // FIXME ??? вроде реактивности не будет
-    state.products.rows.push(product);
-    /*state.products = {
+  createProduct(state, product) {
+    state.products = {
       rows: [
         ...state.products.rows,
-        product
+        // product
       ],
-      count: ++state.products.count
-    };*/
+      count: state.products.count + 1
+    };
   },
   updateProduct(state, product) {
-    state.products.splice(index, 1, product);
+    const rows = state.products.rows.map(item => {
+      if (item.id !== product) {
+        return product;
+      }
+      return item;
+    });
+
+    state.products = {
+      ...state.products,
+      rows,
+    }
   },
   deleteProductById(state, id) {
-    const index = state.products.findIndex(item => item.id === id);
-    state.products.splice(index, 1);
+    const rows = state.products.rows.filter(item => item.id !== id);
+
+    state.products = {
+      rows,
+      count: state.products.count - 1
+    }
   },
 };

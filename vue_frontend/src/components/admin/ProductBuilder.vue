@@ -8,46 +8,59 @@
               sm10 offset-sm1
               sx12>
         <v-sheet elevation="6">
-          <v-form @submit.prevent="addProduct"
+          <v-form @submit.prevent="createProduct"
                   ref="productBuilder">
             <v-container>
-              <v-hover>
-                <v-card slot-scope="{ hover }"
-                        light
-                        :aspect-ratio="16/9"
-                        :class="`elevation-${hover ? 10 : 2}`">
-                  <v-container>
-                    <label for="attachPhoto">
-                      <v-img :src="photoPreview"
-                             contain>
-                      </v-img>
-                    </label>
-                    <input type="file"
-                           id="attachPhoto"
-                           class="attachPhoto"
-                           accept="image/*"
-                           @change="onPhotoChange"/>
-                  </v-container>
-                </v-card>
-              </v-hover>
-              <v-text-field v-model="product.name"
-                            label="Product name"
-                            counter="64"
-                            :rules="validationRules.name"/>
-              <v-text-field v-model="product.description"
-                            label="Description"
-                            counter="512"
-                            :rules="validationRules.description"/>
-              <v-text-field v-model="product.price"
-                            type="number"
-                            label="Price"
-                            :rules="validationRules.price"/>
-              <v-select v-model="product.CategoryId"
-                        item-text="name"
-                        item-value="id"
-                        :items="categories"
-                        :rules="validationRules.category"/>
-              <v-btn type="submit">
+              <v-layout wrap
+                        justify-space-between>
+                <v-flex row md6
+                        sm6 offset-sm0
+                        xs10 offset-xs1>
+                  <v-hover>
+                    <v-card slot-scope="{ hover }"
+                            light
+                            :class="`elevation-${hover ? 10 : 2}`">
+                      <v-container>
+                        <label for="attachPhoto">
+                          <v-img :src="photoPreview"
+                                 contain>
+                          </v-img>
+                        </label>
+                        <input type="file"
+                               id="attachPhoto"
+                               class="attachPhoto"
+                               accept="image/*"
+                               @change="onPhotoChange"/>
+                      </v-container>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+                <v-flex row md6
+                        sm6 offset-sm0
+                        xs10 offset-xs1>
+                  <v-text-field v-model="product.name"
+                                label="Product name"
+                                counter="64"
+                                :rules="validationRules.name"/>
+                  <v-text-field v-model="product.price"
+                                type="number"
+                                label="Price"
+                                :rules="validationRules.price"/>
+                  <v-select v-model="product.CategoryId"
+                            item-text="name"
+                            item-value="id"
+                            label="Category"
+                            :items="categories"
+                            :rules="validationRules.category"/>
+                </v-flex>
+              </v-layout>
+              <v-textarea v-model="product.description"
+                          auto-grow
+                          outline
+                          label="Description"
+                          counter="512"
+                          :rules="validationRules.description"/>
+              <v-btn type="submit" block>
                 Save
               </v-btn>
             </v-container>
@@ -55,7 +68,7 @@
         </v-sheet>
 
         <v-dialog v-model="dialogShowed"
-                  max-width="350">
+                  width="350">
           <v-card>
             <v-card-title class="headline">
               File maximal size exceeded
@@ -82,22 +95,30 @@
   import _ from 'lodash';
 
   export default {
+    props: {
+      editableProduct: Object
+    },
+    created() {
+      const { editableProduct } = this;
 
+      console.error(editableProduct);
+      if (editableProduct) {
+        const { previewPhoto } = editableProduct;
+
+        if (previewPhoto) {
+          this.photoPreview = this.$options.filters.imagePath(previewPhoto, 'preview_photo');
+        }
+
+        this.product = editableProduct;
+      }
+    },
     computed: {
       ...mapState('Product', {
         categories: state => state.categories.rows
       })
     },
-
     data() {
       return {
-        product: {
-          CategoryId: null,
-          attachedPhoto: null,
-          name: '',
-          description: '',
-          price: 0,
-        },
         validationRules: {
           name: [
             (v) => !!v || 'Name is required',
@@ -116,12 +137,20 @@
           ]
         },
         dialogShowed: false,
+        product: {
+          CategoryId: null,
+          attachedPhoto: null,
+          name: '',
+          description: '',
+          price: '',
+        },
         photoPreview: FileResources.defaultPreview,
       }
     },
     methods: {
       ...mapActions('Product', {
-        addProductAction: 'addProduct',
+        createProductAction: 'createProduct',
+        updateProductAction: 'updateProduct'
       }),
       onPhotoChange(e) {
         const [ attachedPhoto ] = e.target.files;
@@ -137,14 +166,25 @@
         };
         fileReader.readAsDataURL(attachedPhoto);
       },
-      addProduct() {
+      createProduct() {
         if (this.$refs.productBuilder.validate()) {
           this.product.price = Number(this.product.price);
           const product = new FormData();
           _.each(this.product, (value, key) => {
             product.append(key, value);
           });
-          this.addProductAction(product)
+          this.createProductAction(product)
+            .then(() => this.$router.go(-1));
+        }
+      },
+      updateProduct() {
+        if (this.$refs.productBuilder.validate()) {
+          this.product.price = Number(this.product.price);
+          const product = new FormData();
+          _.each(this.product, (value, key) => {
+            product.append(key, value);
+          });
+          this.updateProductAction(product)
             .then(() => this.$router.go(-1));
         }
       }

@@ -5,6 +5,10 @@ const axiosProduct = axios.create({
 });
 
 const errorHandler = (err, action, commit) => {
+  //FIXME
+  if (!err.response) {
+    return console.error(err);
+  }
   if (err.response.status === 403) {
     commit('signOut');
   } else {
@@ -28,7 +32,9 @@ export default {
     }
   },
   async fetchProducts({ commit }, paging) {
-    const { offset, limit } = paging;
+    const { currentPage, limit } = paging;
+    const offset = (currentPage - 1) * limit;
+
     try {
       const products = await axiosProduct.get(`/products/${offset}&${limit}`)
         .then(res => res.data);
@@ -37,13 +43,13 @@ export default {
       errorHandler(err, 'FetchProducts', commit);
     }
   },
-  async addProduct({ commit }, product) {
+  async createProduct({ commit }, product) {
     try {
-      const res_prod = await axiosProduct.post('/add_products', product)
+      const res_prod = await axiosProduct.post('/create_products', product)
         .then(res => res.data);
-      commit('fetchProducts', res_prod);
+      commit('createProduct', res_prod);
     } catch (err) {
-      errorHandler(err, 'FetchProducts', commit);
+      errorHandler(err, 'CreateProduct', commit);
     }
   },
   async updateProduct({ commit }, product) {
@@ -52,15 +58,15 @@ export default {
         .then(res => res.data);
       commit('updateProduct', res_prod);
     } catch (err) {
-      errorHandler(err, 'FetchProducts', commit);
+      errorHandler(err, 'UpdateProduct', commit);
     }
   },
   async deleteProductById({ commit }, id) {
     try {
-      await axiosProduct.delete('/delete_product', id);
+      await axiosProduct.delete(`/delete_product/${id}`);
       commit('deleteProductById', id);
     } catch (err) {
-      errorHandler(err, 'FetchProducts', commit);
+      errorHandler(err, 'DeleteProducts', commit);
     }
   },
 };

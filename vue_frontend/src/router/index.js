@@ -49,6 +49,9 @@ const routes = [
         path: '/builder',
         name: 'builder',
         component: ProductBuilder,
+        props: (route) => ({
+          editableProduct: route.params.editableProduct
+        })
       }
     ]
   },
