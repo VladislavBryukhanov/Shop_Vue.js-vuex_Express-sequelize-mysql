@@ -17,7 +17,7 @@ exports.signUp = async (request, response) => {
                     .status(500)
                     .send("Can't authorize new user");
             }
-            response.send(201);
+            response.sendStatus(201);
         });
     } catch (err) {
         return response

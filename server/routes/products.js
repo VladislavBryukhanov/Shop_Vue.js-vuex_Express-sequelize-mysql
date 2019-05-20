@@ -32,6 +32,8 @@ router.get('/products/:offset&:limit', productsController.fetchProducts);
 
 router.post('/create_products', upload.single('attachedPhoto'), productsController.createProduct);
 
+router.put('/update_product', upload.single('attachedPhoto'), productsController.updateProduct);
+
 router.delete('/delete_product/:id', productsController.deleteProduct);
 
 module.exports = router;

@@ -3,6 +3,17 @@ const Category = require('../db/models/Category');
 const fs = require('fs');
 const path = require('path');
 
+const deletePreviewPhoto = async (id) => {
+    const product = await Product.findByPk(id);
+    const { previewPhoto } = product;
+
+    if (previewPhoto) {
+        const filePath = path.join( __dirname, `/../public/preview_photo/${previewPhoto}`);
+        fs.unlink(filePath,
+            (err) => err && console.error(err));
+    }
+};
+
 module.exports.fetchProducts = async (request, response) => {
     const offset = Number(request.params['offset']);
     const limit = Number(request.params['limit']);
@@ -26,6 +37,7 @@ module.exports.fetchProducts = async (request, response) => {
 
 module.exports.createProduct = async (request, response) => {
     const { file } = request;
+
     if (file) {
         request.body.previewPhoto = file.filename;
     }
@@ -40,18 +52,34 @@ module.exports.createProduct = async (request, response) => {
     }
 };
 
-module.exports.deleteProduct = async (request, response) => {
-    const id = request.params['id'];
-    try {
-        const product = await Product.findByPk(id);
-        const { previewPhoto } = product;
+module.exports.updateProduct = async (request, response) => {
+    const { id } = request.body;
+    const { file } = request;
 
-        if (previewPhoto) {
-            const filePath = path.join( __dirname, `/../public/preview_photo/${previewPhoto}`);
-            fs.unlink(filePath,
-                (err) => err && console.error(err));
+    try {
+        if (file) {
+            request.body.previewPhoto = file.filename;
+            await deletePreviewPhoto(id);
         }
 
+        await Product.update(
+            request.body,
+            { where: { id } }
+        );
+        response.sendStatus(200);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
+
+};
+
+module.exports.deleteProduct = async (request, response) => {
+    const id = request.params['id'];
+
+    try {
+        await deletePreviewPhoto(id);
         await Product.destroy({ where: { id }});
         response.sendStatus(200);
     } catch (err) {

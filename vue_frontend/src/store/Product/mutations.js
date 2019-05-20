@@ -9,11 +9,12 @@ export default {
   },
   createProduct(state, product) {
     state.products = {
-      rows: [
-        ...state.products.rows,
-        // product
-      ],
+      ...state.products,
       count: state.products.count + 1
+/*    rows: [
+       ...state.products.rows,
+       product
+     ],*/
     };
   },
   updateProduct(state, product) {

@@ -6,7 +6,7 @@ import NavigationBar from '@/components/NavigationBar.vue'
 const PageNotFound = () => import ('@/pages/PageNotFound.vue');
 const Sign = () => import ('@/pages/Sign.vue');
 const ProductList = () => import ('@/components/ProductList.vue');
-const ProductBuilder = () => import ('@/components/admin/ProductBuilder.vue');
+const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
 
 Vue.use(Router);
 

@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const history = require('connect-history-api-fallback');
 require('dotenv').config();
 
 const cors = require('cors');
@@ -24,6 +25,9 @@ const productRouter = require('./routes/products');
 // const authMV = require('./middlewares/AuthMV');
 
 app.use(logger('dev'));
+app.use(history({
+    verbose: true
+}));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
@@ -38,7 +42,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 6000,
+        maxAge: 24 * 60 * 60 * 1000,
     }
 }));
 app.use(passport.initialize());

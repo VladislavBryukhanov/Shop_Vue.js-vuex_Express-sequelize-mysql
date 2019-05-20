@@ -8,7 +8,7 @@
               sm10 offset-sm1
               sx12>
         <v-sheet elevation="6">
-          <v-form @submit.prevent="createProduct"
+          <v-form @submit.prevent="saveProduct"
                   ref="productBuilder">
             <v-container>
               <v-layout wrap
@@ -51,7 +51,7 @@
                             item-value="id"
                             label="Category"
                             :items="categories"
-                            :rules="validationRules.category"/>
+                            :rules="validationRules.CategoryId"/>
                 </v-flex>
               </v-layout>
               <v-textarea v-model="product.description"
@@ -69,7 +69,7 @@
 
         <v-dialog v-model="dialogShowed"
                   width="350">
-          <v-card>
+          <v-card light>
             <v-card-title class="headline">
               File maximal size exceeded
             </v-card-title>
@@ -77,7 +77,9 @@
               Maximum image size is 5MB. You have exceeded this restriction.
             </v-card-text>
             <v-card-actions>
+              <v-spacer></v-spacer>
               <v-btn @click="dialogShowed = !dialogShowed"
+                     color="actionColor"
                      flat>
                 Ok
               </v-btn>
@@ -101,7 +103,6 @@
     created() {
       const { editableProduct } = this;
 
-      console.error(editableProduct);
       if (editableProduct) {
         const { previewPhoto } = editableProduct;
 
@@ -154,40 +155,45 @@
       }),
       onPhotoChange(e) {
         const [ attachedPhoto ] = e.target.files;
+
         if (attachedPhoto.size > FileResources.IMAGE_MAX_SIZE) {
           this.dialogShowed = !this.dialogShowed;
           return;
         }
 
-        this.product.attachedPhoto = attachedPhoto;
         const fileReader = new FileReader();
+        this.product.attachedPhoto = attachedPhoto;
+
         fileReader.onload = () => {
           this.photoPreview = fileReader.result;
         };
         fileReader.readAsDataURL(attachedPhoto);
       },
-      createProduct() {
-        if (this.$refs.productBuilder.validate()) {
-          this.product.price = Number(this.product.price);
-          const product = new FormData();
-          _.each(this.product, (value, key) => {
-            product.append(key, value);
-          });
-          this.createProductAction(product)
-            .then(() => this.$router.go(-1));
+      saveProduct() {
+        const { product } = this;
+        const productForm = new FormData();
+        product.price = Number(product.price);
+        let action;
+
+        console.info(this.$refs.productBuilder.validate())
+
+        if (!this.$refs.productBuilder.validate()) {
+          return;
         }
+
+        _.each(product, (value, key) => {
+          if (value) {
+            productForm.append(key, value);
+          }
+        });
+
+        if (this.editableProduct) {
+          action = this.updateProductAction(productForm)
+        } else {
+          action = this.createProductAction(productForm)
+        }
+        action.then(() => this.$router.go(-1));
       },
-      updateProduct() {
-        if (this.$refs.productBuilder.validate()) {
-          this.product.price = Number(this.product.price);
-          const product = new FormData();
-          _.each(this.product, (value, key) => {
-            product.append(key, value);
-          });
-          this.updateProductAction(product)
-            .then(() => this.$router.go(-1));
-        }
-      }
     }
   }
 </script>

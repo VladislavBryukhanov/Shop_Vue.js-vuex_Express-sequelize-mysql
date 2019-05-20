@@ -1,5 +1,24 @@
 <template>
   <v-container>
+    <v-dialog light>
+      <v-card>
+        <v-card-title>
+          Are you sure?
+        </v-card-title>
+        <v-card-text>
+          Do you want remove this product {{product}}?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat>
+            Cancel
+          </v-btn>
+          <v-btn flat>
+            Delete
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <div class="text-xs-center">
       <v-container>
         <v-layout justify-center>
@@ -130,7 +149,8 @@
     data() {
       return {
         limit: PRODUCTS_ONE_PAGE_LIMIT,
-        currentPage: parseInt(this.$route.query.page) || 1
+        currentPage: parseInt(this.$route.query.page) || 1,
+        confirmDeletion: false,
       }
     },
     methods: {
@@ -139,7 +159,9 @@
         'deleteProductById'
       ]),
       deleteProduct(id) {
-        this.deleteProductById(id);
+        this.confirmDeletion = ! this.confirmDeletion;
+        /*this.deleteProductById(id)
+          .then(() => this.confirmDeletion = !this.confirmDeletion);*/
       },
       editProduct(product) {
         this.$router.push({
