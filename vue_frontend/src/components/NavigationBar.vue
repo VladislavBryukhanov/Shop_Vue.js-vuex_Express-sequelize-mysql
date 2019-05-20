@@ -56,6 +56,13 @@
           </v-list-tile>
         </v-list-group>
 
+        <v-list-tile :to="{ name: 'shopping_cart' }">
+          <v-list-tile-action>
+            <v-icon>shopping_cart</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-title>Shopping cart</v-list-tile-title>
+        </v-list-tile>
+
         <v-list-tile @click.stop="signOut">
           <v-list-tile-action>
             <v-icon>power_settings_new</v-icon>

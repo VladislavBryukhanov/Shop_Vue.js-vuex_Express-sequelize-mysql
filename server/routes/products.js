@@ -3,19 +3,9 @@ const router = express.Router();
 const categoriesController = require('../controllers/categories');
 const productsController = require('../controllers/products');
 
-const fileQuotas = require('../common/constants').fileQuotas;
-const path = require('path');
+const { fileQuotas } = require('../common/constants');
 const multer = require('multer');
-const uuid = require('uuid');
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join( __dirname, '/../public/preview_photo/'))
-    },
-    filename: (req, file, cb) => {
-        cb(null, uuid.v1() + path.extname(file.originalname))
-    }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,

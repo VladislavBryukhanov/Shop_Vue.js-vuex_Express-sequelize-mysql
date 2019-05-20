@@ -29,7 +29,7 @@
                           width="250"
                           light
                           class="product">
-                    <v-img :src="product.previewPhoto | imagePath('preview_photo')"
+                    <v-img :src="product.previewPhoto | imagePath('preview_photo', 'thumbnail')"
                            height="200">
                       <v-expand-transition>
                         <div v-if="hover"

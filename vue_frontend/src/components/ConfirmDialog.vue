@@ -8,14 +8,14 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn flat
-               @click="confirm"
-               color="actionColor">
-          Confirm
-        </v-btn>
-        <v-btn flat
                @click="cancel"
                color="removingColor">
           Cancel
+        </v-btn>
+        <v-btn flat
+               @click="confirm"
+               color="actionColor">
+          Confirm
         </v-btn>
       </v-card-actions>
     </v-card>
