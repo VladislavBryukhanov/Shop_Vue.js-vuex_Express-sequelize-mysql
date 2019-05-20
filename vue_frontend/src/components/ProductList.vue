@@ -1,24 +1,5 @@
 <template>
   <v-container>
-    <v-dialog light>
-      <v-card>
-        <v-card-title>
-          Are you sure?
-        </v-card-title>
-        <v-card-text>
-          Do you want remove this product {{product}}?
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn flat>
-            Cancel
-          </v-btn>
-          <v-btn flat>
-            Delete
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <div class="text-xs-center">
       <v-container>
         <v-layout justify-center>
@@ -80,7 +61,7 @@
                     </v-card-text>
 
                     <v-btn
-                      @click="deleteProduct(product.id)"
+                      @click="deleteProduct(product)"
                       absolute
                       dark
                       color="removingColor"
@@ -116,7 +97,6 @@
   export default {
     created() {
       const { limit, currentPage } = this;
-
       this.fetchProducts({ currentPage, limit });
     },
     beforeRouteUpdate(to, from, next) {
@@ -150,7 +130,6 @@
       return {
         limit: PRODUCTS_ONE_PAGE_LIMIT,
         currentPage: parseInt(this.$route.query.page) || 1,
-        confirmDeletion: false,
       }
     },
     methods: {
@@ -158,10 +137,17 @@
         'fetchProducts',
         'deleteProductById'
       ]),
-      deleteProduct(id) {
-        this.confirmDeletion = ! this.confirmDeletion;
-        /*this.deleteProductById(id)
-          .then(() => this.confirmDeletion = !this.confirmDeletion);*/
+      async deleteProduct(product) {
+        const { name, id } = product;
+
+        const confirm = await this.$root.$confirmDialog(
+          'Are you sure?',
+          `Do you want remove this product "${name}"?`
+        );
+
+        if (confirm) {
+          this.deleteProductById(id);
+        }
       },
       editProduct(product) {
         this.$router.push({
