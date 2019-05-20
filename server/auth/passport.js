@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User');
+const User = require('../db/models/User');
 const bcrypt = require('bcrypt');
 
 passport.use(new LocalStrategy({
@@ -16,7 +16,7 @@ passport.use(new LocalStrategy({
             return done(null, false, { message: 'User is not exists' });
         }
 
-        const validPassword = await bcrypt.compare(password, user.password);
+        const validPassword = await bcrypt.compare(password, user.password());
 
         if (!validPassword) {
             return done(null, false, { message: 'Incorrect password.' });
@@ -33,7 +33,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    User.findOne({ where: { id }})
+    User.findByPk(id)
         .then(user => done(null, user));
 });
 

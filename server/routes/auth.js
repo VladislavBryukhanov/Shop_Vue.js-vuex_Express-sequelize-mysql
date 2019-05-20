@@ -9,7 +9,7 @@ router.post('/sign_in', authController.signIn);
 
 router.post('/sign_out', (request, response) => {
     request.logOut();
-    response.send(200);
+    response.sendStatus(200);
 });
 
 router.get('/me', checkAuth, (request, response) => {

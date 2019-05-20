@@ -1,9 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from '../store';
+import store from '@/store';
 import Toolbar from '@/components/Toolbar.vue';
+import NavigationBar from '@/components/NavigationBar.vue'
+const PageNotFound = () => import ('@/pages/PageNotFound.vue');
 const Sign = () => import ('@/pages/Sign.vue');
-const Shop = () => import ('@/pages/Shop.vue');
+const ProductList = () => import ('@/components/ProductList.vue');
+const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
 
 Vue.use(Router);
 
@@ -31,21 +34,30 @@ const routes = [
     ]
   },
   {
-    path: '/shop',
-    component: Toolbar,
+    path: '/',
+    component: NavigationBar,
     meta: {
-      authorized: true,
-    },
-    props: {
       authorized: true,
     },
     children: [
       {
-        path: '',
-        name: 'shop',
-        component: Shop,
+        path: '/products',
+        name: 'products',
+        component: ProductList,
+      },
+      {
+        path: '/builder',
+        name: 'builder',
+        component: ProductBuilder,
+        props: (route) => ({
+          editableProduct: route.params.editableProduct
+        })
       }
     ]
+  },
+  {
+    path: '*',
+    component: PageNotFound
   },
 ];
 
@@ -63,7 +75,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.matched.some(route => route.meta.unauthorized)) {
     if (store.state.Auth.me) {
-      redirectParams = { path: '/shop' };
+      redirectParams = { path: '/products' };
     }
   }
 

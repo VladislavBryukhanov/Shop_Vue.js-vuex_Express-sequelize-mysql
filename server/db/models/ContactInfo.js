@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../db/connection');
+const sequelize = require('../connection');
 
 const ContactInfo = sequelize.define('ContactInfo', {
     phone: {
-        type: Sequelize.NUMBER(),
+        type: Sequelize.INTEGER,
         allowNull: false,
     },
     address: {

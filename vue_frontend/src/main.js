@@ -6,9 +6,27 @@ import router from './router';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
+import applyFilters from './common/applyFilters';
+applyFilters();
+
 Vue.use(Vuetify, {
   theme: {
     primary: '#14aba8',
+    removingColor: '#a43931',
+    actionColor: '#1A567B',
+    editColor: '#FFF171',
+    // primary: '#558DC4',
+    whiteShadow: '#f1f1f1',
+    solid_dark: '#282828',
+    solid_black: '#161616',
+    onlineColor: '#558DC4',
+    darkerGrey: '#aaa',
+    offlineColor: '#ffffff',
+    incomingMessage: '#243443',
+    lightBlue: '#6B9BC2',
+    lightIonic: '#14aba8',
+    lincIonicColor: '#00aca2',
+    darkIonic: '#00726a',
   },
 });
 Vue.config.productionTip = false;
