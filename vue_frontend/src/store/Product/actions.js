@@ -5,7 +5,6 @@ const axiosProduct = axios.create({
 });
 
 const errorHandler = (err, action, commit) => {
-  //FIXME
   if (!err.response) {
     return console.error(err);
   }

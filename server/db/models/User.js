@@ -15,10 +15,6 @@ const User = sequelize.define('Users', {
     },
     password: {
         type: Sequelize.STRING,
-        // it is hash and validation useless
-        // validate: {
-        //     len: [8, 32],
-        // },
         allowNull: false,
         get() {
             return () => this.getDataValue('password');

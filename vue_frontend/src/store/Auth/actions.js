@@ -5,6 +5,9 @@ const axiosAuth = axios.create({
 });
 
 const errorHandler = (err, action, commit) => {
+  if (!err.response) {
+    return console.error(err);
+  }
   if (err.response.status === 401) {
     commit('signOut');
   } else {

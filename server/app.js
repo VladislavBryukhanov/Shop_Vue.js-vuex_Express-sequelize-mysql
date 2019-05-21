@@ -22,6 +22,7 @@ const passport = require('./auth/passport');
 
 const authRouter = require('./routes/auth');
 const productRouter = require('./routes/products');
+const cartRouter = require('./routes/cart');
 // const authMV = require('./middlewares/AuthMV');
 
 app.use(logger('dev'));
@@ -51,5 +52,6 @@ app.use(passport.session());
 
 app.use('/', authRouter);
 app.use('/products', productRouter);
+app.use('/cart', cartRouter);
 
 module.exports = app;

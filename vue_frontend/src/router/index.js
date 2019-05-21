@@ -7,6 +7,7 @@ const PageNotFound = () => import ('@/pages/PageNotFound.vue');
 const Sign = () => import ('@/pages/Sign.vue');
 const ProductList = () => import ('@/components/ProductList.vue');
 const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
+const ShoppingCart = () => import ('@/pages/ShoppingCart.vue');
 
 Vue.use(Router);
 
@@ -52,6 +53,11 @@ const routes = [
         props: (route) => ({
           editableProduct: route.params.editableProduct
         })
+      },
+      {
+        path: '/shopping_card',
+        name: 'shopping_cart',
+        component: ShoppingCart
       }
     ]
   },

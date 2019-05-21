@@ -23,7 +23,7 @@
                       <v-container>
                         <label for="attachPhoto">
                           <v-img :src="photoPreview"
-                                 contain>
+                                 height="200">
                           </v-img>
                         </label>
                         <input type="file"
@@ -107,7 +107,7 @@
         const { previewPhoto } = editableProduct;
 
         if (previewPhoto) {
-          this.photoPreview = this.$options.filters.imagePath(previewPhoto, 'preview_photo');
+          this.photoPreview = this.$options.filters.imagePath(previewPhoto, 'preview_photo', 'thumbnail');
         }
 
         this.product = editableProduct;
