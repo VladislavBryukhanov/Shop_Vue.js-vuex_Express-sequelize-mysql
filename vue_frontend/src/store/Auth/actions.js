@@ -4,6 +4,7 @@ const axiosAuth = axios.create({
   withCredentials: true,
 });
 
+//TODO Mb common for all modules?
 const errorHandler = (err, action, commit) => {
   if (!err.response) {
     return console.error(err);

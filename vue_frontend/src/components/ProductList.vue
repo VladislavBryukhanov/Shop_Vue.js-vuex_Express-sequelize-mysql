@@ -43,6 +43,7 @@
                     <v-card-title primary-title
                                   style="position: relative;">
                       <v-btn
+                          @click="insertCartProduct(product.id)"
                           absolute
                           dark
                           color="actionColor"
@@ -68,7 +69,7 @@
                       fab
                       right
                       top>
-                      <v-icon>close</v-icon>
+                      <v-icon>delete_forever</v-icon>
                     </v-btn>
                     <v-btn
                       @click="editProduct(product)"
@@ -135,7 +136,10 @@
     methods: {
       ...mapActions('Product', [
         'fetchProducts',
-        'deleteProductById'
+        'deleteProductById',
+      ]),
+      ...mapActions('Cart', [
+        'insertCartProduct'
       ]),
       async deleteProduct(product) {
         const { name, id } = product;
@@ -154,7 +158,7 @@
           name: 'builder',
           params: { editableProduct: product }
         })
-      }
+      },
     }
   }
 </script>

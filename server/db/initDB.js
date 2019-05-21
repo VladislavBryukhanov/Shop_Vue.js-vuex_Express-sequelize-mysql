@@ -4,6 +4,7 @@ const ContactInfo = require('./models/ContactInfo');
 const Session = require('./models/Session');
 const Category = require('./models/Category');
 const Product = require('./models/Product');
+const Cart = require('./models/Cart');
 
 const initDefaultValues = () => {
     Category.bulkCreate([
@@ -26,13 +27,20 @@ const initDefaultValues = () => {
 
 module.exports = async (force) => {
 
+    //TODO replace to `association` for each model
+
     // await Role.sync(force);
     await User.sync(force);
     await Session.sync(force);
-    // Product.hasOne(Category);
     await Category.sync(force);
     Product.belongsTo(Category);
+    Category.hasMany(Product);
     await Product.sync(force);
+    User.belongsToMany(Product, {
+        through: Cart,
+    });
+    await Cart.sync(force);
+
     initDefaultValues();
 
 /*    Promise.all([
