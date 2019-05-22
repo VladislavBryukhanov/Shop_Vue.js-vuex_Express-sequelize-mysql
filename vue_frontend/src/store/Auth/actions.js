@@ -1,23 +1,9 @@
+import { errorHandler } from '@/common/errorHandler';
 import axios from 'axios';
 const axiosAuth = axios.create({
   baseURL: process.env.VUE_APP_CORE_API,
   withCredentials: true,
 });
-
-//TODO Mb common for all modules?
-const errorHandler = (err, action, commit) => {
-  if (!err.response) {
-    return console.error(err);
-  }
-  if (err.response.status === 401) {
-    commit('signOut');
-  } else {
-    commit('Common/showSnackbar', {
-      message: `${action}: ${err.response.data}`,
-      duration: 2000
-    }, { root: true });
-  }
-};
 
 export default {
   async signIn({ commit, dispatch }, credentials) {

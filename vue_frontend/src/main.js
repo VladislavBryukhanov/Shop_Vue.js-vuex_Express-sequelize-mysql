@@ -12,7 +12,7 @@ applyFilters();
 Vue.use(Vuetify, {
   theme: {
     primary: '#14aba8',
-    removingColor: '#a43931',
+    removingColor: '#cd544e',
     actionColor: '#1A567B',
     editColor: '#FFF171',
     // primary: '#558DC4',

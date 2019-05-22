@@ -20,7 +20,27 @@
     <v-layout>
       <v-flex sm10 offset-sm1>
         <v-sheet elevation="6">
+          <v-card light>
+            <v-card-title>
+              <h3 class="display-1 font-weight-light actionColor--text">
+                Total cost: {{totalCost | price('USD')}}
+              </h3>
+              <v-spacer></v-spacer>
+              <v-btn v-if="!noProducts"
+                     flat
+                     color="removingColor">
+                Buy this products
+              </v-btn>
+            </v-card-title>
+          </v-card>
+
           <v-layout row wrap>
+            <v-flex v-if="noProducts">
+              <v-container>
+                <h3 class="display-1 font-weight-light primary--text">No products in shopping cart</h3>
+              </v-container>
+            </v-flex>
+
             <v-flex v-for="product in products">
               <v-container>
                 <v-card elevation="6"
@@ -70,7 +90,6 @@
                   <v-card-text>
                     {{product.description}}
                   </v-card-text>
-
                 </v-card>
               </v-container>
             </v-flex>
@@ -84,12 +103,14 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
-  import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
+  import { CART_ONE_PAGE_LIMIT } from '@/common/constants';
+  import _ from 'lodash';
 
   export default {
     created() {
       const { limit, currentPage } = this;
       this.fetchCartProducts({ currentPage, limit });
+      this.cartProductsTotalCost();
     },
     beforeRouteUpdate(to, from, next) {
       const { limit } = this;
@@ -108,7 +129,8 @@
     computed: {
       ...mapState('Cart', {
         products: state => state.products,
-        productsCount: state => state.productsCount
+        productsCount: state => state.productsCount,
+        totalCost: state => state.totalCost
       }),
       pageCount: function() {
         let pageCount = (this.productsCount / this.limit);
@@ -117,17 +139,21 @@
         }
         return pageCount || 1;
       },
+      noProducts: function() {
+        return _.isEmpty(this.products);
+      }
     },
     data() {
       return {
-        limit: PRODUCTS_ONE_PAGE_LIMIT,
-        currentPage: parseInt(this.$route.query.page) || 1,
+        limit: CART_ONE_PAGE_LIMIT,
+        currentPage: parseInt(this.$route.query.page) || 1
       }
     },
     methods: {
       ...mapActions('Cart', [
         'fetchCartProducts',
-        'excludeCartProduct'
+        'excludeCartProduct',
+        'cartProductsTotalCost',
       ]),
       createContract(product) {
       }

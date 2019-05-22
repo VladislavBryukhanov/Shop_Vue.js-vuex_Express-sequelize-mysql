@@ -2,8 +2,10 @@ import actions from './actions';
 import mutations from './mutations';
 
 export const state = {
-  products: [],
-  productsCount: 0
+  totalCost: 0,
+  productsCount: 0,
+  productIds: [],
+  products: []
 };
 
 export const Cart = {

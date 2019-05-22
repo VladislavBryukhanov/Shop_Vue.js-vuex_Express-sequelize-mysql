@@ -1,6 +1,12 @@
 export default {
+  cartProductsTotalCost(state, totalCost) {
+    state.totalCost = totalCost;
+  },
   cartProductsCount(state, productsCount) {
     state.productsCount = productsCount;
+  },
+  fetchAllCartProductsId(state, productIds) {
+    state.productIds = productIds;
   },
   fetchCartProducts(state, products) {
     state.products = products;

@@ -26,7 +26,7 @@
 
         <v-list-group prepend-icon="dashboard"
                       @click="selectGroup(groups.CATEGORIES)"
-                      :value="openedGroup === groups.CATEGORIES && !minNavDraw"
+                      :value="!minNavDraw && openedGroup === groups.CATEGORIES"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -41,7 +41,7 @@
 
         <v-list-group prepend-icon="settings_applications"
                       @click="selectGroup(groups.ADMIN)"
-                      :value="openedGroup === groups.ADMIN && !minNavDraw"
+                      :value="!minNavDraw && openedGroup === groups.ADMIN"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -60,7 +60,13 @@
         <v-list-tile :to="{ name: 'shopping_cart' }"
                      @click.stop>
           <v-list-tile-action>
-            <v-icon>shopping_cart</v-icon>
+            <v-badge color="removingColor">
+              <template v-slot:badge
+                        v-if="productsCount">
+                <span class="font-weight-bold">{{productsCount}}</span>
+              </template>
+              <v-icon>shopping_cart</v-icon>
+            </v-badge>
           </v-list-tile-action>
           <v-list-tile-title>Shopping cart</v-list-tile-title>
         </v-list-tile>
@@ -91,11 +97,13 @@
       // TODO select to infinity select component
       // this.fetchCategories({ page: 0, limit: 100 });
       this.fetchCategories();
+      this.cartProductsCount();
     },
 
     computed: {
-      ...mapState('Product', {
-        categories: state => state.categories.rows
+      ...mapState({
+        categories: state => state.Product.categories.rows,
+        productsCount: state => state.Cart.productsCount
       }),
     },
 
@@ -112,8 +120,9 @@
     },
     methods: {
       ...mapActions({
+        cartProductsCount: 'Cart/cartProductsCount',
         fetchCategories: 'Product/fetchCategories',
-        signOutAction: 'Auth/signOut',
+        signOutAction: 'Auth/signOut'
       }),
       selectGroup(group) {
         this.openedGroup = this.openedGroup === group ? '' : group;

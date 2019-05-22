@@ -1,11 +1,47 @@
+const sequelize = require('sequelize');
 const User = require('../db/models/User');
+const Cart = require('../db/models/Cart');
+const Product = require('../db/models/Product');
 
 module.exports.cartProductsCount = async (request, response) => {
     try {
-        const count = User.count({
+        const count = await Cart.count({
             where: { UserId: request.user.id }
         });
-        response.send(count);
+        response.send({ count });
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
+};
+
+module.exports.cartProductsTotalPrice = async (request, response) => {
+    try {
+        const products = await Cart.findAll({
+            where: { UserId: request.user.id }
+        });
+        const ids = products.map(prod => prod.ProductId);
+
+        const [ price ] = await Product.findAll({
+            where: { id: ids },
+            attributes: [[sequelize.fn('sum', sequelize.col('Products.price')), 'price']]
+        });
+        response.send(price);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
+};
+
+//Using for fetch all id and associate cart with store
+module.exports.fetchAllCartProducts = async (request, response) => {
+    try {
+        const products = await Cart.findAndCountAll({
+            where: { UserId: request.user.id }
+        });
+        response.send(products);
     } catch (err) {
         response
             .status(500)
@@ -36,7 +72,14 @@ module.exports.insertProduct = async (request, response) => {
 
     try {
         const user = await User.findByPk(request.user.id);
-        await user.addProduct(ProductId);
+        const prod = await user.addProduct(ProductId);
+
+        if (!prod) {
+            response
+                .status(400)
+                .send('Such product already inside shopping cart');
+        }
+
         response.sendStatus(201);
     } catch (err) {
         response
@@ -50,7 +93,14 @@ module.exports.excludeProduct = async (request, response) => {
 
     try {
         const user = await User.findByPk(request.user.id);
-        await user.removeProduct(ProductId);
+        const prod = await user.removeProduct(ProductId);
+
+        if (!prod) {
+            response
+                .status(400)
+                .send('Such product already excluded from shopping cart');
+        }
+
         response.sendStatus(200);
     } catch (err) {
         response
