@@ -43,6 +43,7 @@
                     <v-card-title primary-title
                                   style="position: relative;">
                       <v-btn
+                          v-if="!isInCart(product.id)"
                           @click="insertCartProduct(product.id)"
                           absolute
                           dark
@@ -52,6 +53,21 @@
                           top>
                         <v-icon>shopping_cart</v-icon>
                       </v-btn>
+
+                      <v-btn
+                          v-else
+                          @click="excludeCartProduct(product.id)"
+                          absolute
+                          dark
+                          color="darkerGrey"
+                          fab
+                          right
+                          top>
+                        <v-icon>remove_shopping_cart</v-icon>
+                      </v-btn>
+
+
+
                       <h3 class="display-1 font-weight-light primary--text">
                         {{product.name}}
                       </h3>
@@ -98,6 +114,7 @@
   export default {
     created() {
       const { limit, currentPage } = this;
+
       this.fetchProducts({ currentPage, limit });
     },
     beforeRouteUpdate(to, from, next) {
@@ -119,6 +136,9 @@
         products: state => state.products.rows,
         productsCount: state => state.products.count
       }),
+      ...mapState('Cart', {
+        productIds: state => state.productIds
+      }),
       pageCount: function() {
         let pageCount = (this.productsCount / this.limit);
         if (pageCount > parseInt(pageCount)) {
@@ -139,7 +159,8 @@
         'deleteProductById',
       ]),
       ...mapActions('Cart', [
-        'insertCartProduct'
+        'insertCartProduct',
+        'excludeCartProduct',
       ]),
       async deleteProduct(product) {
         const { name, id } = product;
@@ -159,6 +180,9 @@
           params: { editableProduct: product }
         })
       },
+      isInCart(prodId) {
+        return this.productIds.includes(prodId);
+      }
     }
   }
 </script>

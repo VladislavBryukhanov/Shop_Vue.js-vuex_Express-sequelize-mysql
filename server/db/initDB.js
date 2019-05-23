@@ -36,13 +36,14 @@ module.exports = async (force) => {
     Product.belongsTo(Category);
     Category.hasMany(Product);
     await Product.sync(force);
+    await Cart.sync(force);
 
     // FIXME
     User.belongsToMany(Product, {
         through: Cart,
     });
 
-    initDefaultValues();
+    // initDefaultValues();
 
 /*    Promise.all([
        User.sync(force),

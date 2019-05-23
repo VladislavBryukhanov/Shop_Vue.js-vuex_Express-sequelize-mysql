@@ -3,45 +3,21 @@ const User = require('../db/models/User');
 const Cart = require('../db/models/Cart');
 const Product = require('../db/models/Product');
 
-module.exports.cartProductsCount = async (request, response) => {
+module.exports.fetchShoppingCart = async (request, response) => {
     try {
-        const count = await Cart.count({
+        const productsIds = await Cart.findAll({
+            attributes: ['ProductId'],
             where: { UserId: request.user.id }
-        });
-        response.send({ count });
-    } catch (err) {
-        response
-            .status(500)
-            .send(err.message);
-    }
-};
+        }).then(res =>
+            res.map(prod => prod.ProductId));
 
-module.exports.cartProductsTotalPrice = async (request, response) => {
-    try {
-        const products = await Cart.findAll({
-            where: { UserId: request.user.id }
+        const { totalCost } = await Product.findOne({
+            where: { id: productsIds },
+            attributes: [[sequelize.fn('sum', sequelize.col('Products.price')), 'totalCost']],
+            raw : true,
         });
-        const ids = products.map(prod => prod.ProductId);
 
-        const [ price ] = await Product.findAll({
-            where: { id: ids },
-            attributes: [[sequelize.fn('sum', sequelize.col('Products.price')), 'price']]
-        });
-        response.send(price);
-    } catch (err) {
-        response
-            .status(500)
-            .send(err.message);
-    }
-};
-
-//Using for fetch all id and associate cart with store
-module.exports.fetchAllCartProducts = async (request, response) => {
-    try {
-        const products = await Cart.findAndCountAll({
-            where: { UserId: request.user.id }
-        });
-        response.send(products);
+        response.send({ productsIds, totalCost });
     } catch (err) {
         response
             .status(500)
@@ -59,6 +35,7 @@ module.exports.fetchCartProducts = async (request, response) => {
             offset,
             limit
         });
+
         response.send(cart);
     } catch (err) {
         response

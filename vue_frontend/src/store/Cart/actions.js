@@ -6,31 +6,13 @@ const axiosCart = axios.create({
 });
 
 export default {
-  async cartProductsCount({ commit }) {
+  async fetchShoppingCart({ commit }) {
     try {
-      const productsCount = await axiosCart.get('/products_count')
-        .then(res => res.data.count);
-      commit('cartProductsCount', productsCount);
+      const cart = await axiosCart.get('/fetch_shopping_cart')
+        .then(res => res.data);
+      commit('fetchShoppingCart', cart);
     } catch (err) {
-      errorHandler(err, 'CartProductsCount', commit);
-    }
-  },
-  async cartProductsTotalCost({ commit }) {
-    try {
-      const totalCost = await axiosCart.get('/total_cost')
-        .then(res => res.data.price);
-      commit('cartProductsTotalCost', totalCost);
-    } catch (err) {
-      errorHandler(err, 'CartProductsCount', commit);
-    }
-  },
-  async fetchAllCartProductsId({ commit }) {
-    try {
-      const productsCount = await axiosCart.get('/fetch_products_id')
-        .then(res => res.data.count);
-      commit('fetchAllCartProductsId', productsCount);
-    } catch (err) {
-      errorHandler(err, 'CartProductsCount', commit);
+      errorHandler(err, 'FetchShoppingCart', commit);
     }
   },
   async fetchCartProducts({ commit }, paging) {
@@ -45,21 +27,23 @@ export default {
       errorHandler(err, 'FetchCart', commit);
     }
   },
-  async insertCartProduct({ commit, state }, productId) {
+  async insertCartProduct({ commit, dispatch }, productId) {
     try {
       const product = await axiosCart.post('/insert_product', { productId })
         .then(res => res.data);
       commit('insertCartProduct', product);
-      commit('cartProductsCount', state.productsCount + 1);
+      //Is it optimal solution? Mb client side?
+      dispatch('fetchShoppingCart');
     } catch (err) {
       errorHandler(err, 'InsertProduct', commit);
     }
   },
-  async excludeCartProduct({ commit, state }, productId) {
+  async excludeCartProduct({ commit, dispatch }, productId) {
     try {
       await axiosCart.delete(`/exclude_product/${productId}`);
       commit('excludeCartProduct', productId);
-      commit('cartProductsCount', state.productsCount - 1);
+      //Is it optimal solution? Mb client side?
+      dispatch('fetchShoppingCart');
     } catch (err) {
       errorHandler(err, 'ExcludeProduct', commit);
     }

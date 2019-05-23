@@ -110,7 +110,6 @@
     created() {
       const { limit, currentPage } = this;
       this.fetchCartProducts({ currentPage, limit });
-      this.cartProductsTotalCost();
     },
     beforeRouteUpdate(to, from, next) {
       const { limit } = this;
@@ -121,7 +120,7 @@
     watch: {
       currentPage: function(val) {
         this.$router.push({
-          name: 'products',
+          name: 'shopping_cart',
           query: { page: val }
         });
       }
@@ -153,7 +152,6 @@
       ...mapActions('Cart', [
         'fetchCartProducts',
         'excludeCartProduct',
-        'cartProductsTotalCost',
       ]),
       createContract(product) {
       }

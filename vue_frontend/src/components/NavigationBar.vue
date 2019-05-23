@@ -97,7 +97,7 @@
       // TODO select to infinity select component
       // this.fetchCategories({ page: 0, limit: 100 });
       this.fetchCategories();
-      this.cartProductsCount();
+      this.fetchShoppingCart();
     },
 
     computed: {
@@ -120,7 +120,7 @@
     },
     methods: {
       ...mapActions({
-        cartProductsCount: 'Cart/cartProductsCount',
+        fetchShoppingCart: 'Cart/fetchShoppingCart',
         fetchCategories: 'Product/fetchCategories',
         signOutAction: 'Auth/signOut'
       }),

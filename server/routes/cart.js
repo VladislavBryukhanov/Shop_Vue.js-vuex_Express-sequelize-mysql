@@ -2,11 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cart');
 
-router.get('/products_count', cartController.cartProductsCount);
-
-router.get('/total_cost', cartController.cartProductsTotalPrice);
-
-router.get('/fetch_products_id', cartController.fetchAllCartProducts);
+router.get('/fetch_shopping_cart', cartController.fetchShoppingCart);
 
 router.get('/fetch_products/:offset&:limit', cartController.fetchCartProducts);
 
