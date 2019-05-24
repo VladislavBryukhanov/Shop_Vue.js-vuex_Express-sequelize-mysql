@@ -5,6 +5,7 @@ const axiosCart = axios.create({
   withCredentials: true
 });
 
+//TODO Cart and Prod logic should be the same = client side or server side only calculating, now cart -serverside, prod - clientside
 export default {
   async fetchShoppingCart({ commit }) {
     try {

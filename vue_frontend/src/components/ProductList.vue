@@ -66,8 +66,6 @@
                         <v-icon>remove_shopping_cart</v-icon>
                       </v-btn>
 
-
-
                       <h3 class="display-1 font-weight-light primary--text">
                         {{product.name}}
                       </h3>
@@ -112,9 +110,10 @@
   import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
 
   export default {
+    // TODO PAGING TO COMMON COMPONENT
+
     created() {
       const { limit, currentPage } = this;
-
       this.fetchProducts({ currentPage, limit });
     },
     beforeRouteUpdate(to, from, next) {
@@ -171,7 +170,10 @@
         );
 
         if (confirm) {
-          this.deleteProductById(id);
+          await this.deleteProductById(id);
+
+          const { limit, currentPage } = this;
+          this.fetchProducts({ currentPage, limit });
         }
       },
       editProduct(product) {

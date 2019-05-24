@@ -7,6 +7,7 @@ export default {
     // TODO caching all loaded products
     state.products = products;
   },
+  //Data will be refetched
   createProduct(state, product) {
     state.products = {
       ...state.products,
@@ -30,11 +31,13 @@ export default {
       rows,
     }
   },
+  //Data will be refetched
   deleteProductById(state, id) {
-    const rows = state.products.rows.filter(item => item.id !== id);
+    // const rows = state.products.rows.filter(item => item.id !== id);
 
     state.products = {
-      rows,
+      // rows,
+      ...state.products,
       count: state.products.count - 1
     }
   },

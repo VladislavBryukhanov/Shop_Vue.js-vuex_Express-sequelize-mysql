@@ -118,10 +118,10 @@
       next();
     },
     watch: {
-      currentPage: function(val) {
+      currentPage: function (val) {
         this.$router.push({
           name: 'shopping_cart',
-          query: { page: val }
+          query: {page: val}
         });
       }
     },
@@ -149,10 +149,16 @@
       }
     },
     methods: {
-      ...mapActions('Cart', [
-        'fetchCartProducts',
-        'excludeCartProduct',
-      ]),
+      ...mapActions('Cart', {
+        fetchCartProducts: 'fetchCartProducts',
+        excludeCartProductAction: 'excludeCartProduct',
+      }),
+      async excludeCartProduct(productId) {
+        const { limit, currentPage } = this;
+
+        await this.excludeCartProductAction(productId);
+        this.fetchCartProducts({ currentPage, limit });
+      },
       createContract(product) {
       }
     }
