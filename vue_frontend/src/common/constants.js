@@ -4,6 +4,7 @@ export const AuthState = {
 };
 
 export const PRODUCTS_ONE_PAGE_LIMIT = 3;
+export const CART_ONE_PAGE_LIMIT = 4;
 
 export const FileResources = {
   IMAGE_MAX_SIZE: 5 * 1024 * 1024,

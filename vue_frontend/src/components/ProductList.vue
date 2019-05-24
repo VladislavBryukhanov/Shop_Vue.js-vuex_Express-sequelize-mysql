@@ -43,6 +43,8 @@
                     <v-card-title primary-title
                                   style="position: relative;">
                       <v-btn
+                          v-if="!isInCart(product.id)"
+                          @click="insertCartProduct(product.id)"
                           absolute
                           dark
                           color="actionColor"
@@ -51,6 +53,19 @@
                           top>
                         <v-icon>shopping_cart</v-icon>
                       </v-btn>
+
+                      <v-btn
+                          v-else
+                          @click="excludeCartProduct(product.id)"
+                          absolute
+                          dark
+                          color="darkerGrey"
+                          fab
+                          right
+                          top>
+                        <v-icon>remove_shopping_cart</v-icon>
+                      </v-btn>
+
                       <h3 class="display-1 font-weight-light primary--text">
                         {{product.name}}
                       </h3>
@@ -68,7 +83,7 @@
                       fab
                       right
                       top>
-                      <v-icon>close</v-icon>
+                      <v-icon>delete_forever</v-icon>
                     </v-btn>
                     <v-btn
                       @click="editProduct(product)"
@@ -95,6 +110,8 @@
   import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
 
   export default {
+    // TODO PAGING TO COMMON COMPONENT
+
     created() {
       const { limit, currentPage } = this;
       this.fetchProducts({ currentPage, limit });
@@ -118,6 +135,9 @@
         products: state => state.products.rows,
         productsCount: state => state.products.count
       }),
+      ...mapState('Cart', {
+        productIds: state => state.productIds
+      }),
       pageCount: function() {
         let pageCount = (this.productsCount / this.limit);
         if (pageCount > parseInt(pageCount)) {
@@ -135,7 +155,11 @@
     methods: {
       ...mapActions('Product', [
         'fetchProducts',
-        'deleteProductById'
+        'deleteProductById',
+      ]),
+      ...mapActions('Cart', [
+        'insertCartProduct',
+        'excludeCartProduct',
       ]),
       async deleteProduct(product) {
         const { name, id } = product;
@@ -146,7 +170,10 @@
         );
 
         if (confirm) {
-          this.deleteProductById(id);
+          await this.deleteProductById(id);
+
+          const { limit, currentPage } = this;
+          this.fetchProducts({ currentPage, limit });
         }
       },
       editProduct(product) {
@@ -154,6 +181,9 @@
           name: 'builder',
           params: { editableProduct: product }
         })
+      },
+      isInCart(prodId) {
+        return this.productIds.includes(prodId);
       }
     }
   }

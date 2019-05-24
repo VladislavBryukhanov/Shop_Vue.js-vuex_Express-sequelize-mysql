@@ -16,7 +16,8 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-tile :to="{ name: 'products' }">
+        <v-list-tile :to="{ name: 'products' }"
+                     @click.stop>
           <v-list-tile-action>
             <v-icon>grade</v-icon>
           </v-list-tile-action>
@@ -25,7 +26,7 @@
 
         <v-list-group prepend-icon="dashboard"
                       @click="selectGroup(groups.CATEGORIES)"
-                      :value="openedGroup === groups.CATEGORIES && !minNavDraw"
+                      :value="!minNavDraw && openedGroup === groups.CATEGORIES"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -40,7 +41,7 @@
 
         <v-list-group prepend-icon="settings_applications"
                       @click="selectGroup(groups.ADMIN)"
-                      :value="openedGroup === groups.ADMIN && !minNavDraw"
+                      :value="!minNavDraw && openedGroup === groups.ADMIN"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -56,9 +57,16 @@
           </v-list-tile>
         </v-list-group>
 
-        <v-list-tile :to="{ name: 'shopping_cart' }">
+        <v-list-tile :to="{ name: 'shopping_cart' }"
+                     @click.stop>
           <v-list-tile-action>
-            <v-icon>shopping_cart</v-icon>
+            <v-badge color="removingColor">
+              <template v-slot:badge
+                        v-if="productsCount">
+                <span class="font-weight-bold">{{productsCount}}</span>
+              </template>
+              <v-icon>shopping_cart</v-icon>
+            </v-badge>
           </v-list-tile-action>
           <v-list-tile-title>Shopping cart</v-list-tile-title>
         </v-list-tile>
@@ -89,11 +97,13 @@
       // TODO select to infinity select component
       // this.fetchCategories({ page: 0, limit: 100 });
       this.fetchCategories();
+      this.fetchShoppingCart();
     },
 
     computed: {
-      ...mapState('Product', {
-        categories: state => state.categories.rows
+      ...mapState({
+        categories: state => state.Product.categories.rows,
+        productsCount: state => state.Cart.productsCount
       }),
     },
 
@@ -110,8 +120,9 @@
     },
     methods: {
       ...mapActions({
+        fetchShoppingCart: 'Cart/fetchShoppingCart',
         fetchCategories: 'Product/fetchCategories',
-        signOutAction: 'Auth/signOut',
+        signOutAction: 'Auth/signOut'
       }),
       selectGroup(group) {
         this.openedGroup = this.openedGroup === group ? '' : group;
