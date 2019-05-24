@@ -27,6 +27,7 @@
               </h3>
               <v-spacer></v-spacer>
               <v-btn v-if="!noProducts"
+                     @click="orderForCart"
                      flat
                      color="removingColor">
                 Buy this products
@@ -66,7 +67,7 @@
                     </v-btn>
 
                     <v-btn
-                      @click="createContract(product)"
+                      @click="orderForSingleProduct(product)"
                       absolute
                       dark
                       color="actionColor"
@@ -129,7 +130,8 @@
       ...mapState('Cart', {
         products: state => state.products,
         productsCount: state => state.productsCount,
-        totalCost: state => state.totalCost
+        totalCost: state => state.totalCost,
+        productIds: state => state.productIds
       }),
       pageCount: function() {
         let pageCount = (this.productsCount / this.limit);
@@ -153,13 +155,38 @@
         fetchCartProducts: 'fetchCartProducts',
         excludeCartProductAction: 'excludeCartProduct',
       }),
+      ...mapActions('Order', [
+        'createPersonalOrder'
+      ]),
       async excludeCartProduct(productId) {
         const { limit, currentPage } = this;
 
         await this.excludeCartProductAction(productId);
         this.fetchCartProducts({ currentPage, limit });
       },
-      createContract(product) {
+      async orderForSingleProduct(product) {
+        const { name, id } = product;
+        const price = this.$options.filters.price(product.price, 'USD');
+        const confirm = await this.$root.$confirmDialog(
+          'Confirm transaction',
+          `Do you want to make order for one product: "${name}", total cost is ${price}?`
+        );
+
+        if (confirm) {
+          this.createPersonalOrder([id]);
+        }
+      },
+      async orderForCart() {
+        const { productsCount, productIds } = this;
+        const totalCost = this.$options.filters.price(this.totalCost, 'USD');
+        const confirm = await this.$root.$confirmDialog(
+          'Confirm transaction',
+          `Do you want to make order with ${productsCount} product, total cost is ${totalCost}?`
+        );
+
+        if (confirm) {
+          this.createPersonalOrder(productIds);
+        }
       }
     }
   }

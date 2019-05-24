@@ -5,6 +5,8 @@ const Session = require('./models/Session');
 const Category = require('./models/Category');
 const Product = require('./models/Product');
 const Cart = require('./models/Cart');
+const Order = require('./models/Order');
+const OrderContent = require('./models/OrderContent');
 
 const initDefaultValues = () => {
     Category.bulkCreate([
@@ -31,24 +33,31 @@ module.exports = async (force) => {
     //TODO replace to `association` for each model
 
     // await Role.sync(force);
-    await User.sync(force);
-    await ContactInfo.sync(force);
     await Session.sync(force);
+    await ContactInfo.sync(force);
+    await User.sync(force);
+    User.hasOne(ContactInfo, {
+        onDelete: 'cascade'
+    });
     await Category.sync(force);
-    await Product.sync(force);
-    await Cart.sync(force);
-
     Product.belongsTo(Category);
     Category.hasMany(Product,{
         onDelete: 'cascade'
     });
-    User.hasOne(ContactInfo, {
-        onDelete: 'cascade'
-    });
+    await Product.sync(force);
     // FIXME
     User.belongsToMany(Product, {
         through: Cart,
     });
+    await Cart.sync(force);
+
+    User.hasMany(Order);
+    Order.belongsTo(User);
+    Order.hasMany(OrderContent);
+    OrderContent.belongsTo(Product);
+
+    await Order.sync(force);
+    await OrderContent.sync(force);
 
     // initDefaultValues();
 

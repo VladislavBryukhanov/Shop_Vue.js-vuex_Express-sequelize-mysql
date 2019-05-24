@@ -9,3 +9,5 @@ router.get('/fetch_personal_orders', orderController.fetchPersonalOrders);
 router.post('/create_personal_order', orderController.createPersonalOrder);
 
 router.delete('/decline_order', orderController.declineOrder);
+
+module.exports = router;
