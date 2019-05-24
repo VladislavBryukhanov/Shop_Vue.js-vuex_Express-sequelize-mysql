@@ -1,7 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../db/models/User');
 const bcrypt = require('bcrypt');
+const User = require('../db/models/User');
+const ContactInfo = require('../db/models/ContactInfo');
 
 passport.use(new LocalStrategy({
     usernameField: 'email',
@@ -32,9 +33,18 @@ passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-    User.findByPk(id)
-        .then(user => done(null, user));
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findOne({
+            where: { id },
+            include: [
+                { model: ContactInfo }
+            ]
+        });
+        done(null, user)
+    } catch (err) {
+        done(err, null);
+    }
 });
 
 module.exports = passport;

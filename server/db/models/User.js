@@ -36,11 +36,6 @@ const User = sequelize.define('Users', {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    //FIXME
-    /*contactInfo: {
-      type: Contact,
-      allowNull: false
-    },*/
     role: {
         type: Sequelize.STRING, //Fixme
         defaultValue: 'user',

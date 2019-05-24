@@ -14,9 +14,9 @@ export default {
       errorHandler(err, 'SignIn', commit);
     }
   },
-  async signUp({ commit, dispatch }, user) {
+  async signUp({ commit, dispatch }, body) {
     try {
-      await axiosAuth.post('/sign_up', user);
+      await axiosAuth.post('/sign_up', body);
       await dispatch('getMe');
     } catch (err) {
       errorHandler(err, 'SignUp', commit);

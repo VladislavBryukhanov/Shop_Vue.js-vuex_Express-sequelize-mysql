@@ -16,7 +16,8 @@ const initDefaultValues = () => {
         { name: 'Vegetables' },
         { name: 'Clothes' },
         { name: 'Decorations'},
-        { name: 'Art' }
+        { name: 'Art' },
+        { name: 'Business' }
     ]);
   /*  Role.bulkCreate([
         { name: 'User' },
@@ -31,13 +32,19 @@ module.exports = async (force) => {
 
     // await Role.sync(force);
     await User.sync(force);
+    await ContactInfo.sync(force);
     await Session.sync(force);
     await Category.sync(force);
-    Product.belongsTo(Category);
-    Category.hasMany(Product);
     await Product.sync(force);
     await Cart.sync(force);
 
+    Product.belongsTo(Category);
+    Category.hasMany(Product,{
+        onDelete: 'cascade'
+    });
+    User.hasOne(ContactInfo, {
+        onDelete: 'cascade'
+    });
     // FIXME
     User.belongsToMany(Product, {
         through: Cart,
