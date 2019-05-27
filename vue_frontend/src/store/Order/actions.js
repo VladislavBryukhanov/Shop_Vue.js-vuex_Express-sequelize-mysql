@@ -6,11 +6,29 @@ const axiosOrder = axios.create({
 });
 
 export default {
+  async fetchOrders({ commit }) {
+    try {
+      // const orders = await axiosOrder.post('/create_personal_order', { productIds })
+      //   .then(res => res.data);
+      commit('createPersonalOrder', orders);
+    } catch (err) {
+      errorHandler(err, 'CreatePersonalOrder', commit);
+    }
+  },
+  async fetchPersonalOrders({ commit }) {
+    try {
+      const orders = await axiosOrder.get('/fetch_personal_orders')
+        .then(res => res.data);
+      commit('fetchPersonalOrders', orders);
+    } catch (err) {
+      errorHandler(err, 'FetchPersonalOrders', commit);
+    }
+  },
   async createPersonalOrder({ commit }, productIds) {
     try {
-      const cart = await axiosOrder.post('/create_personal_order', { productIds })
+      const orders = await axiosOrder.post('/create_personal_order', { productIds })
         .then(res => res.data);
-      commit('createPersonalOrder', cart);
+      commit('createPersonalOrder', orders);
     } catch (err) {
       errorHandler(err, 'CreatePersonalOrder', commit);
     }

@@ -3,7 +3,7 @@ import mutations from './mutations';
 
 export const state = {
   totalCost: 0,
-  ids: [],
+  orderIds: [],
 };
 
 export const Order = {

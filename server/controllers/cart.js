@@ -1,5 +1,4 @@
 const sequelize = require('sequelize');
-const User = require('../db/models/User');
 const Cart = require('../db/models/Cart');
 const Product = require('../db/models/Product');
 
@@ -30,8 +29,7 @@ module.exports.fetchCartProducts = async (request, response) => {
     const limit = Number(request.params['limit']);
 
     try {
-        const user = await User.findByPk(request.user.id);
-        const cart = await user.getProducts({
+        const cart = await request.user.getProducts({
             offset,
             limit
         });
@@ -48,8 +46,7 @@ module.exports.insertProduct = async (request, response) => {
     const ProductId = parseInt(request.body.productId);
 
     try {
-        const user = await User.findByPk(request.user.id);
-        const prod = await user.addProduct(ProductId);
+        const prod = await request.user.addProduct(ProductId);
 
         if (!prod) {
             response
@@ -69,8 +66,7 @@ module.exports.excludeProduct = async (request, response) => {
     const ProductId = parseInt(request.params.id);
 
     try {
-        const user = await User.findByPk(request.user.id);
-        const prod = await user.removeProduct(ProductId);
+        const prod = await request.user.removeProduct(ProductId);
 
         if (!prod) {
             response

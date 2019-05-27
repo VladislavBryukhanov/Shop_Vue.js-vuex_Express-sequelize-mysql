@@ -153,7 +153,7 @@
     methods: {
       ...mapActions('Cart', {
         fetchCartProducts: 'fetchCartProducts',
-        excludeCartProductAction: 'excludeCartProduct',
+        excludeCartProductAction: 'excludeCartProduct'
       }),
       ...mapActions('Order', [
         'createPersonalOrder'
@@ -164,6 +164,7 @@
         await this.excludeCartProductAction(productId);
         this.fetchCartProducts({ currentPage, limit });
       },
+      // TODO remove prods from cart after transaction
       async orderForSingleProduct(product) {
         const { name, id } = product;
         const price = this.$options.filters.price(product.price, 'USD');
