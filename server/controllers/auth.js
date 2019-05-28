@@ -1,5 +1,4 @@
-const User = require('../db/models/User');
-const ContactInfo = require('../db/models/ContactInfo');
+const models = require('../models');
 const bcrypt = require('bcrypt');
 const saltRounds = 12; //2-3 hashes/sec
 const passport = require('passport');
@@ -11,10 +10,10 @@ exports.signUp = async (request, response) => {
         user.password = await bcrypt.hash(user.password, salt);
 
         //TODO atomic
-        const createdUser = await User.create(user);
+        const createdUser = await models.User.create(user);
 
         contactInfo.UserId = createdUser.id;
-        await ContactInfo.create(contactInfo)
+        await models.ContactInfo.create(contactInfo)
             .then(res => res.id);
 
         request.logIn(createdUser, err => {

@@ -1,5 +1,4 @@
-const Product = require('../db/models/Product');
-const Category = require('../db/models/Category');
+const models = require('../models');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid');
@@ -11,11 +10,11 @@ module.exports.fetchProducts = async (request, response) => {
     const limit = Number(request.params['limit']);
 
     try {
-        const product = await Product.findAndCountAll({
+        const product = await models.Product.findAndCountAll({
             offset,
             limit,
             include: [
-                { model: Category }
+                { model: models.Category }
             ]
         });
         response.send(product);
@@ -34,7 +33,7 @@ module.exports.createProduct = async (request, response) => {
             request.body.previewPhoto = await savePreviewWithThumbnail(file);
         }
 
-        const product = await Product.create(request.body);
+        const product = await models.Product.create(request.body);
         response.send(product);
     } catch (err) {
         response
@@ -53,7 +52,7 @@ module.exports.updateProduct = async (request, response) => {
             await deletePreviewPhoto(id);
         }
 
-        await Product.update(
+        await models.Product.update(
             request.body,
             { where: { id } }
         );
@@ -70,7 +69,7 @@ module.exports.deleteProduct = async (request, response) => {
 
     try {
         await deletePreviewPhoto(id);
-        await Product.destroy({ where: { id }});
+        await models.Product.destroy({ where: { id }});
         response.sendStatus(200);
     } catch (err) {
         response
@@ -105,7 +104,7 @@ const savePreviewWithThumbnail = (file) => {
 };
 
 const deletePreviewPhoto = async (id) => {
-    const product = await Product.findByPk(id);
+    const product = await models.Product.findByPk(id);
     const { previewPhoto } = product;
 
     if (previewPhoto) {

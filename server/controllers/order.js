@@ -1,7 +1,4 @@
-const Order = require('../db/models/Order');
-const OrderContent = require('../db/models/OrderContent');
-const Product = require('../db/models/Product');
-const Category = require('../db/models/Category');
+const models = require('../models');
 
 module.exports.fetchOrders = async (request, response) => {
     const offset = Number(request.params['offset']);
@@ -23,11 +20,11 @@ module.exports.fetchPersonalOrders = async (request, response) => {
     try {
         let orders = await request.user.getOrders({
             include: [{
-                model: OrderContent,
+                model: models.OrderContent,
                 include: [{
-                    model: Product,
+                    model: models.Product,
                     include: [{
-                        model: Category,
+                        model: models.Category,
                         attributes: [ 'name' ]
                     }]
                 }],
@@ -65,7 +62,7 @@ module.exports.createPersonalOrder = async (request, response) => {
     try {
         const [ order, orderContents ] = await Promise.all([
             request.user.createOrder(),
-            await OrderContent.bulkCreate(productQuery),
+            await models.OrderContent.bulkCreate(productQuery),
             request.user.removeProducts(productIds)
         ]);
 
@@ -83,7 +80,7 @@ module.exports.declineOrder = async (request, response) => {
     const id = request.params['id'];
 
     try {
-        const ord = await Order.destroy({where: { id }});
+        const ord = await models.Order.destroy({where: { id }});
 
         if (!ord) {
             response

@@ -1,18 +1,17 @@
 const sequelize = require('sequelize');
-const Cart = require('../db/models/Cart');
-const Product = require('../db/models/Product');
+const models = require('../models');
 
 module.exports.fetchShoppingCart = async (request, response) => {
     try {
-        const productsIds = await Cart.findAll({
+        const productsIds = await models.Cart.findAll({
             attributes: ['ProductId'],
             where: { UserId: request.user.id }
         }).then(res =>
             res.map(prod => prod.ProductId));
 
-        const { totalCost } = await Product.findOne({
+        const { totalCost } = await models.Product.findOne({
             where: { id: productsIds },
-            attributes: [[sequelize.fn('sum', sequelize.col('Products.price')), 'totalCost']],
+            attributes: [[sequelize.fn('sum', sequelize.col('price')), 'totalCost']],
             raw : true,
         });
 

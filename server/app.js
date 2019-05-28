@@ -12,10 +12,7 @@ const corsOptions = {
     credentials : true,
 };
 
-const sequelize = require('./db/connection');
-sequelize.authenticate();
-require('./db/initDB')(true);
-
+const sequelize = require('./models').sequelize;
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('./auth/passport');
