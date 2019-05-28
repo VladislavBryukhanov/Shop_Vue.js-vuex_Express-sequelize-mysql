@@ -55,6 +55,28 @@
               <v-icon>add</v-icon>
             </v-list-tile-action>
           </v-list-tile>
+
+          <v-list-tile :to="{ name: 'builder' }">
+            <v-list-tile-title>Manage categories</v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon>add_to_photos</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-list-tile :to="{ name: 'builder' }">
+            <v-list-tile-title>Users</v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon>people</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-list-tile :to="{ name: 'builder' }">
+            <v-list-tile-title>Managers</v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon>work</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+
         </v-list-group>
 
         <v-list-tile :to="{ name: 'shopping_cart' }"

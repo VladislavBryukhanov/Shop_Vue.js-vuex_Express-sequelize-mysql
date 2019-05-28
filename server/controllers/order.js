@@ -5,9 +5,48 @@ module.exports.fetchOrders = async (request, response) => {
     const limit = Number(request.params['limit']);
 
     try {
-        const orders = await request.user.getOrders();
-        console.error(orders);
-        response.send(orders)
+        const orders = await models.Order.findAndCountAll({
+            offset,
+            limit,
+            include: [{
+                model: models.OrderContent,
+                include: [{
+                    model: models.Product,
+                    include: [{
+                        model: models.Category,
+                        attributes: [ 'name' ]
+                    }]
+                }],
+            }],
+        });
+
+        const resultOrders = [];
+        const populateUserContactInfo = [];
+
+        orders.rows.map(order => {
+            const promise = models.User.findOne({
+                where: { id: order.UserId },
+                include: [{
+                    model: models.ContactInfo
+                }]
+            }).then(user => {
+                const { ContactInfo } = user;
+                const { id, createdAt, OrderContents } = order;
+                const products = OrderContents.map(prod => prod.Product);
+
+                resultOrders.push({
+                    id,
+                    createdAt,
+                    ContactInfo,
+                    products
+                });
+            });
+
+            populateUserContactInfo.push(promise);
+        });
+        await Promise.all(populateUserContactInfo);
+
+        response.send({ rows: resultOrders, count: orders.count });
     } catch (err) {
         response
             .status(500)

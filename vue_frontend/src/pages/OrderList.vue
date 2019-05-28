@@ -66,11 +66,13 @@
 
 <script>
   import { mapActions, mapState } from 'vuex';
+  // import { ORDER_ONE_PAGE_LIMIT } from '@/common/constants';
   import _ from 'lodash';
 
   export default {
     created() {
       this.fetchPersonalOrders();
+      // this.fetchOrders({ currentPage: 1, limit: 10 });
     },
     computed: {
       ...mapState('Order', {
@@ -82,6 +84,7 @@
     },
     methods: {
       ...mapActions('Order', [
+        // 'fetchOrders',
         'fetchPersonalOrders',
         'declineOrder'
       ]),

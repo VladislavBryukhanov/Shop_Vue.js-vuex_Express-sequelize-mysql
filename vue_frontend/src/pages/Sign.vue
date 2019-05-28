@@ -9,11 +9,11 @@
               sm8 offset-sm2
               sx10 offset-sx-1>
         <v-sheet elevation="6">
-          <v-toolbar flat>
+          <v-toolbar flat light>
             <v-btn icon @click="navBack">
               <v-icon>arrow_back</v-icon>
             </v-btn>
-            <v-toolbar-title>Sign up</v-toolbar-title>
+            <v-toolbar-title class="font-weight-light actionColor--text">Sign up</v-toolbar-title>
           </v-toolbar>
 
           <v-form @submit.prevent="signUp"
@@ -103,8 +103,8 @@
               sm6 offset-sm3
               sx8 offset-sx-2>
         <v-sheet elevation="6">
-          <v-toolbar flat>
-            <v-toolbar-title>Sign up</v-toolbar-title>
+          <v-toolbar flat light>
+            <v-toolbar-title class="font-weight-light actionColor--text">Sign in</v-toolbar-title>
           </v-toolbar>
 
           <v-container>

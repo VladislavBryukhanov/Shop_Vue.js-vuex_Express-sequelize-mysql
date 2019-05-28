@@ -8,6 +8,13 @@
               sm10 offset-sm1
               sx12>
         <v-sheet elevation="6">
+          <v-toolbar flat light>
+            <v-btn icon @click="navBack">
+              <v-icon>arrow_back</v-icon>
+            </v-btn>
+            <v-toolbar-title class="font-weight-light actionColor--text">Product builder</v-toolbar-title>
+          </v-toolbar>
+
           <v-form @submit.prevent="saveProduct"
                   ref="productBuilder">
             <v-container>
@@ -153,6 +160,9 @@
         createProductAction: 'createProduct',
         updateProductAction: 'updateProduct'
       }),
+      navBack() {
+        this.$router.go(-1);
+      },
       onPhotoChange(e) {
         const [ attachedPhoto ] = e.target.files;
 
@@ -174,8 +184,6 @@
         const productForm = new FormData();
         product.price = Number(product.price);
         let action;
-
-        console.info(this.$refs.productBuilder.validate())
 
         if (!this.$refs.productBuilder.validate()) {
           return;

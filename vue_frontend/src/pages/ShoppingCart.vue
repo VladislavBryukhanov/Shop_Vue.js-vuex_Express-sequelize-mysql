@@ -148,6 +148,7 @@
     },
     methods: {
       ...mapActions('Cart', {
+        fetchShoppingCart: 'fetchShoppingCart',
         fetchCartProducts: 'fetchCartProducts',
         excludeCartProductAction: 'excludeCartProduct'
       }),
@@ -171,7 +172,10 @@
 
         if (confirm) {
           this.createPersonalOrder([id])
-            .then(() => this.$router.push({ name: 'orders' }));
+            .then(() => {
+              this.fetchShoppingCart();
+              this.$router.push({ name: 'orders' })
+            });
         }
       },
       async orderForCart() {
@@ -184,7 +188,10 @@
 
         if (confirm) {
           this.createPersonalOrder(productIds)
-            .then(() => this.$router.push({ name: 'orders' }));
+            .then(() => {
+              this.fetchShoppingCart();
+              this.$router.push({ name: 'orders' });
+            });
         }
       }
     }

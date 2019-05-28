@@ -30,10 +30,8 @@ export default {
   },
   async insertCartProduct({ commit, dispatch }, productId) {
     try {
-      const product = await axiosCart.post('/insert_product', { productId })
-        .then(res => res.data);
-      commit('insertCartProduct', product);
-      //Is it optimal solution? Mb client side?
+      await axiosCart.post('/insert_product', { productId });
+      //Fixme Is it optimal solution? Mb client side?
       dispatch('fetchShoppingCart');
     } catch (err) {
       errorHandler(err, 'InsertProduct', commit);
@@ -42,8 +40,7 @@ export default {
   async excludeCartProduct({ commit, dispatch }, productId) {
     try {
       await axiosCart.delete(`/exclude_product/${productId}`);
-      commit('excludeCartProduct', productId);
-      //Is it optimal solution? Mb client side?
+      //Fixme Is it optimal solution? Mb client side?
       dispatch('fetchShoppingCart');
     } catch (err) {
       errorHandler(err, 'ExcludeProduct', commit);

@@ -6,13 +6,16 @@ const axiosOrder = axios.create({
 });
 
 export default {
-  async fetchOrders({ commit }) {
+  async fetchOrders({ commit }, paging) {
+    const { currentPage, limit } = paging;
+    const offset = (currentPage - 1) * limit;
+
     try {
-      // const orders = await axiosOrder.post('/create_personal_order', { productIds })
-      //   .then(res => res.data);
-      commit('createPersonalOrder', orders);
+      const orders = await axiosOrder.get(`/fetch_orders/${offset}&${limit}`)
+        .then(res => res.data);
+      commit('fetchOrders', orders);
     } catch (err) {
-      errorHandler(err, 'CreatePersonalOrder', commit);
+      errorHandler(err, 'FetchOrders', commit);
     }
   },
   async fetchPersonalOrders({ commit }) {
