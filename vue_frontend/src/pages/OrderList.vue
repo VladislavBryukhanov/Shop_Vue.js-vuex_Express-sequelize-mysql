@@ -3,7 +3,7 @@
     <v-layout>
       <v-flex sm10 offset-sm1>
         <v-sheet elevation="6">
-          <v-list>
+          <v-list class="OrderList" v-infinity-scroll="{ fetchData: fetchPersonalOrders }">
             <v-flex v-if="noOrders">
               <v-container>
                 <h3 class="display-1 font-weight-light primary--text">No active orders found</h3>
@@ -66,14 +66,9 @@
 
 <script>
   import { mapActions, mapState } from 'vuex';
-  // import { ORDER_ONE_PAGE_LIMIT } from '@/common/constants';
   import _ from 'lodash';
 
   export default {
-    created() {
-      this.fetchPersonalOrders();
-      // this.fetchOrders({ currentPage: 1, limit: 10 });
-    },
     computed: {
       ...mapState('Order', {
         orders: state => state.orders
@@ -84,7 +79,7 @@
     },
     methods: {
       ...mapActions('Order', [
-        // 'fetchOrders',
+//         'fetchOrders',
         'fetchPersonalOrders',
         'declineOrder'
       ]),
@@ -108,3 +103,7 @@
     }
   }
 </script>
+
+<style lang="scss">
+  @import '../assets/scss/pages/OrderList';
+</style>

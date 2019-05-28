@@ -55,9 +55,13 @@ module.exports.fetchOrders = async (request, response) => {
 };
 
 module.exports.fetchPersonalOrders = async (request, response) => {
-    // TODO paginate
+    const offset = Number(request.params['offset']);
+    const limit = Number(request.params['limit']);
+
     try {
         let orders = await request.user.getOrders({
+            offset,
+            limit,
             include: [{
                 model: models.OrderContent,
                 include: [{

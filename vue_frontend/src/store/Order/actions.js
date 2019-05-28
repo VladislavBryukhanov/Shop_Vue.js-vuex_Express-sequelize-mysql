@@ -18,9 +18,12 @@ export default {
       errorHandler(err, 'FetchOrders', commit);
     }
   },
-  async fetchPersonalOrders({ commit }) {
+  async fetchPersonalOrders({ commit }, paging) {
+    const { currentPage, limit } = paging;
+    const offset = (currentPage - 1) * limit;
+
     try {
-      const orders = await axiosOrder.get('/fetch_personal_orders')
+      const orders = await axiosOrder.get(`/fetch_personal_orders/${offset}&${limit}`)
         .then(res => res.data);
       commit('fetchPersonalOrders', orders);
     } catch (err) {

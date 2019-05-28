@@ -9,6 +9,9 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import applyFilters from './common/applyFilters';
 applyFilters();
 
+import applyDirectives from './common/applyDirectives';
+applyDirectives();
+
 Vue.use(Vuetify, {
   theme: {
     primary: '#14aba8',

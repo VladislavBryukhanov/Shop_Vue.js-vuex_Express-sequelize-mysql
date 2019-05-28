@@ -1,5 +1,5 @@
 export default {
-  fetchOrders(state, orderIds) {
+  fetchOrders(state, orders) {
     state.orders = orderIds;
   },
   fetchPersonalOrders(state, orderIds) {
