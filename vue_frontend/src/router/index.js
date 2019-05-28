@@ -6,7 +6,7 @@ import Toolbar from '@/components/Toolbar.vue';
 import NavigationBar from '@/components/NavigationBar.vue'
 
 const Sign = () => import ('@/pages/Sign.vue');
-const ProductList = () => import ('@/components/ProductList.vue');
+const ProductList = () => import ('@/pages/ProductList.vue');
 const PageNotFound = () => import ('@/pages/PageNotFound.vue');
 
 const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');

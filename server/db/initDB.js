@@ -48,13 +48,20 @@ module.exports = async (force) => {
     // FIXME
     User.belongsToMany(Product, {
         through: Cart,
+        inverse: 'Product'
     });
     await Cart.sync(force);
 
-    User.hasMany(Order);
+    User.hasMany(Order, {
+        onDelete: 'cascade'
+    });
     Order.belongsTo(User);
-    Order.hasMany(OrderContent);
-    OrderContent.belongsTo(Product);
+    Order.hasMany(OrderContent, {
+        onDelete: 'cascade'
+    });
+    OrderContent.belongsTo(Product, {
+        onDelete: 'cascade'
+    });
 
     await Order.sync(force);
     await OrderContent.sync(force);

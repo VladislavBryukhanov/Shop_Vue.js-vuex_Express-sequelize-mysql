@@ -26,7 +26,7 @@
                 Total cost: {{totalCost | price('USD')}}
               </h3>
               <v-spacer></v-spacer>
-              <v-btn v-if="!noProducts"
+              <v-btn v-if="productsCount > 0"
                      @click="orderForCart"
                      flat
                      color="removingColor">
@@ -36,7 +36,7 @@
           </v-card>
 
           <v-layout row wrap>
-            <v-flex v-if="noProducts">
+            <v-flex v-if="productsCount === 0">
               <v-container>
                 <h3 class="display-1 font-weight-light primary--text">No products in shopping cart</h3>
               </v-container>
@@ -105,7 +105,6 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   import { CART_ONE_PAGE_LIMIT } from '@/common/constants';
-  import _ from 'lodash';
 
   export default {
     created() {
@@ -139,9 +138,6 @@
           pageCount = parseInt(pageCount) + 1;
         }
         return pageCount || 1;
-      },
-      noProducts: function() {
-        return _.isEmpty(this.products);
       }
     },
     data() {
@@ -174,7 +170,8 @@
         );
 
         if (confirm) {
-          this.createPersonalOrder([id]);
+          this.createPersonalOrder([id])
+            .then(() => this.$router.push({ name: 'orders' }));
         }
       },
       async orderForCart() {
@@ -186,7 +183,8 @@
         );
 
         if (confirm) {
-          this.createPersonalOrder(productIds);
+          this.createPersonalOrder(productIds)
+            .then(() => this.$router.push({ name: 'orders' }));
         }
       }
     }

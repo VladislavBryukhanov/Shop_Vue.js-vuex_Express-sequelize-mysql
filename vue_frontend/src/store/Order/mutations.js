@@ -1,11 +1,12 @@
 export default {
   fetchOrders(state, orderIds) {
-    state.orderIds = orderIds;
+    state.orders = orderIds;
   },
   fetchPersonalOrders(state, orderIds) {
-    state.orderIds = orderIds;
+    state.orders = orderIds;
   },
-  createPersonalOrder(state, orderId) {
-    state.orderIds.push(orderId);
+  declineOrder(state, deletedOrder) {
+    const index = state.orders.findIndex(order => order.id === deletedOrder);
+    state.orders.splice(index, 1);
   }
 }

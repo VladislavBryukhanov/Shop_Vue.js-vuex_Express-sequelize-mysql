@@ -28,23 +28,10 @@ module.exports.fetchPersonalOrders = async (request, response) => {
                     model: Product,
                     include: [{
                         model: Category,
-                        attributes: ['name']
+                        attributes: [ 'name' ]
                     }]
                 }],
-                attributes: [
-                    'ProductId',
-                    // TODO WHY IT IS NOT WORKING???       NESTED AGGREGATION
-                    // [sequelize.fn('COUNT', sequelize.col('Products.id')), 'totalCost'],
-                    // [sequelize.fn('SUM', sequelize.col('OrderContents.Products.price')), 'totalCost'],
-                ],
             }],
-/*            attributes: [ 'id', 'createdAt',
-                [sequelize.fn('COUNT', sequelize.col('OrderContents.id')), 'test'],
-            ],
-            group: [
-                'Order.id',
-                'OrderContents.id'
-            ]*/
         });
 
         orders = orders.map(order => {
@@ -69,17 +56,47 @@ module.exports.createPersonalOrder = async (request, response) => {
     const { productIds } = request.body;
     const productQuery = productIds.map(id => ({ ProductId: id }));
 
-    const order = await Order.create();
-    const orderContents = await OrderContent.bulkCreate(productQuery);
+    if (!productIds) {
+        response
+            .status(400)
+            .send('Products is not exists');
+    }
 
-    request.user.addOrders(order);
-    const res = await order.addOrderContents(orderContents);
+    try {
+        const [ order, orderContents ] = await Promise.all([
+            request.user.createOrder(),
+            await OrderContent.bulkCreate(productQuery),
+            request.user.removeProducts(productIds)
+        ]);
 
-    response.send(res);
+        const res = await order.addOrderContents(orderContents);
+
+        response.send(res);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
 };
 
 module.exports.declineOrder = async (request, response) => {
+    const id = request.params['id'];
 
+    try {
+        const ord = await Order.destroy({where: { id }});
+
+        if (!ord) {
+            response
+                .status(400)
+                .send('Such product already excluded from shopping cart');
+        }
+
+        response.sendStatus(204);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
 };
 
 //Можно намутить фичу с удаление через флаг делейтед + восстановлением заявки, если будет время

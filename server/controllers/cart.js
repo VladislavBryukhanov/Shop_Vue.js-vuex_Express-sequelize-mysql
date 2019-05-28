@@ -63,7 +63,7 @@ module.exports.insertProduct = async (request, response) => {
 };
 
 module.exports.excludeProduct = async (request, response) => {
-    const ProductId = parseInt(request.params.id);
+    const ProductId = parseInt(request.params['id']);
 
     try {
         const prod = await request.user.removeProduct(ProductId);
@@ -74,7 +74,7 @@ module.exports.excludeProduct = async (request, response) => {
                 .send('Such product already excluded from shopping cart');
         }
 
-        response.sendStatus(200);
+        response.sendStatus(204);
     } catch (err) {
         response
             .status(500)

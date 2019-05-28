@@ -26,11 +26,17 @@ export default {
   },
   async createPersonalOrder({ commit }, productIds) {
     try {
-      const orders = await axiosOrder.post('/create_personal_order', { productIds })
-        .then(res => res.data);
-      commit('createPersonalOrder', orders);
+      await axiosOrder.post('/create_personal_order', { productIds });
     } catch (err) {
       errorHandler(err, 'CreatePersonalOrder', commit);
     }
   },
+  async declineOrder({ commit }, orderId) {
+    try {
+      await axiosOrder.delete(`/decline_order/${orderId}`);
+      commit('declineOrder', orderId);
+    } catch (err) {
+      errorHandler(err, 'DeclineOrder', commit);
+    }
+  }
 };
