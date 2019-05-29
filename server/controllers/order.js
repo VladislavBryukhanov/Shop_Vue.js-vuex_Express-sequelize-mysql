@@ -1,13 +1,9 @@
 const models = require('../models');
 
 module.exports.fetchOrders = async (request, response) => {
-    const offset = Number(request.params['offset']);
-    const limit = Number(request.params['limit']);
-
     try {
         const orders = await models.Order.findAndCountAll({
-            offset,
-            limit,
+            ...request.paging,
             include: [{
                 model: models.OrderContent,
                 include: [{

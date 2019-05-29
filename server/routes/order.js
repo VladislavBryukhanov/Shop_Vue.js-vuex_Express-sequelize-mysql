@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/order');
+const pagingMiddleware = require('../middlewares/paging');
 
-//TODO paging middleware with query parsing
-router.get('/fetch_orders/:offset&:limit', orderController.fetchOrders);
+router.get('/fetch_orders', pagingMiddleware, orderController.fetchOrders);
 
 router.get('/fetch_personal_orders', orderController.fetchPersonalOrders);
 

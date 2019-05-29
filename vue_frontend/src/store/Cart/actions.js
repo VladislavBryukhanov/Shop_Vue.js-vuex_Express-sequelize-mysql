@@ -21,8 +21,10 @@ export default {
     const offset = (currentPage - 1) * limit;
 
     try {
-      const products = await axiosCart.get(`/fetch_products/${offset}&${limit}`)
-        .then(res => res.data);
+      const products = await axiosCart.get('/fetch_products', {
+        params: { offset, limit }
+      }).then(res => res.data);
+
       commit('fetchCartProducts', products);
     } catch (err) {
       errorHandler(err, 'FetchCart', commit);

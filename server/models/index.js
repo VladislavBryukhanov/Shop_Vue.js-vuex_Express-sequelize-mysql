@@ -39,21 +39,22 @@ const initDefaultValues = (db) => {
   db.sequelize.sync();
 
   db.Category.bulkCreate([
-    { name: 'Tablet' },
-    { name: 'Computers'},
-    { name: 'Smartphones'},
-    { name: 'Fastfood'},
-    { name: 'Fruits' },
-    { name: 'Vegetables' },
-    { name: 'Clothes' },
-    { name: 'Decorations'},
     { name: 'Art' },
-    { name: 'Business' }
+    { name: 'Fruits' },
+    { name: 'Tablet' },
+    { name: 'Clothes' },
+    { name: 'Business' },
+    { name: 'Fastfood' },
+    { name: 'Computers' },
+    { name: 'Vegetables' },
+    { name: 'Smartphones' },
+    { name: 'Decorations' }
   ]);
+
   db.Role.bulkCreate([
     { name: 'User' },
-    { name: 'Manager' },
     { name: 'Admin' },
+    { name: 'Manager' }
   ]);
 };
 // initDefaultValues(db);

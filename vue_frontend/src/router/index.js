@@ -46,9 +46,17 @@ const routes = [
     },
     children: [
       {
-        path: '/products',
+        path: '/products/:category',
         name: 'products',
         component: ProductList,
+      },
+      {
+        path: '/top_products',
+        name: 'top_products',
+        component: ProductList,
+        props: {
+          topProducts: true
+        }
       },
       {
         path: '/builder',
@@ -90,7 +98,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.matched.some(route => route.meta.unauthorized)) {
     if (store.state.Auth.me) {
-      redirectParams = { path: '/products' };
+      redirectParams = { path: '/top_products' };
     }
   }
 

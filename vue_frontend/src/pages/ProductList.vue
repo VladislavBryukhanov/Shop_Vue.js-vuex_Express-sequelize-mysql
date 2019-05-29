@@ -6,6 +6,12 @@
           <v-flex xl4 lg6 md8 sm10 xs12>
             <v-card>
               <v-card-text>
+                <v-text-field v-model="query.searchQuery"
+                              @input="searchFilter"
+                              clearable solo light
+                              prepend-inner-icon="search"
+                              label="Filter by name">
+                </v-text-field>
                 <v-pagination
                   v-model="currentPage"
                   :total-visible="8"
@@ -21,6 +27,12 @@
       <v-flex sm10 offset-sm1>
         <v-sheet elevation="6">
           <v-layout row wrap>
+            <v-flex v-if="!productsCount">
+              <v-container>
+                <h3 class="display-1 font-weight-light primary--text">No products found in this category</h3>
+              </v-container>
+            </v-flex>
+
             <v-flex v-for="product in products">
               <v-container>
                 <v-hover>
@@ -75,6 +87,19 @@
                       {{product.description}}
                     </v-card-text>
 
+                    <v-card-text v-if="product.OrderCount">
+                        <v-badge color="primary">
+                          <template v-slot:badge>
+                            <span class="font-weight-bold">{{product.OrderCount}}</span>
+                          </template>
+
+                          <span class="font-weight-bold font-weight-light primary--text">
+                            Number of purchases:
+                          </span>
+                          <v-icon>add_shopping_cart</v-icon>
+                        </v-badge>
+                    </v-card-text>
+
                     <v-btn
                       @click="deleteProduct(product)"
                       absolute
@@ -108,24 +133,31 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
+  import _ from 'lodash';
 
   export default {
     // TODO PAGING TO COMMON COMPONENT
 
-    created() {
-      const { limit, currentPage } = this;
-      this.fetchProducts({ currentPage, limit });
+    props: {
+      topProducts: Boolean
     },
-    beforeRouteUpdate(to, from, next) {
-      const { limit } = this;
-
-      this.fetchProducts({ currentPage: to.query.page, limit });
-      next();
+    created() {
+      const { query, currentPage } = this;
+      this.fetchProducts({ currentPage, ...query });
+    },
+    data() {
+      return {
+        query: {
+          limit: PRODUCTS_ONE_PAGE_LIMIT,
+          category: this.$route.params.category,
+          searchQuery: ''
+        },
+        currentPage: parseInt(this.$route.query.page) || 1
+      }
     },
     watch: {
       currentPage: function(val) {
         this.$router.push({
-          name: 'products',
           query: { page: val }
         });
       }
@@ -139,28 +171,32 @@
         productIds: state => state.productIds
       }),
       pageCount: function() {
-        let pageCount = (this.productsCount / this.limit);
+        let pageCount = (this.productsCount / this.query.limit);
         if (pageCount > parseInt(pageCount)) {
           pageCount = parseInt(pageCount) + 1;
         }
         return pageCount || 1;
-      },
-    },
-    data() {
-      return {
-        limit: PRODUCTS_ONE_PAGE_LIMIT,
-        currentPage: parseInt(this.$route.query.page) || 1,
       }
     },
     methods: {
-      ...mapActions('Product', [
-        'fetchProducts',
-        'deleteProductById',
-      ]),
+      ...mapActions('Product', {
+        fetchProductsAction: 'fetchProducts',
+        fetchTopProductsAction: 'fetchTopProducts',
+        deleteProductById: 'deleteProductById'
+      }),
       ...mapActions('Cart', [
         'insertCartProduct',
         'excludeCartProduct',
       ]),
+      fetchProducts(query) {
+        if (this.topProducts) {
+          return this.fetchTopProductsAction(query)
+        }
+        return this.fetchProductsAction(query);
+      },
+      searchFilter: _.debounce(function () {
+        this.fetchProducts({ currentPage: 1, ...this.query });
+      }, 300),
       async deleteProduct(product) {
         const { name, id } = product;
 
@@ -172,8 +208,8 @@
         if (confirm) {
           await this.deleteProductById(id);
 
-          const { limit, currentPage } = this;
-          this.fetchProducts({ currentPage, limit });
+          const { query, currentPage } = this;
+          this.fetchProducts({ currentPage, ...query });
         }
       },
       editProduct(product) {

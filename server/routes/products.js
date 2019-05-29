@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const categoriesController = require('../controllers/categories');
 const productsController = require('../controllers/products');
+const pagingMiddleware = require('../middlewares/paging');
 
 const { fileQuotas } = require('../common/constants');
 const multer = require('multer');
@@ -16,9 +17,11 @@ const upload = multer({
 
 router.get('/categories', categoriesController.fetchCategories);
 
-router.get('/categories/:offset&:limit', categoriesController.fetchCategoriesPaginated);
+// router.get('/categories/:offset&:limit', categoriesController.fetchCategoriesPaginated);
 
-router.get('/products/:offset&:limit', productsController.fetchProducts);
+router.get('/top_products', pagingMiddleware, productsController.fetchTopProducts);
+
+router.get('/products', pagingMiddleware, productsController.fetchProducts);
 
 router.post('/create_products', upload.single('attachedPhoto'), productsController.createProduct);
 

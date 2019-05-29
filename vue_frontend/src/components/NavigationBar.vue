@@ -16,7 +16,7 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-tile :to="{ name: 'products' }"
+        <v-list-tile :to="{ name: 'top_products' }"
                      @click.stop>
           <v-list-tile-action>
             <v-icon>grade</v-icon>
@@ -34,7 +34,8 @@
             </v-list-tile>
           </template>
 
-          <v-list-tile v-for="category in categories">
+          <v-list-tile v-for="category in categories"
+                       :to="{ name: 'products', params: { category: category.name } }">
             <v-list-tile-title>{{category.name}}</v-list-tile-title>
           </v-list-tile>
         </v-list-group>
@@ -113,7 +114,7 @@
     </v-navigation-drawer>
 
     <v-content>
-          <router-view></router-view>
+          <router-view :key="$route.fullPath"></router-view>
     </v-content>
   </div>
 </template>

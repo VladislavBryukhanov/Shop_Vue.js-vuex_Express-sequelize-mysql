@@ -17,12 +17,35 @@ export default {
       errorHandler(err, 'FetchCategories', commit);
     }
   },
-  async fetchProducts({ commit }, paging) {
-    const { currentPage, limit } = paging;
+  async fetchTopProducts({ commit }, query) {
+    const { currentPage, limit, searchQuery } = query;
     const offset = (currentPage - 1) * limit;
+    const params = {
+      offset,
+      limit,
+      searchQuery,
+    };
 
     try {
-      const products = await axiosProduct.get(`/products/${offset}&${limit}`)
+      const products = await axiosProduct.get(`/top_products`, { params })
+        .then(res => res.data);
+      commit('fetchProducts', products);
+    } catch (err) {
+      errorHandler(err, 'FetchProducts', commit);
+    }
+  },
+  async fetchProducts({ commit }, query) {
+    const { currentPage, limit, category, searchQuery } = query;
+    const offset = (currentPage - 1) * limit;
+    const params = {
+      offset,
+      limit,
+      category,
+      searchQuery,
+    };
+
+    try {
+      const products = await axiosProduct.get(`/products`, { params })
         .then(res => res.data);
       commit('fetchProducts', products);
     } catch (err) {

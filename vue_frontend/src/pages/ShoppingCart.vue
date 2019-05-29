@@ -111,12 +111,6 @@
       const { limit, currentPage } = this;
       this.fetchCartProducts({ currentPage, limit });
     },
-    beforeRouteUpdate(to, from, next) {
-      const { limit } = this;
-
-      this.fetchCartProducts({ currentPage: to.query.page, limit });
-      next();
-    },
     watch: {
       currentPage: function (val) {
         this.$router.push({

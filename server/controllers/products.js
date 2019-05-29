@@ -5,14 +5,53 @@ const uuid = require('uuid');
 const sharp = require('sharp');
 const { productFileSizes } = require('../common/constants');
 
-module.exports.fetchProducts = async (request, response) => {
-    const offset = Number(request.params['offset']);
-    const limit = Number(request.params['limit']);
+module.exports.fetchTopProducts = async (request, response) => {
+    const { searchQuery } = request.query;
+    const { Op } = models.Sequelize;
+    const searchFilter = searchQuery ?
+        { name: { [Op.like]: `%${searchQuery}%` } } : {};
 
     try {
+        const orderContents = await models.Product.findAndCountAll({
+            ...request.paging,
+            where: searchFilter,
+            paranoid: false,
+            attributes: {
+                include: [
+                    [models.sequelize.literal('(SELECT COUNT(*) FROM OrderContents WHERE OrderContents.ProductId = Product.id )'), 'OrderCount']
+                ]
+            },
+            order: [
+                [models.sequelize.literal('OrderCount'), 'DESC']
+            ]
+        });
+
+        response.send(orderContents);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
+};
+
+module.exports.fetchProducts = async (request, response) => {
+    const {
+        category: categoryName,
+        searchQuery
+    } = request.query;
+
+    const { Op } = models.Sequelize;
+    const searchFilter = searchQuery ?
+        { name: { [Op.like]: `%${searchQuery}%` } } : {};
+
+    try {
+        const category = await models.Category.findOne({ where: { name: categoryName } });
         const product = await models.Product.findAndCountAll({
-            offset,
-            limit,
+            where: {
+                CategoryId: category.id,
+                ...searchFilter
+            },
+            ...request.paging,
             include: [
                 { model: models.Category }
             ]
@@ -70,7 +109,7 @@ module.exports.deleteProduct = async (request, response) => {
     try {
         await deletePreviewPhoto(id);
         await models.Product.destroy({ where: { id }});
-        response.sendStatus(200);
+        response.sendStatus(204);
     } catch (err) {
         response
             .status(500)
