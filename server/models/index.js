@@ -36,7 +36,18 @@ db.Sequelize = Sequelize;
 
 // FIXME just for initilize db for first running
 const initDefaultValues = (db) => {
-  db.sequelize.sync();
+  // db.sequelize.sync();
+  db.Session.sync();
+  db.Role.sync();
+  db.ContactInfo.sync();
+  db.User.sync();
+  db.Product.sync();
+  db.Category.sync();
+  db.Cart.sync();
+  db.Order.sync();
+  db.OrderContent.sync();
+  db.Message.sync();
+  db.Chat.sync();
 
   db.Category.bulkCreate([
     { name: 'Art' },
