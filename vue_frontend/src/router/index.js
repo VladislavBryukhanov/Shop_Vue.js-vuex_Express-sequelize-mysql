@@ -1,13 +1,17 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '@/store';
+
 import Toolbar from '@/components/Toolbar.vue';
 import NavigationBar from '@/components/NavigationBar.vue'
-const PageNotFound = () => import ('@/pages/PageNotFound.vue');
+
 const Sign = () => import ('@/pages/Sign.vue');
-const ProductList = () => import ('@/components/ProductList.vue');
+const ProductList = () => import ('@/pages/ProductList.vue');
+const PageNotFound = () => import ('@/pages/PageNotFound.vue');
+
 const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
 const ShoppingCart = () => import ('@/pages/ShoppingCart.vue');
+const OrderList = () => import ('@/pages/OrderList.vue');
 
 Vue.use(Router);
 
@@ -58,6 +62,11 @@ const routes = [
         path: '/shopping_card',
         name: 'shopping_cart',
         component: ShoppingCart
+      },
+      {
+        path: '/orders',
+        name: 'orders',
+        component: OrderList
       }
     ]
   },

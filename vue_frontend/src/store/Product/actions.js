@@ -31,18 +31,15 @@ export default {
   },
   async createProduct({ commit }, product) {
     try {
-      const res_prod = await axiosProduct.post('/create_products', product)
-        .then(res => res.data);
-      commit('createProduct', res_prod);
+      await axiosProduct.post('/create_products', product);
+      commit('createProduct');
     } catch (err) {
       errorHandler(err, 'CreateProduct', commit);
     }
   },
   async updateProduct({ commit }, product) {
     try {
-      const res_prod = await axiosProduct.put('/update_product', product)
-        .then(res => res.data);
-      commit('updateProduct', res_prod);
+      await axiosProduct.put('/update_product', product)
     } catch (err) {
       errorHandler(err, 'UpdateProduct', commit);
     }
@@ -50,7 +47,7 @@ export default {
   async deleteProductById({ commit }, id) {
     try {
       await axiosProduct.delete(`/delete_product/${id}`);
-      commit('deleteProductById', id);
+      commit('deleteProductById');
     } catch (err) {
       errorHandler(err, 'DeleteProducts', commit);
     }

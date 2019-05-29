@@ -1,17 +1,22 @@
-const User = require('../db/models/User');
+const models = require('../models');
 const bcrypt = require('bcrypt');
 const saltRounds = 12; //2-3 hashes/sec
 const passport = require('passport');
 
 exports.signUp = async (request, response) => {
     try {
-        const { body } = request;
+        const { user, contactInfo } = request.body;
         const salt = await bcrypt.genSalt(saltRounds);
-        body.password = await bcrypt.hash(body.password, salt);
+        user.password = await bcrypt.hash(user.password, salt);
 
-        const user = await User.create(body);
+        //TODO atomic
+        const createdUser = await models.User.create(user);
 
-        request.logIn(user, err => {
+        contactInfo.UserId = createdUser.id;
+        await models.ContactInfo.create(contactInfo)
+            .then(res => res.id);
+
+        request.logIn(createdUser, err => {
             if (err) {
                 return response
                     .status(500)

@@ -26,7 +26,8 @@
                 Total cost: {{totalCost | price('USD')}}
               </h3>
               <v-spacer></v-spacer>
-              <v-btn v-if="!noProducts"
+              <v-btn v-if="productsCount > 0"
+                     @click="orderForCart"
                      flat
                      color="removingColor">
                 Buy this products
@@ -35,7 +36,7 @@
           </v-card>
 
           <v-layout row wrap>
-            <v-flex v-if="noProducts">
+            <v-flex v-if="productsCount === 0">
               <v-container>
                 <h3 class="display-1 font-weight-light primary--text">No products in shopping cart</h3>
               </v-container>
@@ -66,7 +67,7 @@
                     </v-btn>
 
                     <v-btn
-                      @click="createContract(product)"
+                      @click="orderForSingleProduct(product)"
                       absolute
                       dark
                       color="actionColor"
@@ -104,7 +105,6 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   import { CART_ONE_PAGE_LIMIT } from '@/common/constants';
-  import _ from 'lodash';
 
   export default {
     created() {
@@ -129,7 +129,8 @@
       ...mapState('Cart', {
         products: state => state.products,
         productsCount: state => state.productsCount,
-        totalCost: state => state.totalCost
+        totalCost: state => state.totalCost,
+        productIds: state => state.productIds
       }),
       pageCount: function() {
         let pageCount = (this.productsCount / this.limit);
@@ -137,9 +138,6 @@
           pageCount = parseInt(pageCount) + 1;
         }
         return pageCount || 1;
-      },
-      noProducts: function() {
-        return _.isEmpty(this.products);
       }
     },
     data() {
@@ -150,16 +148,51 @@
     },
     methods: {
       ...mapActions('Cart', {
+        fetchShoppingCart: 'fetchShoppingCart',
         fetchCartProducts: 'fetchCartProducts',
-        excludeCartProductAction: 'excludeCartProduct',
+        excludeCartProductAction: 'excludeCartProduct'
       }),
+      ...mapActions('Order', [
+        'createPersonalOrder'
+      ]),
       async excludeCartProduct(productId) {
         const { limit, currentPage } = this;
 
         await this.excludeCartProductAction(productId);
         this.fetchCartProducts({ currentPage, limit });
       },
-      createContract(product) {
+      // TODO remove prods from cart after transaction
+      async orderForSingleProduct(product) {
+        const { name, id } = product;
+        const price = this.$options.filters.price(product.price, 'USD');
+        const confirm = await this.$root.$confirmDialog(
+          'Confirm transaction',
+          `Do you want to make order for one product: "${name}", total cost is ${price}?`
+        );
+
+        if (confirm) {
+          this.createPersonalOrder([id])
+            .then(() => {
+              this.fetchShoppingCart();
+              this.$router.push({ name: 'orders' })
+            });
+        }
+      },
+      async orderForCart() {
+        const { productsCount, productIds } = this;
+        const totalCost = this.$options.filters.price(this.totalCost, 'USD');
+        const confirm = await this.$root.$confirmDialog(
+          'Confirm transaction',
+          `Do you want to make order with ${productsCount} product, total cost is ${totalCost}?`
+        );
+
+        if (confirm) {
+          this.createPersonalOrder(productIds)
+            .then(() => {
+              this.fetchShoppingCart();
+              this.$router.push({ name: 'orders' });
+            });
+        }
       }
     }
   }

@@ -3,40 +3,19 @@ export default {
     // TODO infinity scroll
     state.categories = categories;
   },
+  //Data will be refreshed after any changes so mutate list is not needed
   fetchProducts(state, products) {
     // TODO caching all loaded products
     state.products = products;
   },
-  //Data will be refetched
-  createProduct(state, product) {
+  createProduct(state) {
     state.products = {
       ...state.products,
       count: state.products.count + 1
-/*    rows: [
-       ...state.products.rows,
-       product
-     ],*/
     };
   },
-  updateProduct(state, product) {
-    const rows = state.products.rows.map(item => {
-      if (item.id !== product) {
-        return product;
-      }
-      return item;
-    });
-
+  deleteProductById(state) {
     state.products = {
-      ...state.products,
-      rows,
-    }
-  },
-  //Data will be refetched
-  deleteProductById(state, id) {
-    // const rows = state.products.rows.filter(item => item.id !== id);
-
-    state.products = {
-      // rows,
       ...state.products,
       count: state.products.count - 1
     }

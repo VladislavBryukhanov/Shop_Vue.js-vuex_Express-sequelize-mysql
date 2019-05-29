@@ -9,11 +9,11 @@
               sm8 offset-sm2
               sx10 offset-sx-1>
         <v-sheet elevation="6">
-          <v-toolbar flat>
+          <v-toolbar flat light>
             <v-btn icon @click="navBack">
               <v-icon>arrow_back</v-icon>
             </v-btn>
-            <v-toolbar-title>Sign up</v-toolbar-title>
+            <v-toolbar-title class="font-weight-light actionColor--text">Sign up</v-toolbar-title>
           </v-toolbar>
 
           <v-form @submit.prevent="signUp"
@@ -74,6 +74,19 @@
                   </v-menu>
                 </v-flex>
               </v-layout>
+
+              <v-subheader>Contact info</v-subheader>
+
+              <v-text-field v-model="contactInfo.phone"
+                            type="number"
+                            label="Phone"
+                            :rules="validationRules.phone"
+                            :counter="12"/>
+
+              <v-text-field v-model="contactInfo.address"
+                            label="Address"
+                            :rules="validationRules.address"
+                            :counter="64"/>
               <v-btn block
                      type="submit">
                 Sign up
@@ -90,8 +103,8 @@
               sm6 offset-sm3
               sx8 offset-sx-2>
         <v-sheet elevation="6">
-          <v-toolbar flat>
-            <v-toolbar-title>Sign up</v-toolbar-title>
+          <v-toolbar flat light>
+            <v-toolbar-title class="font-weight-light actionColor--text">Sign in</v-toolbar-title>
           </v-toolbar>
 
           <v-container>
@@ -136,6 +149,10 @@
           gender: null,
           birthDay: null,
         },
+        contactInfo: {
+          phone: '',
+          address: '',
+        },
         validationRules: {
           email: [
             v => !!v || 'E-mail is required',
@@ -153,6 +170,15 @@
             (v) => !!v || 'Last name is required field!',
             (v) => (v.length >= 1 && v.length <= 20) || 'Last name must be longer then 1 and less then 20 characters!',
           ],
+
+          phone: [
+            (v) => !!v || 'Phone is required field!',
+            (v) => (v.length >= 4 && v.length <= 12) || 'Please enter a valid phone number'
+          ],
+          address: [
+            (v) => !!v || 'Address is required field!',
+            (v) => (v.length >= 4 && v.length <= 64) || 'Please enter a valid address'
+          ]
         },
         genderList: [
           {
@@ -185,12 +211,15 @@
       },
       signUp() {
         if (this.$refs.signUpForm.validate()) {
+          const contactInfo = _.pickBy(this.contactInfo, _.identity);
           const user = _.pickBy(this.user, _.identity);
+          user.birthDay = moment(user.birthDay).unix();
 
           this.signUpActions({
-            ...user,
-            birthDay: moment(user.birthDay).unix()
-          }).then(() => this.$router.push('products'));
+            user,
+            contactInfo,
+          }).then(() =>
+            this.$router.push('products'));
         }
       }
     }
