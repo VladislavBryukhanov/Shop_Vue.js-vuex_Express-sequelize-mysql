@@ -87,6 +87,19 @@
                       {{product.description}}
                     </v-card-text>
 
+                    <v-card-text v-if="product.OrderCount">
+                        <v-badge color="primary">
+                          <template v-slot:badge>
+                            <span class="font-weight-bold">{{product.OrderCount}}</span>
+                          </template>
+
+                          <span class="font-weight-bold font-weight-light primary--text">
+                            Number of purchases:
+                          </span>
+                          <v-icon>add_shopping_cart</v-icon>
+                        </v-badge>
+                    </v-card-text>
+
                     <v-btn
                       @click="deleteProduct(product)"
                       absolute
@@ -125,20 +138,12 @@
   export default {
     // TODO PAGING TO COMMON COMPONENT
 
+    props: {
+      topProducts: Boolean
+    },
     created() {
       const { query, currentPage } = this;
       this.fetchProducts({ currentPage, ...query });
-    },
-    beforeRouteUpdate(to, from, next) {
-      if (to.params.category !== from.params.category) {
-        this.query.category = to.params.category;
-        this.currentPage = 1;
-        this.searchQuery = '';
-      }
-
-      const { query, currentPage } = this;
-      this.fetchProducts({ currentPage, ...query });
-      next();
     },
     data() {
       return {
@@ -153,10 +158,9 @@
     watch: {
       currentPage: function(val) {
         this.$router.push({
-          name: 'products',
           query: { page: val }
         });
-      },
+      }
     },
     computed: {
       ...mapState('Product', {
@@ -175,14 +179,21 @@
       }
     },
     methods: {
-      ...mapActions('Product', [
-        'fetchProducts',
-        'deleteProductById',
-      ]),
+      ...mapActions('Product', {
+        fetchProductsAction: 'fetchProducts',
+        fetchTopProductsAction: 'fetchTopProducts',
+        deleteProductById: 'deleteProductById'
+      }),
       ...mapActions('Cart', [
         'insertCartProduct',
         'excludeCartProduct',
       ]),
+      fetchProducts(query) {
+        if (this.topProducts) {
+          return this.fetchTopProductsAction(query)
+        }
+        return this.fetchProductsAction(query);
+      },
       searchFilter: _.debounce(function () {
         this.fetchProducts({ currentPage: 1, ...this.query });
       }, 300),

@@ -19,6 +19,8 @@ router.get('/categories', categoriesController.fetchCategories);
 
 // router.get('/categories/:offset&:limit', categoriesController.fetchCategoriesPaginated);
 
+router.get('/top_products', pagingMiddleware, productsController.fetchTopProducts);
+
 router.get('/products', pagingMiddleware, productsController.fetchProducts);
 
 router.post('/create_products', upload.single('attachedPhoto'), productsController.createProduct);

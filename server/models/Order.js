@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id'
             }
         },
+    }, {
+        paranoid: true
     });
 
     Order.associate = (models) => {

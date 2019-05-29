@@ -55,7 +55,7 @@ const routes = [
         name: 'top_products',
         component: ProductList,
         props: {
-          top_products: true
+          topProducts: true
         }
       },
       {

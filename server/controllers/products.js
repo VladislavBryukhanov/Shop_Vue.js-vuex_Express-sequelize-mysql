@@ -5,6 +5,35 @@ const uuid = require('uuid');
 const sharp = require('sharp');
 const { productFileSizes } = require('../common/constants');
 
+module.exports.fetchTopProducts = async (request, response) => {
+    const { searchQuery } = request.query;
+    const { Op } = models.Sequelize;
+    const searchFilter = searchQuery ?
+        { name: { [Op.like]: `%${searchQuery}%` } } : {};
+
+    try {
+        const orderContents = await models.Product.findAndCountAll({
+            ...request.paging,
+            where: searchFilter,
+            paranoid: false,
+            attributes: {
+                include: [
+                    [models.sequelize.literal('(SELECT COUNT(*) FROM OrderContents WHERE OrderContents.ProductId = Product.id )'), 'OrderCount']
+                ]
+            },
+            order: [
+                [models.sequelize.literal('OrderCount'), 'DESC']
+            ]
+        });
+
+        response.send(orderContents);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
+};
+
 module.exports.fetchProducts = async (request, response) => {
     const {
         category: categoryName,
