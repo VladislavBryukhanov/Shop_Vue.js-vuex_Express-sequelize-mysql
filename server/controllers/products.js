@@ -7,14 +7,9 @@ const { productFileSizes } = require('../common/constants');
 
 module.exports.fetchProducts = async (request, response) => {
     const {
-        offset: offsetStr,
-        limit: limitStr,
         category: categoryName,
         searchQuery
     } = request.query;
-
-    const offset = Number(offsetStr);
-    const limit = Number(limitStr);
 
     const { Op } = models.Sequelize;
     const searchFilter = searchQuery ?
@@ -27,8 +22,7 @@ module.exports.fetchProducts = async (request, response) => {
                 CategoryId: category.id,
                 ...searchFilter
             },
-            offset,
-            limit,
+            ...request.paging,
             include: [
                 { model: models.Category }
             ]

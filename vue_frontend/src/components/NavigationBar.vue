@@ -16,7 +16,7 @@
           </v-list-tile-action>
         </v-list-tile>
 
-        <v-list-tile :to="{ name: 'products' }"
+        <v-list-tile :to="{ name: 'top_products' }"
                      @click.stop>
           <v-list-tile-action>
             <v-icon>grade</v-icon>

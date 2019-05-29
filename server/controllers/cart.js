@@ -24,15 +24,8 @@ module.exports.fetchShoppingCart = async (request, response) => {
 };
 
 module.exports.fetchCartProducts = async (request, response) => {
-    const offset = Number(request.params['offset']);
-    const limit = Number(request.params['limit']);
-
     try {
-        const cart = await request.user.getProducts({
-            offset,
-            limit
-        });
-
+        const cart = await request.user.getProducts({ ...request.paging });
         response.send(cart);
     } catch (err) {
         response

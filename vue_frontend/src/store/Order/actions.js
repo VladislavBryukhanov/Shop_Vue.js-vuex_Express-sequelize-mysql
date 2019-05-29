@@ -11,8 +11,10 @@ export default {
     const offset = (currentPage - 1) * limit;
 
     try {
-      const orders = await axiosOrder.get(`/fetch_orders/${offset}&${limit}`)
-        .then(res => res.data);
+      const orders = await axiosOrder.get('/fetch_orders', {
+        params: { offset, limit }
+      }).then(res => res.data);
+
       commit('fetchOrders', orders);
     } catch (err) {
       errorHandler(err, 'FetchOrders', commit);

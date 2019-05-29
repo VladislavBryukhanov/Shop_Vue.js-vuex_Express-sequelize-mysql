@@ -126,8 +126,8 @@
     // TODO PAGING TO COMMON COMPONENT
 
     created() {
-      const { query, offset } = this;
-      this.fetchProducts({ offset, ...query });
+      const { query, currentPage } = this;
+      this.fetchProducts({ currentPage, ...query });
     },
     beforeRouteUpdate(to, from, next) {
       if (to.params.category !== from.params.category) {
@@ -136,8 +136,8 @@
         this.searchQuery = '';
       }
 
-      const { query, offset } = this;
-      this.fetchProducts({ offset, ...query });
+      const { query, currentPage } = this;
+      this.fetchProducts({ currentPage, ...query });
       next();
     },
     data() {
@@ -172,9 +172,6 @@
           pageCount = parseInt(pageCount) + 1;
         }
         return pageCount || 1;
-      },
-      offset: function() {
-        return (this.currentPage - 1) * this.query.limit;
       }
     },
     methods: {
@@ -187,7 +184,7 @@
         'excludeCartProduct',
       ]),
       searchFilter: _.debounce(function () {
-        this.fetchProducts({ offset: 0, ...this.query });
+        this.fetchProducts({ currentPage: 1, ...this.query });
       }, 300),
       async deleteProduct(product) {
         const { name, id } = product;
@@ -200,8 +197,8 @@
         if (confirm) {
           await this.deleteProductById(id);
 
-          const { query, offset } = this;
-          this.fetchProducts({ offset, ...query });
+          const { query, currentPage } = this;
+          this.fetchProducts({ currentPage, ...query });
         }
       },
       editProduct(product) {
