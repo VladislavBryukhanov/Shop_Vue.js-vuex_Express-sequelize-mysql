@@ -6,11 +6,27 @@ const sharp = require('sharp');
 const { productFileSizes } = require('../common/constants');
 
 module.exports.fetchProducts = async (request, response) => {
-    const offset = Number(request.params['offset']);
-    const limit = Number(request.params['limit']);
+    const {
+        offset: offsetStr,
+        limit: limitStr,
+        category: categoryName,
+        searchQuery
+    } = request.query;
+
+    const offset = Number(offsetStr);
+    const limit = Number(limitStr);
+
+    const { Op } = models.Sequelize;
+    const searchFilter = searchQuery ?
+        { name: { [Op.like]: `%${searchQuery}%` } } : {};
 
     try {
+        const category = await models.Category.findOne({ where: { name: categoryName } });
         const product = await models.Product.findAndCountAll({
+            where: {
+                CategoryId: category.id,
+                ...searchFilter
+            },
             offset,
             limit,
             include: [
@@ -70,7 +86,7 @@ module.exports.deleteProduct = async (request, response) => {
     try {
         await deletePreviewPhoto(id);
         await models.Product.destroy({ where: { id }});
-        response.sendStatus(200);
+        response.sendStatus(204);
     } catch (err) {
         response
             .status(500)

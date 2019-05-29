@@ -34,7 +34,8 @@
             </v-list-tile>
           </template>
 
-          <v-list-tile v-for="category in categories">
+          <v-list-tile v-for="category in categories"
+                       :to="{ name: 'products', params: { category: category.name } }">
             <v-list-tile-title>{{category.name}}</v-list-tile-title>
           </v-list-tile>
         </v-list-group>

@@ -206,7 +206,7 @@
         if (this.$refs.signInForm.validate()) {
           const user = _.pickBy(this.user, _.identity);
           this.signInActions(user)
-            .then(() => this.$router.push('products'));
+            .then(() => this.$router.push('top_products'));
         }
       },
       signUp() {
@@ -219,7 +219,7 @@
             user,
             contactInfo,
           }).then(() =>
-            this.$router.push('products'));
+            this.$router.push('top_products'));
         }
       }
     }

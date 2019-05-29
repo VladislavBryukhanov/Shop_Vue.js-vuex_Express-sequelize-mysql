@@ -6,6 +6,12 @@
           <v-flex xl4 lg6 md8 sm10 xs12>
             <v-card>
               <v-card-text>
+                <v-text-field v-model="query.searchQuery"
+                              @input="searchFilter"
+                              clearable solo light
+                              prepend-inner-icon="search"
+                              label="Filter by name">
+                </v-text-field>
                 <v-pagination
                   v-model="currentPage"
                   :total-visible="8"
@@ -21,6 +27,12 @@
       <v-flex sm10 offset-sm1>
         <v-sheet elevation="6">
           <v-layout row wrap>
+            <v-flex v-if="!productsCount">
+              <v-container>
+                <h3 class="display-1 font-weight-light primary--text">No products found in this category</h3>
+              </v-container>
+            </v-flex>
+
             <v-flex v-for="product in products">
               <v-container>
                 <v-hover>
@@ -108,19 +120,35 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
+  import _ from 'lodash';
 
   export default {
     // TODO PAGING TO COMMON COMPONENT
 
     created() {
-      const { limit, currentPage } = this;
-      this.fetchProducts({ currentPage, limit });
+      const { query, offset } = this;
+      this.fetchProducts({ offset, ...query });
     },
     beforeRouteUpdate(to, from, next) {
-      const { limit } = this;
+      if (to.params.category !== from.params.category) {
+        this.query.category = to.params.category;
+        this.currentPage = 1;
+        this.searchQuery = '';
+      }
 
-      this.fetchProducts({ currentPage: to.query.page, limit });
+      const { query, offset } = this;
+      this.fetchProducts({ offset, ...query });
       next();
+    },
+    data() {
+      return {
+        query: {
+          limit: PRODUCTS_ONE_PAGE_LIMIT,
+          category: this.$route.params.category,
+          searchQuery: ''
+        },
+        currentPage: parseInt(this.$route.query.page) || 1
+      }
     },
     watch: {
       currentPage: function(val) {
@@ -128,7 +156,7 @@
           name: 'products',
           query: { page: val }
         });
-      }
+      },
     },
     computed: {
       ...mapState('Product', {
@@ -139,17 +167,14 @@
         productIds: state => state.productIds
       }),
       pageCount: function() {
-        let pageCount = (this.productsCount / this.limit);
+        let pageCount = (this.productsCount / this.query.limit);
         if (pageCount > parseInt(pageCount)) {
           pageCount = parseInt(pageCount) + 1;
         }
         return pageCount || 1;
       },
-    },
-    data() {
-      return {
-        limit: PRODUCTS_ONE_PAGE_LIMIT,
-        currentPage: parseInt(this.$route.query.page) || 1,
+      offset: function() {
+        return (this.currentPage - 1) * this.query.limit;
       }
     },
     methods: {
@@ -161,6 +186,9 @@
         'insertCartProduct',
         'excludeCartProduct',
       ]),
+      searchFilter: _.debounce(function () {
+        this.fetchProducts({ offset: 0, ...this.query });
+      }, 300),
       async deleteProduct(product) {
         const { name, id } = product;
 
@@ -172,8 +200,8 @@
         if (confirm) {
           await this.deleteProductById(id);
 
-          const { limit, currentPage } = this;
-          this.fetchProducts({ currentPage, limit });
+          const { query, offset } = this;
+          this.fetchProducts({ offset, ...query });
         }
       },
       editProduct(product) {
