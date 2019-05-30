@@ -17,22 +17,9 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('./auth/passport');
 
-const authRouter = require('./routes/auth');
-const productRouter = require('./routes/products');
-const cartRouter = require('./routes/cart');
-const orderRouter = require('./routes/order');
 // const authMV = require('./middlewares/AuthMV');
 
-app.use(logger('dev'));
-app.use(history({
-    verbose: true
-}));
-app.use(cors(corsOptions));
 app.use(cookieParser());
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: process.env.AUTH_SECRET,
     store: new SequelizeStore({
@@ -47,6 +34,21 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(authMV);
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors(corsOptions));
+app.use(history({
+    verbose: true
+}));
+
+// TODO to one module
+const authRouter = require('./routes/auth');
+const productRouter = require('./routes/products');
+const cartRouter = require('./routes/cart');
+const orderRouter = require('./routes/order');
 
 app.use('/', authRouter);
 app.use('/products', productRouter);

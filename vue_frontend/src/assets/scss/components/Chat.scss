@@ -1,62 +1,57 @@
-.chat.theme--light.v-sheet {
-  background: rgba(0, 0, 0, .7);
-  margin: 4vh auto;
-  height: 88vh;
+.messagesContent {
+  min-height: 60vh;
+  padding: 8px !important;
+  //background: rgba(0, 0, 0, .7);
+  //margin: 4vh auto;
+  overflow: auto;
 
-  .messagesContent {
-    height: calc(100% - 48px - 64px);
-    overflow: auto;
+  .incoming {
+    display: flex;
+    flex-direction: row;
+    .content {
+      background-color: #243443;
+    }
+    .dateOfSend {
+    }
+  }
+  .outcome {
+    display: flex;
+    flex-direction: row-reverse;
+    .content {
+      background-color: #1A567B;
+    }
+    .dateOfSend {
+      text-align: right;
+    }
+  }
+  .message {
+    margin: 8px 10px;
+    .content {
+      cursor: pointer;
+      border: 1px solid #282828;
+      padding: 4px 8px;
+      color: white;
+      border-radius: 6px;
+      max-width: 65%;
+      word-wrap: break-word;
 
-    .incoming {
-      display: flex;
-      flex-direction: row;
-      .content {
-        background-color: #243443;
-      }
-      .dateOfSend {
+      img {
+        max-width: 100%;
       }
     }
-    .outcome {
-      display: flex;
-      flex-direction: row-reverse;
-      .content {
-        background-color: #1A567B;
-      }
-      .dateOfSend {
-        text-align: right;
-      }
+    .dateOfSend {
+      display: inline-block;
+      color: #aaa;
+      margin: 0 5px;
+      font-size: 10px;
+      vertical-align: middle;
     }
-    .message {
-      margin: 8px 10px;
-
-
-      .content {
-        cursor: pointer;
-        border: 1px solid #282828;
-        padding: 4px 8px;
-        color: white;
-        border-radius: 6px;
-        max-width: 65%;
-        word-wrap: break-word;
-
-        img {
-          max-width: 100%;
-        }
-      }
-      .dateOfSend {
-        display: inline-block;
-        color: #aaa;
-        margin: 0 5px;
-        font-size: 10px;
-        vertical-align: middle;
-      }
-      .arrow-left {
-        width: 0;
-        height: 0;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-        border-right:10px solid #1A567B;
-      }
+    .arrow-left {
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right:10px solid #1A567B;
     }
   }
 }

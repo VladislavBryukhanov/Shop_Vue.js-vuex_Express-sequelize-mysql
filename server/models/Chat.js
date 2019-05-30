@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Chat = sequelize.define('Chat', {
+        // id and association will be generated automatically
     });
 
     Chat.associate = (models) => {

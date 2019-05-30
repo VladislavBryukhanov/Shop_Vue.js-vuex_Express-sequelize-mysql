@@ -1,17 +1,16 @@
 <template>
-  <v-form class="messageInput" @submit.prevent="sendMessage()" >
-    <v-btn flat icon>
-      <v-icon>attach_file</v-icon>
-    </v-btn>
-    <input
-      v-model="messageContent"
-      placeholder="Enter message"/>
-    <v-btn
-      flat icon
-      type="submit">
-      <v-icon>send</v-icon>
-    </v-btn>
-  </v-form>
+  <v-card light>
+    <v-form class="messageInput" @submit.prevent="sendMessage" light>
+      <input
+        v-model="messageContent"
+        placeholder="Enter message"/>
+      <v-btn
+        flat icon
+        type="submit">
+        <v-icon>send</v-icon>
+      </v-btn>
+    </v-form>
+  </v-card>
 </template>
 
 <script>
@@ -26,14 +25,18 @@
     methods: {
       ...mapActions('Chat', {
         sendMessageAction: 'sendMessage'
-      })
-    },
-    sendMessage() {
-      if (_.isEmpty(this.messageContent.trim())) {
-        return;
+      }),
+      async sendMessage() {
+        const { messageContent, sendMessageAction } = this;
+
+        if (_.isEmpty(messageContent.trim())) {
+          return;
+        }
+
+        await sendMessageAction(messageContent);
+        this.messageContent = '';
       }
-      this.sendMessageAction(this.messageContent);
-    }
+    },
   }
 </script>
 

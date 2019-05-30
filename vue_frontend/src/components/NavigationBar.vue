@@ -116,15 +116,22 @@
     <v-content>
           <router-view :key="$route.fullPath"></router-view>
     </v-content>
+
+    <Chat></Chat>
   </div>
 </template>
 
 <script>
+  // FIXME separate NavBar and Chat
+
+  import Chat from '@/components/Chat.vue';
   import { mapActions, mapState } from 'vuex';
   import { FileResources } from '@/common/constants';
 
   export default {
-
+    components: {
+      Chat
+    },
     created() {
       // TODO select to infinity select component
       // this.fetchCategories({ page: 0, limit: 100 });
