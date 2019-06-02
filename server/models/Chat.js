@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Chat.associate = (models) => {
         Chat.belongsTo(models.User);
-        Chat.hasMany(models.Message);
+        Chat.hasMany(models.Message, {
+            onDelete: 'cascade'
+        });
     };
 
     return Chat;

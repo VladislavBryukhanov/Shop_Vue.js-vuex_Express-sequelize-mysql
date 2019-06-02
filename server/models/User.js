@@ -33,15 +33,11 @@ module.exports = (sequelize, DataTypes) => {
         birthDay: {
             type: DataTypes.INTEGER,
             allowNull: true,
-        },
-        role: {
-            type: DataTypes.STRING, //Fixme
-            defaultValue: 'user',
-            allowNull: false,
         }
     });
 
     User.associate = (models) => {
+        User.belongsTo(models.Role);
         User.hasOne(models.ContactInfo, {
             onDelete: 'cascade'
         });

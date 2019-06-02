@@ -67,7 +67,7 @@ const routes = [
         })
       },
       {
-        path: '/shopping_card',
+        path: '/shopping_cart',
         name: 'shopping_cart',
         component: ShoppingCart
       },

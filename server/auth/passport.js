@@ -37,8 +37,10 @@ passport.deserializeUser(async (id, done) => {
         const user = await models.User.findOne({
             where: { id },
             include: [
-                { model: models.ContactInfo }
-            ]
+                { model: models.ContactInfo },
+                { model: models.Role }
+            ],
+            attributes: { exclude: ['RoleId'] }
         });
         done(null, user)
     } catch (err) {

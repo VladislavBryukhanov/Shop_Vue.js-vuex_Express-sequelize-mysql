@@ -9,12 +9,17 @@ exports.signUp = async (request, response) => {
         const salt = await bcrypt.genSalt(saltRounds);
         user.password = await bcrypt.hash(user.password, salt);
 
-        //TODO atomic
+        //TODO atomic creating of contact info and phone
         const createdUser = await models.User.create(user);
 
+        //set default role
+        const userRole = await models.Role.findOne({ where: { name: 'User' } });
+        await createdUser.setRole(userRole);
+
         contactInfo.UserId = createdUser.id;
-        await models.ContactInfo.create(contactInfo)
-            .then(res => res.id);
+        createdUser.createContactInfo(contactInfo);
+        // await models.ContactInfo.create(contactInfo)
+        //     .then(res => res.id);
 
         request.logIn(createdUser, err => {
             if (err) {

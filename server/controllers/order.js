@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const models = require('../models');
 
 module.exports.fetchOrders = async (request, response) => {
@@ -5,7 +6,7 @@ module.exports.fetchOrders = async (request, response) => {
         const orders = await models.Order.findAndCountAll({
             ...request.paging,
             include: [{
-                model: models.OrderContent,
+                model: models.OrderProduct,
                 include: [{
                     model: models.Product,
                     include: [{
@@ -27,8 +28,8 @@ module.exports.fetchOrders = async (request, response) => {
                 }]
             }).then(user => {
                 const { ContactInfo } = user;
-                const { id, createdAt, OrderContents } = order;
-                const products = OrderContents.map(prod => prod.Product);
+                const { id, createdAt, OrderProducts } = order;
+                const products = OrderProducts.map(prod => prod.Product);
 
                 resultOrders.push({
                     id,
@@ -55,7 +56,7 @@ module.exports.fetchPersonalOrders = async (request, response) => {
     try {
         let orders = await request.user.getOrders({
             include: [{
-                model: models.OrderContent,
+                model: models.OrderProduct,
                 include: [{
                     model: models.Product,
                     include: [{
@@ -67,12 +68,12 @@ module.exports.fetchPersonalOrders = async (request, response) => {
         });
 
         orders = orders.map(order => {
-            const { id, createdAt, OrderContents } = order;
-            const products = OrderContents.map(prod => prod.Product);
+            const { id, createdAt, OrderProducts } = order;
+            const products = OrderProducts.map(prod => prod.Product);
             return {
                 id,
                 createdAt,
-                products
+                products: _.compact(products)
             }
         });
 
@@ -95,13 +96,13 @@ module.exports.createPersonalOrder = async (request, response) => {
     }
 
     try {
-        const [ order, orderContents ] = await Promise.all([
+        const [ order, OrderProducts ] = await Promise.all([
             request.user.createOrder(),
-            await models.OrderContent.bulkCreate(productQuery),
+            models.OrderProduct.bulkCreate(productQuery),
             request.user.removeProducts(productIds)
         ]);
 
-        const res = await order.addOrderContents(orderContents);
+        const res = await order.addOrderProduct(OrderProducts);
 
         response.send(res);
     } catch (err) {

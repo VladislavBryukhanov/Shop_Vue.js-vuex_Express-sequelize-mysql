@@ -3,11 +3,9 @@ const models = require('../models');
 
 module.exports.fetchShoppingCart = async (request, response) => {
     try {
-        const productsIds = await models.Cart.findAll({
-            attributes: ['ProductId'],
-            where: { UserId: request.user.id }
-        }).then(res =>
-            res.map(prod => prod.ProductId));
+        const productsIds = await request.user.getProducts({
+            attributes: ['id']
+        }).then(res => res.map(prod => prod.id));
 
         const { totalCost } = await models.Product.findOne({
             where: { id: productsIds },

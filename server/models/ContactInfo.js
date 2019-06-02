@@ -1,13 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
     const ContactInfo = sequelize.define('ContactInfo', {
-        UserId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'Users',
-                key: 'id'
-            }
-        },
         phone: {
             type: DataTypes.INTEGER,
             validate: {
@@ -26,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         }
         // cities dropdown, zip code, etc ...
     });
+
+    ContactInfo.associate = (models) => {
+        ContactInfo.belongsTo(models.User);
+    };
 
     return ContactInfo;
 };

@@ -12,13 +12,13 @@ module.exports.fetchTopProducts = async (request, response) => {
         { name: { [Op.like]: `%${searchQuery}%` } } : {};
 
     try {
-        const orderContents = await models.Product.findAndCountAll({
+        const orderProducts = await models.Product.findAndCountAll({
             ...request.paging,
             where: searchFilter,
             paranoid: false,
             attributes: {
                 include: [
-                    [models.sequelize.literal('(SELECT COUNT(*) FROM OrderContents WHERE OrderContents.ProductId = Product.id )'), 'OrderCount']
+                    [models.sequelize.literal('(SELECT COUNT(*) FROM OrderProducts WHERE OrderProducts.ProductId = Product.id )'), 'OrderCount']
                 ]
             },
             order: [
@@ -26,7 +26,7 @@ module.exports.fetchTopProducts = async (request, response) => {
             ]
         });
 
-        response.send(orderContents);
+        response.send(orderProducts);
     } catch (err) {
         response
             .status(500)
