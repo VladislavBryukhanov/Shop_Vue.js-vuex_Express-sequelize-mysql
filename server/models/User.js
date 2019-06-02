@@ -37,7 +37,12 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.associate = (models) => {
-        User.belongsTo(models.Role);
+        User.belongsTo(models.Role, {
+            foreignKey: {
+                field: 'RoleId',
+                allowNull: false
+            },
+        });
         User.hasOne(models.ContactInfo, {
             onDelete: 'cascade'
         });

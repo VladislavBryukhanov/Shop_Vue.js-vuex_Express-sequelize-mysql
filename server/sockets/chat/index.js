@@ -1,6 +1,7 @@
 const io = require('socket.io')();
 const models = require('../../models');
-const users = [];
+const { roles } = require('../../common/constants');
+const users = []; // Todo memory cash or redis etc
 
 io.on('connection', async (socket) => {
     if (!socket.request.session.passport) {
@@ -8,12 +9,16 @@ io.on('connection', async (socket) => {
     }
 
     const userId = socket.request.session.passport.user;
-    const user = await models.User.findByPk(userId);
+    const user = await models.User.findByPk(userId, {
+        include: [{
+            model: models.Role,
+            attributes: ['name']
+        }]
+    });
 
     //For user - one chat, for management - list and diff login
     let [ chat ] = await user.getChats();
     if (!chat) {
-        console.info('CRT');
         chat = await user.createChat();
     }
     //
@@ -24,8 +29,8 @@ io.on('connection', async (socket) => {
     });
 
     // serialize + role checking
-    if (user.id === 1) {
-        socket.join('managers');
+    if (user.Role.name === roles.MANAGER) {
+        socket.join(roles.MANAGER);
     }
 
     socket.on('fetch_messages', async (query) => {
@@ -54,7 +59,7 @@ io.on('connection', async (socket) => {
         socket.emit('message_sent', message);
 
         // if manager
-        if (userId === 1) {
+        if (user.Role.name === roles.MANAGER) {
             const someUserId = userId;
             const { socketId } = users.find(user => user.id === someUserId);
             return io.sockets.connected[socketId].emit('message_sent', message);

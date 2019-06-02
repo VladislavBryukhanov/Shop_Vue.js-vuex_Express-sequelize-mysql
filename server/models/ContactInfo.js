@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     ContactInfo.associate = (models) => {
-        ContactInfo.belongsTo(models.User);
+        ContactInfo.belongsTo(models.User, {
+            onDelete: 'cascade'
+        });
     };
 
     return ContactInfo;

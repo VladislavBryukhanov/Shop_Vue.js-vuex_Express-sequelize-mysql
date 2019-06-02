@@ -36,7 +36,8 @@ db.Sequelize = Sequelize;
 
 // FIXME just for initilize db for first running
 const initDefaultValues = async (db) => {
-  // db.sequelize.sync({force: true});
+  const { roles } = require('../common/constants');
+    // db.sequelize.sync({force: true});
 
   await db.Session.sync();
   await db.Role.sync();
@@ -64,9 +65,9 @@ const initDefaultValues = async (db) => {
   ]);
 
   db.Role.bulkCreate([
-      { name: 'User' },
-      { name: 'Admin' },
-      { name: 'Manager' }
+      { name: roles.USER },
+      { name: roles.ADMIN },
+      { name: roles.MANAGER }
   ]);
 };
 // initDefaultValues(db);

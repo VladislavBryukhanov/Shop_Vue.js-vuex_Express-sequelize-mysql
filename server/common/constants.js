@@ -8,4 +8,8 @@ module.exports.productFileSizes = {
     }
 };
 
-
+module.exports.roles = {
+    USER: 'User',
+    ADMIN: 'Admin',
+    MANAGER: 'Manager'
+};
