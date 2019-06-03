@@ -32,10 +32,12 @@ const authRouter = require('./routes/auth');
 const productRouter = require('./routes/products');
 const cartRouter = require('./routes/cart');
 const orderRouter = require('./routes/order');
+const usersRouter = require('./routes/users');
 
 app.use('/', authRouter);
 app.use('/products', productRouter);
 app.use('/cart', cartRouter);
 app.use('/order', orderRouter);
+app.use('/users', usersRouter);
 
 module.exports = app;

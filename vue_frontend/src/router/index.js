@@ -10,6 +10,7 @@ const ProductList = () => import ('@/pages/ProductList.vue');
 const PageNotFound = () => import ('@/pages/PageNotFound.vue');
 
 const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
+const UserList = () => import ('@/pages/admin/UserList.vue');
 const ShoppingCart = () => import ('@/pages/ShoppingCart.vue');
 const OrderList = () => import ('@/pages/OrderList.vue');
 
@@ -65,6 +66,11 @@ const routes = [
         props: (route) => ({
           editableProduct: route.params.editableProduct
         })
+      },
+      {
+        path: '/users',
+        name: 'users',
+        component: UserList
       },
       {
         path: '/shopping_cart',

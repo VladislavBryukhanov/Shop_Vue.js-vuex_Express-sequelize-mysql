@@ -22,12 +22,12 @@
         </v-toolbar>
 
         <v-container class="chat" fill-height>
-          <v-container v-if="noMessages"
-                       bg grid-list-md text-xs-center>
-            <h3 class="darkerGrey--text title">Please send message and our support team will contact you.</h3>
-          </v-container>
-
           <div class="messageContainer">
+            <v-container v-if="noMessages"
+                         bg grid-list-md text-xs-center>
+              <h3 class="darkerGrey--text title">Please send message and our support team will contact you.</h3>
+            </v-container>
+
             <template v-for="message in messages">
               <div class="message"
                    :class="isMyMessage(message.UserId) ? 'outcome' : 'incoming'">
