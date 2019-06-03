@@ -1,51 +1,43 @@
 <template>
   <div>
-    <v-btn color="actionColor"
-           @click="chatOpened = !chatOpened"
-           dark fixed bottom right fab>
-      <v-icon>chat</v-icon>
-    </v-btn>
-    <v-dialog v-model="chatOpened"
-              max-width="420px">
-      <v-card dark>
-        <v-toolbar light>
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <img :src="seller"/>
-            </v-list-tile-avatar>
+    <v-card dark>
+      <v-toolbar light>
+        <v-list-tile avatar>
+          <v-list-tile-avatar>
+            <img :src="seller"/>
+          </v-list-tile-avatar>
 
-            <v-list-tile-content>
-              <!--<v-list-tile-title>{{interlocutor.login}}</v-list-tile-title>-->
-              <v-list-tile-title>Sales manager</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-toolbar>
+          <v-list-tile-content>
+            <!--<v-list-tile-title>{{interlocutor.login}}</v-list-tile-title>-->
+            <v-list-tile-title>Sales manager</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-toolbar>
 
-        <v-container class="chat" fill-height>
-          <div class="messageContainer">
-            <v-container v-if="noMessages"
-                         bg grid-list-md text-xs-center>
-              <h3 class="darkerGrey--text title">Please send message and our support team will contact you.</h3>
-            </v-container>
+      <v-container class="chat" fill-height>
+        <div class="messageContainer">
+          <v-container v-if="noMessages"
+                       bg grid-list-md text-xs-center>
+            <h3 class="darkerGrey--text title">Please send message and our support team will contact you.</h3>
+          </v-container>
 
-            <template v-for="message in messages">
-              <div class="message"
-                   :class="isMyMessage(message.UserId) ? 'outcome' : 'incoming'">
+          <template v-for="message in messages">
+            <div class="message"
+                 :class="isMyMessage(message.UserId) ? 'outcome' : 'incoming'">
 
-                <span class="content">{{message.textContent}}</span>
+              <span class="content">{{message.textContent}}</span>
 
-                <div class="dateOfSend">
-                  <div>{{message.timestamp | formatDateTime}}</div>
-                  <div>{{message.timestamp | formatDateDay}}</div>
-                </div>
+              <div class="dateOfSend">
+                <div>{{message.timestamp | formatDateTime}}</div>
+                <div>{{message.timestamp | formatDateDay}}</div>
               </div>
-            </template>
-          </div>
-        </v-container>
+            </div>
+          </template>
+        </div>
+      </v-container>
 
-        <MessageInput></MessageInput>
-      </v-card>
-    </v-dialog>
+      <MessageInput></MessageInput>
+    </v-card>
   </div>
 </template>
 
@@ -69,18 +61,20 @@
       },
     },
     async created() {
-      await this.initConnection();
-      await this.fetchMessages({
-        offset: 0,
-        limit: 100,
-      });
+      const interlocutorId = this.interlocutorId;
+
+      this.initConnection();
+      await this.openChat(interlocutorId);
+      this.fetchMessages();
     },
     beforeDestroy() {
       this.closeConnection();
     },
+    props: {
+      interlocutorId: Number
+    },
     data() {
       return {
-        chatOpened: false,
         seller: FileResources.seller,
         customer: FileResources.customer,
       }
@@ -99,8 +93,9 @@
     methods: {
       ...mapActions('Chat', [
         'initConnection',
+        'openChat',
         'fetchMessages',
-        'closeChat'
+        'closeConnection'
       ]),
       isMyMessage(owner) {
         return this.me.id === owner;

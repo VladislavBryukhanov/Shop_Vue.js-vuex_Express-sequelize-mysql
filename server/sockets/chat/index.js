@@ -1,76 +1,60 @@
 const io = require('socket.io')();
-const models = require('../../models');
-const { roles } = require('../../common/constants');
-const users = []; // Todo memory cash or redis etc
+const { User, Role } = require('../../models');
 
 io.on('connection', async (socket) => {
     if (!socket.request.session.passport) {
-        return new Error('Authentication error');
+        socket.emit('error', 'Authentication error');
+        return socket.destroy();
     }
 
+    let chat;
+    let chatOwner;
+
     const userId = socket.request.session.passport.user;
-    const user = await models.User.findByPk(userId, {
+    const user = await User.findByPk(userId, {
         include: [{
-            model: models.Role,
+            model: Role,
             attributes: ['name']
         }]
     });
 
-    //For user - one chat, for management - list and diff login
-    let [ chat ] = await user.getChats();
-    if (!chat) {
-        chat = await user.createChat();
-    }
-    //
+    socket.on('open_chat', async (chatOwnerId) => {
+        if (!chatOwnerId) {
+            chatOwnerId = user.id;
+        }
 
-    users.push({
-        ...user.get({ plain: true }),
-        socketId: socket.id
+        try {
+            chatOwner = await User.findByPk(chatOwnerId);
+
+            [chat] = await chatOwner.getChats();
+            if (!chat) {
+                chat = await chatOwner.createChat();
+            }
+
+            socket.join(chatOwner.id);
+            socket.emit('chat_opened');
+        } catch (err) {
+            socket.emit('error', err.message);
+        }
     });
 
-    // serialize + role checking
-    if (user.Role.name === roles.MANAGER) {
-        socket.join(roles.MANAGER);
-    }
-
-    socket.on('fetch_messages', async (query) => {
-     /*   const interlocutors = await chat.getMessages({
-            attributes: [
-                [models.Sequelize.fn('DISTINCT', models.Sequelize.col('UserId')), 'UserId'],
-            ]
-        });
-        console.info(interlocutors);*/
-
+    socket.on('fetch_messages', async (paging) => {
         const messages = await chat.getMessages();
         socket.emit('messages_fetched', messages);
     });
 
     socket.on('send_message', async (message) => {
-        message.UserId = userId;
+        message.UserId = user.id;
 
         try {
             await chat.createMessage(message);
         } catch (err) {
-            console.error(err);
-            return new Error(err);
+            socket.emit('error', err.message);
         }
 
+        socket.to(chatOwner.id).emit('message_sent', message);
         // Message to self - notify that msg delivered
         socket.emit('message_sent', message);
-
-        // if manager
-        if (user.Role.name === roles.MANAGER) {
-            const someUserId = userId;
-            const { socketId } = users.find(user => user.id === someUserId);
-            return io.sockets.connected[socketId].emit('message_sent', message);
-        }
-        socket.to('managers').emit('message_sent', message);
-    });
-
-    socket.on('disconnect', () => {
-        const userId = socket.request.session.passport.user;
-        const index = users.findIndex(user => userId === user.uid);
-        users.splice(index, 1);
     });
 });
 

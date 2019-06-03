@@ -50,7 +50,7 @@
 
                 <v-list-tile>
                   <v-layout justify-center>
-                    <v-btn @click="closeOrder(order)" block flat class="font-weight-black"
+                    <v-btn @click="openChat(user)" block flat class="font-weight-black"
                            color="primary">Open chat</v-btn>
                   </v-layout>
                   <v-layout justify-center>
@@ -72,15 +72,24 @@
         </v-sheet>
       </v-flex>
     </v-layout>
+
+    <v-dialog v-model="chatOpened"
+              max-width="420px">
+      <Chat v-if="chatOpened" :interlocutorId="interlocutorId"></Chat>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+  import Chat from '@/components/Chat.vue';
   import { mapActions, mapState } from 'vuex';
   import { USERS_ONE_PAGE_LIMIT } from '@/common/constants';
   import _ from 'lodash';
 
   export default {
+    components: {
+      Chat
+    },
     created() {
       const { limit, currentPage } = this;
       this.fetchUsers({ currentPage, limit });
@@ -89,7 +98,9 @@
     data() {
       return {
         limit: USERS_ONE_PAGE_LIMIT,
-        currentPage: parseInt(this.$route.query.page) || 1
+        currentPage: parseInt(this.$route.query.page) || 1,
+        chatOpened: false,
+        interlocutorId: 0,
       }
     },
     watch: {
@@ -134,6 +145,10 @@
         if (confirm) {
           await this.updateUserRole({ role, id: user.id })
         }
+      },
+      openChat(user) {
+        this.chatOpened = !this.chatOpened;
+        this.interlocutorId = user.id;
       }
     }
   }

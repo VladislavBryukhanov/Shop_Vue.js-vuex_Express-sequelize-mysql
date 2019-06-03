@@ -110,7 +110,6 @@
           </v-list-tile-action>
           <v-list-tile-title>Sign out</v-list-tile-title>
         </v-list-tile>
-
       </v-list>
     </v-navigation-drawer>
 
@@ -118,7 +117,16 @@
           <router-view :key="$route.fullPath"></router-view>
     </v-content>
 
-    <Chat></Chat>
+    <v-btn color="actionColor"
+           @click="chatOpened = !chatOpened"
+           dark fixed bottom right fab>
+      <v-icon>chat</v-icon>
+    </v-btn>
+    <v-dialog v-model="chatOpened"
+              max-width="420px">
+      <Chat v-if="chatOpened"></Chat>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -155,7 +163,8 @@
         },
         openedGroup: '',
         minNavDraw: true,
-        logo: FileResources.logo
+        logo: FileResources.logo,
+        chatOpened: false
       }
     },
     methods: {
