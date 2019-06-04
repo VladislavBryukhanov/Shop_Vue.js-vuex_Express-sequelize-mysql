@@ -42,5 +42,5 @@
 
 
 <style lang="scss">
-  @import "../assets/scss/components/MessageInput";
+  @import "../../assets/scss/components/MessageInput";
 </style>

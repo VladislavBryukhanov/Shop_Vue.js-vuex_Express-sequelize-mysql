@@ -16,3 +16,9 @@ export const FileResources = {
   seller: require('@/assets/img/chat/seller.png'),
   customer: require('@/assets/img/chat/customer.png')
 };
+
+export const Roles = {
+  USER: 'User',
+  ADMIN: 'Admin',
+  MANAGER: 'Manager'
+};

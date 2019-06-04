@@ -40,9 +40,10 @@
           </v-list-tile>
         </v-list-group>
 
-        <v-list-group prepend-icon="settings_applications"
+        <v-list-group v-if="!isMeUser"
                       @click="selectGroup(groups.ADMIN)"
                       :value="!minNavDraw && openedGroup === groups.ADMIN"
+                      prepend-icon="settings_applications"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -117,15 +118,17 @@
           <router-view :key="$route.fullPath"></router-view>
     </v-content>
 
-    <v-btn color="actionColor"
-           @click="chatOpened = !chatOpened"
-           dark fixed bottom right fab>
-      <v-icon>chat</v-icon>
-    </v-btn>
-    <v-dialog v-model="chatOpened"
-              max-width="420px">
-      <Chat v-if="chatOpened"></Chat>
-    </v-dialog>
+    <template v-if="isMeUser">
+      <v-btn color="actionColor"
+             @click="chatOpened = !chatOpened"
+             dark fixed bottom right fab>
+        <v-icon>chat</v-icon>
+      </v-btn>
+      <v-dialog v-model="chatOpened"
+                max-width="420px">
+        <Chat v-if="chatOpened"></Chat>
+      </v-dialog>
+    </template>
 
   </div>
 </template>
@@ -133,9 +136,9 @@
 <script>
   // FIXME separate NavBar and Chat
 
-  import Chat from '@/components/Chat.vue';
+  import Chat from '@/components/chat/Chat.vue';
   import { mapActions, mapState } from 'vuex';
-  import { FileResources } from '@/common/constants';
+  import { FileResources, Roles } from '@/common/constants';
 
   export default {
     components: {
@@ -151,8 +154,12 @@
     computed: {
       ...mapState({
         categories: state => state.Product.categories.rows,
-        productsCount: state => state.Cart.productsCount
+        productsCount: state => state.Cart.productsCount,
+        me: state => state.Auth.me
       }),
+      isMeUser: function() {
+        return this.me.Role.name === Roles.USER;
+      }
     },
 
     data() {

@@ -4,12 +4,12 @@
       <v-toolbar light>
         <v-list-tile avatar>
           <v-list-tile-avatar>
-            <img :src="seller"/>
+            <img :src="interlocutorUser.avatar"/>
           </v-list-tile-avatar>
-
           <v-list-tile-content>
-            <!--<v-list-tile-title>{{interlocutor.login}}</v-list-tile-title>-->
-            <v-list-tile-title>Sales manager</v-list-tile-title>
+            <v-list-tile-title>
+              {{interlocutorUser.firstName}} {{interlocutorUser.lastName}}
+            </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-toolbar>
@@ -18,7 +18,9 @@
         <div class="messageContainer">
           <v-container v-if="noMessages"
                        bg grid-list-md text-xs-center>
-            <h3 class="darkerGrey--text title">Please send message and our support team will contact you.</h3>
+            <h3 class="darkerGrey--text title">
+              Please send message and our support team will contact you.
+            </h3>
           </v-container>
 
           <template v-for="message in messages">
@@ -44,7 +46,7 @@
 <script>
   import MessageInput from './MessageInput';
   import { mapState, mapActions } from 'vuex';
-  import { FileResources } from '@/common/constants';
+  import { FileResources, Roles } from '@/common/constants';
   import moment from 'moment';
   import _ from 'lodash';
 
@@ -61,7 +63,10 @@
       },
     },
     async created() {
-      const interlocutorId = this.interlocutorId;
+      let interlocutorId;
+      if (this.interlocutor) {
+        interlocutorId = this.interlocutor.id;
+      }
 
       this.initConnection();
       await this.openChat(interlocutorId);
@@ -71,23 +76,30 @@
       this.closeConnection();
     },
     props: {
-      interlocutorId: Number
-    },
-    data() {
-      return {
-        seller: FileResources.seller,
-        customer: FileResources.customer,
-      }
+      interlocutor: Object
     },
     computed: {
-      ...mapState('Chat', {
-        messages: state => state.messages
-      }),
-      ...mapState('Auth', {
-        me: state => state.me
+      ...mapState({
+        messages: state => state.Chat.messages,
+        me: state => state.Auth.me,
       }),
       noMessages() {
         return _.isEmpty(this.messages);
+      },
+      interlocutorUser() {
+        const { customer, seller } = FileResources;
+
+        if (this.me.Role.name === Roles.USER) {
+          return {
+            avatar: seller,
+            firstName: 'Sales',
+            lastName: 'Manager'
+          }
+        }
+        return {
+          ...this.interlocutor,
+          avatar: customer
+        }
       }
     },
     methods: {
@@ -105,5 +117,5 @@
 </script>
 
 <style lang="scss">
-  @import "../assets/scss/components/Chat";
+  @import "../../assets/scss/components/Chat";
 </style>

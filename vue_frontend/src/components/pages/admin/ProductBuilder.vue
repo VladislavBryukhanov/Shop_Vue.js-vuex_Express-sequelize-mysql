@@ -207,5 +207,5 @@
 </script>
 
 <style>
-  @import "../../assets/scss/components/ProductBuilder.scss";
+  @import "../../../assets/scss/components/ProductBuilder.scss";
 </style>

@@ -193,5 +193,5 @@
 </script>
 
 <style lang="scss">
-  @import '../assets/scss/components/ShoppingCart';
+  @import '../../assets/scss/components/ShoppingCart';
 </style>

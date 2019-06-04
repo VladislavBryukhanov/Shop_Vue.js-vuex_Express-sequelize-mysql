@@ -100,25 +100,27 @@
                         </v-badge>
                     </v-card-text>
 
-                    <v-btn
-                      @click="deleteProduct(product)"
-                      absolute
-                      dark
-                      color="removingColor"
-                      fab
-                      right
-                      top>
-                      <v-icon>delete_forever</v-icon>
-                    </v-btn>
-                    <v-btn
-                      @click="editProduct(product)"
-                      absolute
-                      color="white"
-                      fab
-                      left
-                      top>
-                      <v-icon>edit</v-icon>
-                    </v-btn>
+                    <template v-if="!isMeUser">
+                      <v-btn
+                        @click="deleteProduct(product)"
+                        absolute
+                        dark
+                        color="removingColor"
+                        fab
+                        right
+                        top>
+                        <v-icon>delete_forever</v-icon>
+                      </v-btn>
+                      <v-btn
+                        @click="editProduct(product)"
+                        absolute
+                        color="white"
+                        fab
+                        left
+                        top>
+                        <v-icon>edit</v-icon>
+                      </v-btn>
+                    </template>
                   </v-card>
                 </v-hover>
               </v-container>
@@ -132,7 +134,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
-  import { PRODUCTS_ONE_PAGE_LIMIT } from '@/common/constants';
+  import { PRODUCTS_ONE_PAGE_LIMIT, Roles } from '@/common/constants';
   import _ from 'lodash';
 
   export default {
@@ -167,8 +169,9 @@
         products: state => state.products.rows,
         productsCount: state => state.products.count
       }),
-      ...mapState('Cart', {
-        productIds: state => state.productIds
+      ...mapState({
+        productIds: state => state.Cart.productIds,
+        me: state => state.Auth.me
       }),
       pageCount: function() {
         let pageCount = (this.productsCount / this.query.limit);
@@ -176,6 +179,9 @@
           pageCount = parseInt(pageCount) + 1;
         }
         return pageCount || 1;
+      },
+      isMeUser: function() {
+        return this.me.Role.name === Roles.USER;
       }
     },
     methods: {
@@ -226,5 +232,5 @@
 </script>
 
 <style lang="scss">
-  @import '../assets/scss/components/ProductList';
+  @import '../../assets/scss/components/ProductList';
 </style>

@@ -3,9 +3,10 @@ export default {
     state.messages.push(message);
   },
   fetchMessages(state, messages) {
-    state.messages = [
+    state.messages = messages;
+    /*state.messages = [
       ...state.messages,
       ...messages
-    ];
+    ];*/
   }
 }

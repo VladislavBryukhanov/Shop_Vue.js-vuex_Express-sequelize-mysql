@@ -75,13 +75,13 @@
 
     <v-dialog v-model="chatOpened"
               max-width="420px">
-      <Chat v-if="chatOpened" :interlocutorId="interlocutorId"></Chat>
+      <Chat v-if="chatOpened" :interlocutor="interlocutor"></Chat>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
-  import Chat from '@/components/Chat.vue';
+  import Chat from '@/components/chat/Chat.vue';
   import { mapActions, mapState } from 'vuex';
   import { USERS_ONE_PAGE_LIMIT } from '@/common/constants';
   import _ from 'lodash';
@@ -100,7 +100,7 @@
         limit: USERS_ONE_PAGE_LIMIT,
         currentPage: parseInt(this.$route.query.page) || 1,
         chatOpened: false,
-        interlocutorId: 0,
+        interlocutor: null,
       }
     },
     watch: {
@@ -148,7 +148,7 @@
       },
       openChat(user) {
         this.chatOpened = !this.chatOpened;
-        this.interlocutorId = user.id;
+        this.interlocutor = user;
       }
     }
   }

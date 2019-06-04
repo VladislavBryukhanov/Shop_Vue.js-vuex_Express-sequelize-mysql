@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import Snackbar from '@/components/Snackbar.vue';
-import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import Snackbar from '@/components/common/Snackbar.vue';
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 
 export default {
   mounted() {
