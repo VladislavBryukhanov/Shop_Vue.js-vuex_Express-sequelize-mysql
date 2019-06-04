@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth');
-const checkAuth = require('../middlewares/checkAuth');
+const AuthRequired = require('../middlewares/authRequired');
 
 router.post('/sign_up', authController.signUp);
 
@@ -12,7 +12,7 @@ router.post('/sign_out', (request, response) => {
     response.sendStatus(200);
 });
 
-router.get('/me', checkAuth, (request, response) => {
+router.get('/me', AuthRequired, (request, response) => {
     response.send(request.user);
 });
 

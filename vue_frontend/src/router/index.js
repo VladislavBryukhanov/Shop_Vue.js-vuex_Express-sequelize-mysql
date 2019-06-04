@@ -1,17 +1,19 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '@/store';
+import { Roles } from '@/common/constants';
 
-import Toolbar from '@/components/Toolbar.vue';
-import NavigationBar from '@/components/NavigationBar.vue'
+import Toolbar from '@/components/common/Toolbar.vue';
+import NavigationBar from '@/components/common/NavigationBar.vue'
 
-const Sign = () => import ('@/pages/Sign.vue');
-const ProductList = () => import ('@/pages/ProductList.vue');
-const PageNotFound = () => import ('@/pages/PageNotFound.vue');
+const Sign = () => import ('@/components/pages/Sign.vue');
+const ProductList = () => import ('@/components/pages/ProductList.vue');
+const PageNotFound = () => import ('@/components/pages/PageNotFound.vue');
 
-const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
-const ShoppingCart = () => import ('@/pages/ShoppingCart.vue');
-const OrderList = () => import ('@/pages/OrderList.vue');
+const ProductBuilder = () => import ('@/components/pages/admin/ProductBuilder.vue');
+const UserList = () => import ('@/components/pages/admin/UserList.vue');
+const ShoppingCart = () => import ('@/components/pages/ShoppingCart.vue');
+const OrderList = () => import ('@/components/pages/OrderList.vue');
 
 Vue.use(Router);
 
@@ -64,10 +66,21 @@ const routes = [
         component: ProductBuilder,
         props: (route) => ({
           editableProduct: route.params.editableProduct
-        })
+        }),
+        meta: {
+          requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
+        }
       },
       {
-        path: '/shopping_card',
+        path: '/users',
+        name: 'users',
+        component: UserList,
+        meta: {
+          requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
+        }
+      },
+      {
+        path: '/shopping_cart',
         name: 'shopping_cart',
         component: ShoppingCart
       },
@@ -80,6 +93,7 @@ const routes = [
   },
   {
     path: '*',
+    name: 'not_found',
     component: PageNotFound
   },
 ];
@@ -106,6 +120,11 @@ router.beforeEach(async (to, from, next) => {
     if (!store.state.Auth.me) {
       redirectParams = { path: '/' };
     }
+  }
+
+  if (to.matched.some(route => (route.meta.requiredRoles &&
+      !route.meta.requiredRoles.includes(store.state.Auth.me.Role.name)))) {
+    redirectParams = { name: 'not_found' };
   }
 
   next(redirectParams);

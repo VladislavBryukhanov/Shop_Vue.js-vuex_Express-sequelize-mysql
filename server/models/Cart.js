@@ -1,6 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Cart = sequelize.define('Cart', {
-        UserId: {
+        // will be generated programmatically by belongsToMany
+        /*UserId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -15,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'Products',
                 key: 'id'
             }
-        }
+        }*/
     });
 
     return Cart;

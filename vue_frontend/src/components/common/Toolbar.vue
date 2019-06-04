@@ -18,22 +18,12 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
   import { FileResources } from '@/common/constants'
 
   export default {
     data() {
       return {
         logo: FileResources.logo
-      }
-    },
-    methods: {
-      ...mapActions({
-        signOutAction: 'Auth/signOut'
-      }),
-      signOut() {
-        this.signOutAction()
-          .then(() => this.$router.push('/'));
       }
     }
   }

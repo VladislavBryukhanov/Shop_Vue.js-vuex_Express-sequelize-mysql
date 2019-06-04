@@ -1,15 +1,16 @@
-const models = require('../models');
+const _ = require('lodash');
+const { Order, OrderProduct, Product, Category, User, ContactInfo } = require('../models');
 
 module.exports.fetchOrders = async (request, response) => {
     try {
-        const orders = await models.Order.findAndCountAll({
+        const orders = await Order.findAndCountAll({
             ...request.paging,
             include: [{
-                model: models.OrderContent,
+                model: OrderProduct,
                 include: [{
-                    model: models.Product,
+                    model: Product,
                     include: [{
-                        model: models.Category,
+                        model: Category,
                         attributes: [ 'name' ]
                     }]
                 }],
@@ -20,15 +21,15 @@ module.exports.fetchOrders = async (request, response) => {
         const populateUserContactInfo = [];
 
         orders.rows.map(order => {
-            const promise = models.User.findOne({
+            const promise = User.findOne({
                 where: { id: order.UserId },
                 include: [{
-                    model: models.ContactInfo
+                    model: ContactInfo
                 }]
             }).then(user => {
                 const { ContactInfo } = user;
-                const { id, createdAt, OrderContents } = order;
-                const products = OrderContents.map(prod => prod.Product);
+                const { id, createdAt, OrderProducts } = order;
+                const products = OrderProducts.map(prod => prod.Product);
 
                 resultOrders.push({
                     id,
@@ -55,11 +56,11 @@ module.exports.fetchPersonalOrders = async (request, response) => {
     try {
         let orders = await request.user.getOrders({
             include: [{
-                model: models.OrderContent,
+                model: OrderProduct,
                 include: [{
-                    model: models.Product,
+                    model: Product,
                     include: [{
-                        model: models.Category,
+                        model: Category,
                         attributes: [ 'name' ]
                     }]
                 }],
@@ -67,12 +68,12 @@ module.exports.fetchPersonalOrders = async (request, response) => {
         });
 
         orders = orders.map(order => {
-            const { id, createdAt, OrderContents } = order;
-            const products = OrderContents.map(prod => prod.Product);
+            const { id, createdAt, OrderProducts } = order;
+            const products = OrderProducts.map(prod => prod.Product);
             return {
                 id,
                 createdAt,
-                products
+                products: _.compact(products)
             }
         });
 
@@ -95,13 +96,13 @@ module.exports.createPersonalOrder = async (request, response) => {
     }
 
     try {
-        const [ order, orderContents ] = await Promise.all([
+        const [ order, OrderProducts ] = await Promise.all([
             request.user.createOrder(),
-            await models.OrderContent.bulkCreate(productQuery),
+            OrderProduct.bulkCreate(productQuery),
             request.user.removeProducts(productIds)
         ]);
 
-        const res = await order.addOrderContents(orderContents);
+        const res = await order.addOrderProduct(OrderProducts);
 
         response.send(res);
     } catch (err) {
@@ -115,7 +116,7 @@ module.exports.declineOrder = async (request, response) => {
     const id = request.params['id'];
 
     try {
-        const ord = await models.Order.destroy({where: { id }});
+        const ord = await Order.destroy({where: { id }});
 
         if (!ord) {
             response

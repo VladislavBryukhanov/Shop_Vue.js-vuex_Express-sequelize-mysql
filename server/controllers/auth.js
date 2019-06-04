@@ -1,20 +1,26 @@
-const models = require('../models');
+const { Role, User, sequelize } = require('../models');
 const bcrypt = require('bcrypt');
 const saltRounds = 12; //2-3 hashes/sec
 const passport = require('passport');
+const { roles } = require('../common/constants');
 
 exports.signUp = async (request, response) => {
+    const transaction = await sequelize.transaction();
+
     try {
         const { user, contactInfo } = request.body;
         const salt = await bcrypt.genSalt(saltRounds);
         user.password = await bcrypt.hash(user.password, salt);
 
-        //TODO atomic
-        const createdUser = await models.User.create(user);
+        const RoleId = await Role.findOne({
+            where: { name: roles.USER },
+            attributes: ['id'],
+        }).then(res => res.id);
 
-        contactInfo.UserId = createdUser.id;
-        await models.ContactInfo.create(contactInfo)
-            .then(res => res.id);
+        //atomic creating of contact info and user - creation can throw error on duplicate email for User and duplicate phone for ContactInfo so need rollback both if any error
+        const createdUser = await User.create({...user, RoleId }, { transaction });
+        await createdUser.createContactInfo(contactInfo, { transaction });
+        await transaction.commit();
 
         request.logIn(createdUser, err => {
             if (err) {
@@ -25,6 +31,7 @@ exports.signUp = async (request, response) => {
             response.sendStatus(201);
         });
     } catch (err) {
+        await transaction.rollback();
         return response
             .status(500)
             .send(err.message);

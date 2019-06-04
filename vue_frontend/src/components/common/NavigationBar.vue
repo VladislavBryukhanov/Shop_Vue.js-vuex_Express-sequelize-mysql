@@ -40,9 +40,10 @@
           </v-list-tile>
         </v-list-group>
 
-        <v-list-group prepend-icon="settings_applications"
+        <v-list-group v-if="!isMeUser"
                       @click="selectGroup(groups.ADMIN)"
                       :value="!minNavDraw && openedGroup === groups.ADMIN"
+                      prepend-icon="settings_applications"
                       no-action>
           <template v-slot:activator>
             <v-list-tile>
@@ -64,19 +65,20 @@
             </v-list-tile-action>
           </v-list-tile>
 
-          <v-list-tile :to="{ name: 'builder' }">
+          <v-list-tile :to="{ name: 'users' }">
             <v-list-tile-title>Users</v-list-tile-title>
             <v-list-tile-action>
               <v-icon>people</v-icon>
             </v-list-tile-action>
           </v-list-tile>
 
-          <v-list-tile :to="{ name: 'builder' }">
-            <v-list-tile-title>Managers</v-list-tile-title>
-            <v-list-tile-action>
-              <v-icon>work</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
+          <!--TODO Admin and User to separate tab - Admin without order and chat buttons, role only-->
+          <!--<v-list-tile :to="{ name: 'users' }">-->
+            <!--<v-list-tile-title>Managers</v-list-tile-title>-->
+            <!--<v-list-tile-action>-->
+              <!--<v-icon>work</v-icon>-->
+            <!--</v-list-tile-action>-->
+          <!--</v-list-tile>-->
 
         </v-list-group>
 
@@ -109,22 +111,39 @@
           </v-list-tile-action>
           <v-list-tile-title>Sign out</v-list-tile-title>
         </v-list-tile>
-
       </v-list>
     </v-navigation-drawer>
 
     <v-content>
           <router-view :key="$route.fullPath"></router-view>
     </v-content>
+
+    <template v-if="isMeUser">
+      <v-btn color="actionColor"
+             @click="chatOpened = !chatOpened"
+             dark fixed bottom right fab>
+        <v-icon>chat</v-icon>
+      </v-btn>
+      <v-dialog v-model="chatOpened"
+                max-width="420px">
+        <Chat v-if="chatOpened"></Chat>
+      </v-dialog>
+    </template>
+
   </div>
 </template>
 
 <script>
+  // FIXME separate NavBar and Chat
+
+  import Chat from '@/components/chat/Chat.vue';
   import { mapActions, mapState } from 'vuex';
-  import { FileResources } from '@/common/constants';
+  import { FileResources, Roles } from '@/common/constants';
 
   export default {
-
+    components: {
+      Chat
+    },
     created() {
       // TODO select to infinity select component
       // this.fetchCategories({ page: 0, limit: 100 });
@@ -135,8 +154,12 @@
     computed: {
       ...mapState({
         categories: state => state.Product.categories.rows,
-        productsCount: state => state.Cart.productsCount
+        productsCount: state => state.Cart.productsCount,
+        me: state => state.Auth.me
       }),
+      isMeUser: function() {
+        return this.me.Role.name === Roles.USER;
+      }
     },
 
     data() {
@@ -147,7 +170,8 @@
         },
         openedGroup: '',
         minNavDraw: true,
-        logo: FileResources.logo
+        logo: FileResources.logo,
+        chatOpened: false
       }
     },
     methods: {

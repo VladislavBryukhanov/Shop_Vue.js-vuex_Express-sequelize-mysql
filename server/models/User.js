@@ -33,15 +33,16 @@ module.exports = (sequelize, DataTypes) => {
         birthDay: {
             type: DataTypes.INTEGER,
             allowNull: true,
-        },
-        role: {
-            type: DataTypes.STRING, //Fixme
-            defaultValue: 'user',
-            allowNull: false,
         }
     });
 
     User.associate = (models) => {
+        User.belongsTo(models.Role, {
+            foreignKey: {
+                field: 'RoleId',
+                allowNull: false
+            },
+        });
         User.hasOne(models.ContactInfo, {
             onDelete: 'cascade'
         });
@@ -50,6 +51,9 @@ module.exports = (sequelize, DataTypes) => {
             inverse: 'Product'
         });
         User.hasMany(models.Order, {
+            onDelete: 'cascade'
+        });
+        User.hasMany(models.Chat, {
             onDelete: 'cascade'
         });
     };

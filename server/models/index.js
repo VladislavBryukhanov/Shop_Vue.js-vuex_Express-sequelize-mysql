@@ -35,26 +35,39 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // FIXME just for initilize db for first running
-const initDefaultValues = (db) => {
-  db.sequelize.sync();
+const initDefaultValues = async (db) => {
+  const { roles } = require('../common/constants');
+    // db.sequelize.sync({force: true});
+
+  await db.Session.sync();
+  await db.Role.sync();
+  await db.User.sync();
+  await db.ContactInfo.sync();
+  await db.Category.sync();
+  await db.Product.sync();
+  await db.Cart.sync();
+  await db.Order.sync();
+  await db.OrderProduct.sync();
+  await db.Chat.sync();
+  await db.Message.sync();
 
   db.Category.bulkCreate([
-    { name: 'Art' },
-    { name: 'Fruits' },
-    { name: 'Tablet' },
-    { name: 'Clothes' },
-    { name: 'Business' },
-    { name: 'Fastfood' },
-    { name: 'Computers' },
-    { name: 'Vegetables' },
-    { name: 'Smartphones' },
-    { name: 'Decorations' }
+      { name: 'Art' },
+      { name: 'Fruits' },
+      { name: 'Tablet' },
+      { name: 'Clothes' },
+      { name: 'Business' },
+      { name: 'Fastfood' },
+      { name: 'Computers' },
+      { name: 'Vegetables' },
+      { name: 'Smartphones' },
+      { name: 'Decorations' }
   ]);
 
   db.Role.bulkCreate([
-    { name: 'User' },
-    { name: 'Admin' },
-    { name: 'Manager' }
+      { name: roles.USER },
+      { name: roles.ADMIN },
+      { name: roles.MANAGER }
   ]);
 };
 // initDefaultValues(db);
