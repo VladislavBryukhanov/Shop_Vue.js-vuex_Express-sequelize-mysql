@@ -1,5 +1,5 @@
 const sequelize = require('sequelize');
-const models = require('../models');
+const { Product } = require('../models');
 
 module.exports.fetchShoppingCart = async (request, response) => {
     try {
@@ -7,7 +7,7 @@ module.exports.fetchShoppingCart = async (request, response) => {
             attributes: ['id']
         }).then(res => res.map(prod => prod.id));
 
-        const { totalCost } = await models.Product.findOne({
+        const { totalCost } = await Product.findOne({
             where: { id: productsIds },
             attributes: [[sequelize.fn('sum', sequelize.col('price')), 'totalCost']],
             raw : true,

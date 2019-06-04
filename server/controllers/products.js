@@ -1,4 +1,4 @@
-const models = require('../models');
+const { Category, Product, sequelize, Sequelize } = require('../models');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid');
@@ -7,22 +7,21 @@ const { productFileSizes } = require('../common/constants');
 
 module.exports.fetchTopProducts = async (request, response) => {
     const { searchQuery } = request.query;
-    const { Op } = models.Sequelize;
     const searchFilter = searchQuery ?
-        { name: { [Op.like]: `%${searchQuery}%` } } : {};
+        { name: { [Sequelize.Op.like]: `%${searchQuery}%` } } : {};
 
     try {
-        const orderProducts = await models.Product.findAndCountAll({
+        const orderProducts = await Product.findAndCountAll({
             ...request.paging,
             where: searchFilter,
             paranoid: false,
             attributes: {
                 include: [
-                    [models.sequelize.literal('(SELECT COUNT(*) FROM OrderProducts WHERE OrderProducts.ProductId = Product.id )'), 'OrderCount']
+                    [sequelize.literal('(SELECT COUNT(*) FROM OrderProducts WHERE OrderProducts.ProductId = Product.id )'), 'OrderCount']
                 ]
             },
             order: [
-                [models.sequelize.literal('OrderCount'), 'DESC']
+                [sequelize.literal('OrderCount'), 'DESC']
             ]
         });
 
@@ -40,20 +39,20 @@ module.exports.fetchProducts = async (request, response) => {
         searchQuery
     } = request.query;
 
-    const { Op } = models.Sequelize;
+    const { Op } = Sequelize;
     const searchFilter = searchQuery ?
         { name: { [Op.like]: `%${searchQuery}%` } } : {};
 
     try {
-        const category = await models.Category.findOne({ where: { name: categoryName } });
-        const product = await models.Product.findAndCountAll({
+        const category = await Category.findOne({ where: { name: categoryName } });
+        const product = await Product.findAndCountAll({
             where: {
                 CategoryId: category.id,
                 ...searchFilter
             },
             ...request.paging,
             include: [
-                { model: models.Category }
+                { model: Category }
             ]
         });
         response.send(product);
@@ -72,7 +71,7 @@ module.exports.createProduct = async (request, response) => {
             request.body.previewPhoto = await savePreviewWithThumbnail(file);
         }
 
-        const product = await models.Product.create(request.body);
+        const product = await Product.create(request.body);
         response.send(product);
     } catch (err) {
         response
@@ -91,7 +90,7 @@ module.exports.updateProduct = async (request, response) => {
             await deletePreviewPhoto(id);
         }
 
-        await models.Product.update(
+        await Product.update(
             request.body,
             { where: { id } }
         );
@@ -108,7 +107,7 @@ module.exports.deleteProduct = async (request, response) => {
 
     try {
         await deletePreviewPhoto(id);
-        await models.Product.destroy({ where: { id }});
+        await Product.destroy({ where: { id }});
         response.sendStatus(204);
     } catch (err) {
         response
@@ -143,7 +142,7 @@ const savePreviewWithThumbnail = (file) => {
 };
 
 const deletePreviewPhoto = async (id) => {
-    const product = await models.Product.findByPk(id);
+    const product = await Product.findByPk(id);
     const { previewPhoto } = product;
 
     if (previewPhoto) {

@@ -6,7 +6,7 @@ export const errorHandler = (err, action, commit, delay = 2000) => {
   const { status, data } = err.response;
 
   if (status === 401 || status === 403) {
-    commit('signOut');
+    commit('Auth/signOut', {}, { root: true });
   } else {
     commit('Common/showSnackbar', {
       message: `${action}: ${data}`,

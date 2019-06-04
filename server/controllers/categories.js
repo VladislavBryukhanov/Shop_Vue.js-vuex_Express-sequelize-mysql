@@ -1,8 +1,8 @@
-const models = require('../models');
+const { Category } = require('../models');
 
 module.exports.fetchCategories = async (request, response) => {
     try {
-        const categories = await models.Category.findAndCountAll();
+        const categories = await Category.findAndCountAll();
         response.send(categories);
     } catch (err) {
         response
@@ -16,7 +16,7 @@ module.exports.fetchCategoriesPaginated = async (request, response) => {
     const limit = Number(request.params['limit']);
 
     try {
-        const categories = models.Category.findAndCountAll({
+        const categories = Category.findAndCountAll({
             offset,
             limit,
         });

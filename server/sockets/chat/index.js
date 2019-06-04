@@ -2,9 +2,9 @@ const io = require('socket.io')();
 const { User, Role } = require('../../models');
 
 io.on('connection', async (socket) => {
-    if (!socket.request.session.passport) {
-        socket.emit('error', 'Authentication error');
-        return socket.destroy();
+    if (!socket.request.session.passport.user) {
+        // socket.emit('error', { message: 'Authentication error' });
+        return socket.disconnect();
     }
 
     let chat;
@@ -25,7 +25,7 @@ io.on('connection', async (socket) => {
 
         try {
             chatOwner = await User.findByPk(chatOwnerId);
-
+            // TODO signle chat
             [chat] = await chatOwner.getChats();
             if (!chat) {
                 chat = await chatOwner.createChat();

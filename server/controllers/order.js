@@ -1,16 +1,16 @@
 const _ = require('lodash');
-const models = require('../models');
+const { Order, OrderProduct, Product, Category, User, ContactInfo } = require('../models');
 
 module.exports.fetchOrders = async (request, response) => {
     try {
-        const orders = await models.Order.findAndCountAll({
+        const orders = await Order.findAndCountAll({
             ...request.paging,
             include: [{
-                model: models.OrderProduct,
+                model: OrderProduct,
                 include: [{
-                    model: models.Product,
+                    model: Product,
                     include: [{
-                        model: models.Category,
+                        model: Category,
                         attributes: [ 'name' ]
                     }]
                 }],
@@ -21,10 +21,10 @@ module.exports.fetchOrders = async (request, response) => {
         const populateUserContactInfo = [];
 
         orders.rows.map(order => {
-            const promise = models.User.findOne({
+            const promise = User.findOne({
                 where: { id: order.UserId },
                 include: [{
-                    model: models.ContactInfo
+                    model: ContactInfo
                 }]
             }).then(user => {
                 const { ContactInfo } = user;
@@ -56,11 +56,11 @@ module.exports.fetchPersonalOrders = async (request, response) => {
     try {
         let orders = await request.user.getOrders({
             include: [{
-                model: models.OrderProduct,
+                model: OrderProduct,
                 include: [{
-                    model: models.Product,
+                    model: Product,
                     include: [{
-                        model: models.Category,
+                        model: Category,
                         attributes: [ 'name' ]
                     }]
                 }],
@@ -98,7 +98,7 @@ module.exports.createPersonalOrder = async (request, response) => {
     try {
         const [ order, OrderProducts ] = await Promise.all([
             request.user.createOrder(),
-            models.OrderProduct.bulkCreate(productQuery),
+            OrderProduct.bulkCreate(productQuery),
             request.user.removeProducts(productIds)
         ]);
 
@@ -116,7 +116,7 @@ module.exports.declineOrder = async (request, response) => {
     const id = request.params['id'];
 
     try {
-        const ord = await models.Order.destroy({where: { id }});
+        const ord = await Order.destroy({where: { id }});
 
         if (!ord) {
             response

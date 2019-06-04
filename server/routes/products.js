@@ -3,6 +3,8 @@ const router = express.Router();
 const categoriesController = require('../controllers/categories');
 const productsController = require('../controllers/products');
 const pagingMiddleware = require('../middlewares/paging');
+const HasRole = require('../middlewares/hasRole');
+const { MANAGER, ADMIN } = require('../common/constants').roles;
 
 const { fileQuotas } = require('../common/constants');
 const multer = require('multer');
@@ -23,10 +25,21 @@ router.get('/top_products', pagingMiddleware, productsController.fetchTopProduct
 
 router.get('/products', pagingMiddleware, productsController.fetchProducts);
 
-router.post('/create_products', upload.single('attachedPhoto'), productsController.createProduct);
+router.post('/create_products',
+    HasRole([MANAGER, ADMIN]),
+    upload.single('attachedPhoto'),
+    productsController.createProduct
+);
 
-router.put('/update_product', upload.single('attachedPhoto'), productsController.updateProduct);
+router.put('/update_product',
+    HasRole([MANAGER, ADMIN]),
+    upload.single('attachedPhoto'),
+    productsController.updateProduct
+);
 
-router.delete('/delete_product/:id', productsController.deleteProduct);
+router.delete('/delete_product/:id',
+    HasRole([MANAGER, ADMIN]),
+    productsController.deleteProduct
+);
 
 module.exports = router;

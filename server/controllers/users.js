@@ -1,13 +1,10 @@
-const models = require('../models');
-const { Role, User } = models;
+const { Role, User, Sequelize } = require('../models');
 
 module.exports.fetchUsers = async (request, response) => {
-    const { Op } = models.Sequelize;
-
     try {
         const users = await User.findAndCountAll({
             ...request.paging,
-            where: { id: { [Op.notIn]: [request.user.id] } }, // exclude self
+            where: { id: { [Sequelize.Op.notIn]: [request.user.id] } }, // exclude self
             order: [['createdAt', 'DESC']],
             include: [
                 { model: Role }

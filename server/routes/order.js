@@ -2,8 +2,14 @@ const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/order');
 const pagingMiddleware = require('../middlewares/paging');
+const HasRole = require('../middlewares/hasRole');
+const { MANAGER, ADMIN } = require('../common/constants').roles;
 
-router.get('/fetch_orders', pagingMiddleware, orderController.fetchOrders);
+router.get('/fetch_orders',
+    HasRole([MANAGER, ADMIN]),
+    pagingMiddleware,
+    orderController.fetchOrders
+);
 
 router.get('/fetch_personal_orders', orderController.fetchPersonalOrders);
 
