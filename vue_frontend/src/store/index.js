@@ -7,6 +7,7 @@ import { Cart } from './Cart';
 import { Order } from './Order';
 import { Chat } from './Chat';
 import { User } from './User';
+import { Category } from './Category';
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ const store = new Vuex.Store({
     Order,
     Chat,
     User,
+    Category,
   }
 });
 

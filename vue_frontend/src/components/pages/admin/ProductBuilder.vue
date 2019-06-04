@@ -121,8 +121,8 @@
       }
     },
     computed: {
-      ...mapState('Product', {
-        categories: state => state.categories.rows
+      ...mapState('Category', {
+        categories: state => state.categories
       })
     },
     data() {

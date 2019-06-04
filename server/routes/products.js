@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const categoriesController = require('../controllers/categories');
 const productsController = require('../controllers/products');
 const pagingMiddleware = require('../middlewares/paging');
 const HasRole = require('../middlewares/hasRole');
@@ -16,10 +15,6 @@ const upload = multer({
         fileSize: fileQuotas.IMAGE_MAX_SIZE
     }
 });
-
-router.get('/categories', categoriesController.fetchCategories);
-
-// router.get('/categories/:offset&:limit', categoriesController.fetchCategoriesPaginated);
 
 router.get('/top_products', pagingMiddleware, productsController.fetchTopProducts);
 

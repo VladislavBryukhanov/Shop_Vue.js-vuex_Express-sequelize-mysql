@@ -10,6 +10,7 @@ const Sign = () => import ('@/components/pages/Sign.vue');
 const ProductList = () => import ('@/components/pages/ProductList.vue');
 const PageNotFound = () => import ('@/components/pages/PageNotFound.vue');
 
+const CategoriesManager = () => import ('@/components/pages/admin/CategoriesManager.vue');
 const ProductBuilder = () => import ('@/components/pages/admin/ProductBuilder.vue');
 const UserList = () => import ('@/components/pages/admin/UserList.vue');
 const ShoppingCart = () => import ('@/components/pages/ShoppingCart.vue');
@@ -93,6 +94,14 @@ const routes = [
         path: '/review_order/:userId',
         name: 'review_order',
         component: OrderList,
+        meta: {
+          requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
+        }
+      },
+      {
+        path: '/categories_manager',
+        name: 'categories_manager',
+        component: CategoriesManager,
         meta: {
           requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
         }

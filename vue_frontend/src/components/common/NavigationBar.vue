@@ -58,7 +58,7 @@
             </v-list-tile-action>
           </v-list-tile>
 
-          <v-list-tile :to="{ name: 'builder' }">
+          <v-list-tile :to="{ name: 'categories_manager' }">
             <v-list-tile-title>Manage categories</v-list-tile-title>
             <v-list-tile-action>
               <v-icon>add_to_photos</v-icon>
@@ -153,7 +153,7 @@
 
     computed: {
       ...mapState({
-        categories: state => state.Product.categories.rows,
+        categories: state => state.Category.categories,
         productsCount: state => state.Cart.productsCount,
         me: state => state.Auth.me
       }),
@@ -177,7 +177,7 @@
     methods: {
       ...mapActions({
         fetchShoppingCart: 'Cart/fetchShoppingCart',
-        fetchCategories: 'Product/fetchCategories',
+        fetchCategories: 'Category/fetchCategories',
         signOutAction: 'Auth/signOut'
       }),
       selectGroup(group) {
