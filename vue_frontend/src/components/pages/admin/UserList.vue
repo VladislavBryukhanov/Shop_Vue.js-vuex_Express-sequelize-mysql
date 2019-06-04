@@ -54,7 +54,7 @@
                            color="primary">Open chat</v-btn>
                   </v-layout>
                   <v-layout justify-center>
-                    <v-btn @click="closeOrder(order)" block flat class="font-weight-black"
+                    <v-btn @click="openOrderList(user)" block flat class="font-weight-black"
                            color="white">Show order list</v-btn>
                   </v-layout>
                   <v-layout justify-center>
@@ -149,6 +149,12 @@
       openChat(user) {
         this.chatOpened = !this.chatOpened;
         this.interlocutor = user;
+      },
+      openOrderList(user) {
+        this.$router.push({
+          name: 'review_order',
+          params: { userId: user.id }
+        })
       }
     }
   }

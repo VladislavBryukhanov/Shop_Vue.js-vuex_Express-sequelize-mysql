@@ -11,7 +11,7 @@ module.exports.fetchCategories = async (request, response) => {
     }
 };
 
-module.exports.fetchCategoriesPaginated = async (request, response) => {
+/*module.exports.fetchCategoriesPaginated = async (request, response) => {
     const offset = Number(request.params['offset']);
     const limit = Number(request.params['limit']);
 
@@ -26,4 +26,4 @@ module.exports.fetchCategoriesPaginated = async (request, response) => {
             .status(500)
             .send(err.message);
     }
-};
+};*/

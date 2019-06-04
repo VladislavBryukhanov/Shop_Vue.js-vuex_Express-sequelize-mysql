@@ -3,7 +3,7 @@ module.exports = (request, response, next) => {
 
     // && request.user.role === USER
     if (!offset || !limit) {
-        response
+        return response
             .status(400)
             .send('You should use paging query for this request');
     }

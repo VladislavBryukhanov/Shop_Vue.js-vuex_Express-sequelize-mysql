@@ -20,6 +20,15 @@ export default {
       errorHandler(err, 'FetchOrders', commit);
     }
   },
+  async fetchUsersOrder({ commit }, id) {
+    try {
+      const orders = await axiosOrder.get(`/fetch_users_order/${id}`)
+        .then(res => res.data);
+      commit('fetchOrders', orders);
+    } catch (err) {
+      errorHandler(err, 'FetchPersonalOrders', commit);
+    }
+  },
   async fetchPersonalOrders({ commit }) {
     try {
       const orders = await axiosOrder.get('/fetch_personal_orders')

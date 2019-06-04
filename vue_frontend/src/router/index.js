@@ -61,6 +61,16 @@ const routes = [
         }
       },
       {
+        path: '/shopping_cart',
+        name: 'shopping_cart',
+        component: ShoppingCart
+      },
+      {
+        path: '/orders',
+        name: 'orders',
+        component: OrderList
+      },
+      {
         path: '/builder',
         name: 'builder',
         component: ProductBuilder,
@@ -80,14 +90,12 @@ const routes = [
         }
       },
       {
-        path: '/shopping_cart',
-        name: 'shopping_cart',
-        component: ShoppingCart
-      },
-      {
-        path: '/orders',
-        name: 'orders',
-        component: OrderList
+        path: '/review_order/:userId',
+        name: 'review_order',
+        component: OrderList,
+        meta: {
+          requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
+        }
       }
     ]
   },
@@ -122,7 +130,8 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (to.matched.some(route => (route.meta.requiredRoles &&
+  //Child meta override parent
+  if (to.matched.some(route => ((store.state.Auth.me && route.meta.requiredRoles) &&
       !route.meta.requiredRoles.includes(store.state.Auth.me.Role.name)))) {
     redirectParams = { name: 'not_found' };
   }

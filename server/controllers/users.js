@@ -30,7 +30,7 @@ module.exports.updateRole = async (request, response) => {
         const [ res ] = await User.update({ RoleId }, { where: {id} });
 
         if (!res) {
-            response
+            return response
                 .status(400)
                 .send('Invalid role or user selected');
         }

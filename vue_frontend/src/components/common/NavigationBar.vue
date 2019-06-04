@@ -115,7 +115,7 @@
     </v-navigation-drawer>
 
     <v-content>
-          <router-view :key="$route.fullPath"></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </v-content>
 
     <template v-if="isMeUser">

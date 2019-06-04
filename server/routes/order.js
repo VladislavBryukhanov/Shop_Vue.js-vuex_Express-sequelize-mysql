@@ -11,6 +11,11 @@ router.get('/fetch_orders',
     orderController.fetchOrders
 );
 
+router.get('/fetch_users_order/:id',
+    HasRole([MANAGER, ADMIN]),
+    orderController.fetchUsersOrder
+);
+
 router.get('/fetch_personal_orders', orderController.fetchPersonalOrders);
 
 router.post('/create_personal_order', orderController.createPersonalOrder);

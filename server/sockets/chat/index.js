@@ -25,7 +25,7 @@ io.on('connection', async (socket) => {
 
         try {
             chatOwner = await User.findByPk(chatOwnerId);
-            // TODO signle chat
+            // TODO single chat
             [chat] = await chatOwner.getChats();
             if (!chat) {
                 chat = await chatOwner.createChat();
