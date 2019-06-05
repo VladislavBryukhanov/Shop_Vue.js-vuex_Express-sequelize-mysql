@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { roles } = require('../common/constants');
 const { Order, OrderProduct, Product, Category, User, ContactInfo } = require('../models');
 
 module.exports.fetchOrders = async (request, response) => {
@@ -51,32 +52,25 @@ module.exports.fetchOrders = async (request, response) => {
     }
 };
 
+module.exports.fetchUsersOrder = async (request, response) => {
+    const { id } = request.params;
+    // TODO paginate
+    try {
+        const user = await User.findByPk(id);
+        const orders = await fetchOrders(user);
+
+        response.send(orders);
+    } catch (err) {
+        response
+            .status(500)
+            .send(err.message);
+    }
+};
+
 module.exports.fetchPersonalOrders = async (request, response) => {
     // TODO paginate
     try {
-        let orders = await request.user.getOrders({
-            include: [{
-                model: OrderProduct,
-                include: [{
-                    model: Product,
-                    include: [{
-                        model: Category,
-                        attributes: [ 'name' ]
-                    }]
-                }],
-            }],
-        });
-
-        orders = orders.map(order => {
-            const { id, createdAt, OrderProducts } = order;
-            const products = OrderProducts.map(prod => prod.Product);
-            return {
-                id,
-                createdAt,
-                products: _.compact(products)
-            }
-        });
-
+        const orders = await fetchOrders(request.user);
         response.send(orders);
     } catch (err) {
         response
@@ -90,7 +84,7 @@ module.exports.createPersonalOrder = async (request, response) => {
     const productQuery = productIds.map(id => ({ ProductId: id }));
 
     if (!productIds) {
-        response
+        return response
             .status(400)
             .send('Products is not exists');
     }
@@ -116,10 +110,20 @@ module.exports.declineOrder = async (request, response) => {
     const id = request.params['id'];
 
     try {
-        const ord = await Order.destroy({where: { id }});
+        if (![roles.ADMIN, roles.MANAGER].includes(request.user.Role.name)) {
+            const order = await Order.findOne({ where: { id, UserId: request.user.id } });
 
-        if (!ord) {
-            response
+            if (!order) {
+                return response
+                    .status(403)
+                    .send('You have not permission to close this Order');
+            }
+        }
+
+        const res = await Order.destroy({ where: { id } });
+
+        if (!res) {
+            return response
                 .status(400)
                 .send('Such product already excluded from shopping cart');
         }
@@ -132,4 +136,29 @@ module.exports.declineOrder = async (request, response) => {
     }
 };
 
-//Можно намутить фичу с удаление через флаг делейтед + восстановлением заявки, если будет время
+const fetchOrders = async (user) => {
+    let orders = await user.getOrders({
+        include: [{
+            model: OrderProduct,
+            include: [{
+                model: Product,
+                include: [{
+                    model: Category,
+                    attributes: [ 'name' ]
+                }]
+            }],
+        }],
+    });
+
+    orders = orders.map(order => {
+        const { id, createdAt, OrderProducts } = order;
+        const products = OrderProducts.map(prod => prod.Product);
+        return {
+            id,
+            createdAt,
+            products: _.compact(products)
+        }
+    });
+
+    return orders;
+};

@@ -10,6 +10,7 @@ const Sign = () => import ('@/components/pages/Sign.vue');
 const ProductList = () => import ('@/components/pages/ProductList.vue');
 const PageNotFound = () => import ('@/components/pages/PageNotFound.vue');
 
+const CategoriesManager = () => import ('@/components/pages/admin/CategoriesManager.vue');
 const ProductBuilder = () => import ('@/components/pages/admin/ProductBuilder.vue');
 const UserList = () => import ('@/components/pages/admin/UserList.vue');
 const ShoppingCart = () => import ('@/components/pages/ShoppingCart.vue');
@@ -61,6 +62,16 @@ const routes = [
         }
       },
       {
+        path: '/shopping_cart',
+        name: 'shopping_cart',
+        component: ShoppingCart
+      },
+      {
+        path: '/orders',
+        name: 'orders',
+        component: OrderList
+      },
+      {
         path: '/builder',
         name: 'builder',
         component: ProductBuilder,
@@ -80,14 +91,20 @@ const routes = [
         }
       },
       {
-        path: '/shopping_cart',
-        name: 'shopping_cart',
-        component: ShoppingCart
+        path: '/review_order/:userId',
+        name: 'review_order',
+        component: OrderList,
+        meta: {
+          requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
+        }
       },
       {
-        path: '/orders',
-        name: 'orders',
-        component: OrderList
+        path: '/categories_manager',
+        name: 'categories_manager',
+        component: CategoriesManager,
+        meta: {
+          requiredRoles: [ Roles.MANAGER, Roles.ADMIN ]
+        }
       }
     ]
   },
@@ -122,7 +139,8 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (to.matched.some(route => (route.meta.requiredRoles &&
+  //Child meta override parent
+  if (to.matched.some(route => ((store.state.Auth.me && route.meta.requiredRoles) &&
       !route.meta.requiredRoles.includes(store.state.Auth.me.Role.name)))) {
     redirectParams = { name: 'not_found' };
   }

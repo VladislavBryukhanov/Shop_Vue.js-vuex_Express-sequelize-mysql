@@ -35,11 +35,13 @@ const productRouter = require('./routes/products');
 const cartRouter = require('./routes/cart');
 const orderRouter = require('./routes/order');
 const usersRouter = require('./routes/users');
+const categoriesRouter = require('./routes/categories');
 
 app.use('/', authRouter);
 app.use('/products', productRouter);
 app.use('/cart', AuthRequired, cartRouter);
 app.use('/order', AuthRequired, orderRouter);
 app.use('/users', usersRouter);
+app.use('/categories', categoriesRouter);
 
 module.exports = app;

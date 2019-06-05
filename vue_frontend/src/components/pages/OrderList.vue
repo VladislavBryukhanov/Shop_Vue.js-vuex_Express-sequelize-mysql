@@ -71,8 +71,19 @@
 
   export default {
     created() {
+      const { userId } = this;
+
+      if (userId) {
+        return this.fetchUsersOrder(userId);
+      }
+
       this.fetchPersonalOrders();
       // this.fetchOrders({ currentPage: 1, limit: 10 });
+    },
+    data() {
+      return {
+        userId: this.$route.params.userId
+      }
     },
     computed: {
       ...mapState('Order', {
@@ -84,7 +95,7 @@
     },
     methods: {
       ...mapActions('Order', [
-        // 'fetchOrders',
+        'fetchUsersOrder',
         'fetchPersonalOrders',
         'declineOrder'
       ]),

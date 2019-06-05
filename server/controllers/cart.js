@@ -39,7 +39,7 @@ module.exports.insertProduct = async (request, response) => {
         const prod = await request.user.addProduct(ProductId);
 
         if (!prod) {
-            response
+            return response
                 .status(400)
                 .send('Such product already inside shopping cart');
         }
@@ -59,7 +59,7 @@ module.exports.excludeProduct = async (request, response) => {
         const prod = await request.user.removeProduct(ProductId);
 
         if (!prod) {
-            response
+            return response
                 .status(400)
                 .send('Such product already excluded from shopping cart');
         }

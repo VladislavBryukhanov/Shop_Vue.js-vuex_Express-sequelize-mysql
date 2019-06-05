@@ -6,17 +6,6 @@ const axiosProduct = axios.create({
 });
 
 export default {
-  async fetchCategories({ commit }, paging) {
-    // const { page, limit } = paging;
-    try {
-      // const categories = await axiosProduct.get(`/categories/${page * limit}&${limit}`)
-      const categories = await axiosProduct.get(`/categories`)
-        .then(res => res.data);
-      commit('fetchCategories', categories);
-    } catch (err) {
-      errorHandler(err, 'FetchCategories', commit);
-    }
-  },
   async fetchTopProducts({ commit }, query) {
     const { currentPage, limit, searchQuery } = query;
     const offset = (currentPage - 1) * limit;
