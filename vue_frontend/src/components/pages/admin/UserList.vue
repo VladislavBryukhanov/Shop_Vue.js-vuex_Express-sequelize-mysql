@@ -57,7 +57,7 @@
                     <v-btn @click="openOrderList(user)" block flat class="font-weight-black"
                            color="white">Show order list</v-btn>
                   </v-layout>
-                  <v-layout justify-center>
+                  <v-layout justify-center v-if="isAdmin">
                     <v-select :value.sync="user.Role"
                               return-object
                               @change="onRoleChanged($event, user)"
@@ -83,7 +83,7 @@
 <script>
   import Chat from '@/components/chat/Chat.vue';
   import { mapActions, mapState } from 'vuex';
-  import { USERS_ONE_PAGE_LIMIT } from '@/common/constants';
+  import { USERS_ONE_PAGE_LIMIT, Roles } from '@/common/constants';
   import _ from 'lodash';
 
   export default {
@@ -115,6 +115,9 @@
         availableRoles: state => state.availableRoles,
         users: state => state.users,
         usersCount: state => state.usersCount
+      }),
+      ...mapState('Auth', {
+        isAdmin: state => state.me.Role.name === Roles.ADMIN
       }),
       noUsers: function() {
         return _.isEmpty(this.users);
