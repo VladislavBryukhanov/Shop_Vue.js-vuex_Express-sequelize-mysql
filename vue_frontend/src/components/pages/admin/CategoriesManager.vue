@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapState, mapActions, mapMutations } from 'vuex';
   import _ from 'lodash';
 
   export default {
@@ -64,8 +64,25 @@
         createCategoryAction: 'createCategory',
         removeCategoryAction: 'removeCategory'
       }),
+      ...mapMutations('Common', [
+        'showSnackbar'
+      ]),
+      validateCategory(category) {
+        if (category.length >= 1 && category.length <= 32) {
+          return true;
+        }
+
+        this.showSnackbar({
+          message: 'Category must be longer then 1 and less then 32 characters!',
+          duration: 5000
+        });
+      },
       async createCategory() {
         const { category } = this;
+
+        if (!this.validateCategory(category)) {
+          return;
+        }
 
         const confirm = await this.$root.$confirmDialog(
           'Are you sure?',

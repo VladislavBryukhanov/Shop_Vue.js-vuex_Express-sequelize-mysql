@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
                 args: true,
                 msg: 'This category already exists'
             },
+            validation: {
+                len: [1, 32]
+            },
             allowNull: false,
         }
     });
