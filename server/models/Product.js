@@ -1,3 +1,5 @@
+const { deletePreviewPhoto } = require('../common/utils');
+
 module.exports = (sequelize, DataTypes) => {
     const Product = sequelize.define('Product', {
         name: {
@@ -33,10 +35,23 @@ module.exports = (sequelize, DataTypes) => {
         //         key: 'id'
         //     }
         // }
+    }, {
+        hooks: {
+            beforeDestroy: async (instance, options) => {
+                const product = instance.get({ plain: true });
+                try {
+                    await deletePreviewPhoto(product.previewPhoto);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        },
     });
 
     Product.associate = (models) => {
-        Product.belongsTo(models.Category);
+        Product.belongsTo(models.Category, {
+            hooks: true
+        });
     };
 
     return Product;

@@ -27,16 +27,15 @@ module.exports.createCategory = async (request, response) => {
 module.exports.removeCategory = async (request, response) => {
     const { id } = request.params;
 
-    // TODO cascade delete product => hook for file res deletion
     try {
-        const res = await Category.destroy({ where: { id } });
-
-        if (!res) {
+        const category = await Category.findByPk(id);
+        if (!category) {
             return response
-                .status(400)
-                .send('Invalid target id');
+                .status(404)
+                .send('Such category not found');
         }
 
+        await category.destroy();
         response.sendStatus(204);
     } catch (err) {
         response

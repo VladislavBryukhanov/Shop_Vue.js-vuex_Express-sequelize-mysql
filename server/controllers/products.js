@@ -1,4 +1,5 @@
 const { Category, Product, sequelize, Sequelize } = require('../models');
+const { deletePreviewPhoto } = require('../common/utils');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid');
@@ -87,7 +88,8 @@ module.exports.updateProduct = async (request, response) => {
     try {
         if (file) {
             request.body.previewPhoto = await savePreviewWithThumbnail(file);
-            await deletePreviewPhoto(id);
+            const product = await Product.findByPk(id);
+            await deletePreviewPhoto(product.previewPhoto);
         }
 
         await Product.update(
@@ -106,8 +108,10 @@ module.exports.deleteProduct = async (request, response) => {
     const id = request.params['id'];
 
     try {
-        await deletePreviewPhoto(id);
-        await Product.destroy({ where: { id }});
+        await Product.destroy({
+            where: { id },
+            individualHooks: true
+        });
         response.sendStatus(204);
     } catch (err) {
         response
@@ -139,21 +143,4 @@ const savePreviewWithThumbnail = (file) => {
 
     return Promise.all([fileResizing, fileSaving])
         .then(() => fileName);
-};
-
-const deletePreviewPhoto = async (id) => {
-    const product = await Product.findByPk(id);
-    const { previewPhoto } = product;
-
-    if (previewPhoto) {
-        const dirPath = path.join( __dirname, `/../public/preview_photo/`);
-        const files = [
-            dirPath + previewPhoto,
-            `${dirPath}/thumbnail/${previewPhoto}`
-        ];
-
-        files.forEach(file => {
-            fs.unlink(file, (err) => err && console.error(err));
-        });
-    }
 };
