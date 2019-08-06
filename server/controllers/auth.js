@@ -24,6 +24,7 @@ exports.signUp = async (request, response) => {
 
         request.logIn(createdUser, err => {
             if (err) {
+                console.error(err);
                 return response
                     .status(500)
                     .send("Can't authorize new user");
@@ -46,11 +47,11 @@ exports.signIn = async (request, response, next) => {
 
         if (info) {
             // Dev only, insecure
-            const errorMessage = info.message;
-            // const errorMessage = 'Invalid username or password.';
+            // const errorMessage = info.message;
+            const errorMessage = 'Invalid username or password.';
 
             return response
-                .status(400)
+                .status(401)
                 .send(errorMessage);
         }
 

@@ -8,8 +8,7 @@ const axiosCategory = axios.create({
 export default {
   async fetchCategories({ commit }) {
     try {
-      const categories = await axiosCategory.get(`/fetch_categories`)
-        .then(res => res.data);
+      const { data: categories } = await axiosCategory.get(`/fetch_categories`);
       commit('fetchCategories', categories);
     } catch (err) {
       errorHandler(err, 'FetchCategories', commit);
@@ -17,8 +16,7 @@ export default {
   },
   async createCategory({ commit }, categoryName) {
     try {
-      const category = await axiosCategory.post(`/create_category`, { categoryName })
-        .then(res => res.data);
+      const { data: category } = await axiosCategory.post(`/create_category`, { categoryName });
       commit('createCategory', category);
     } catch (err) {
       errorHandler(err, 'CreateCategory', commit);

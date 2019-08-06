@@ -86,7 +86,7 @@
 
         const confirm = await this.$root.$confirmDialog(
           'Are you sure?',
-          `Do you want create this category "${category}"?`
+          `Do you want create category "${category}"?`
         );
         if (confirm) {
           await this.createCategoryAction(category);
@@ -96,7 +96,7 @@
       async removeCategory(category) {
         const confirm = await this.$root.$confirmDialog(
           'Are you sure?',
-          `Do you want delete this category "${category.name}" with all attached products?`
+          `Do you want delete category "${category.name}" with all attached products?`
         );
         if (confirm) {
           await this.removeCategoryAction(category.id);

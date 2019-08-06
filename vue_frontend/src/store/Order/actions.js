@@ -11,9 +11,9 @@ export default {
     const offset = (currentPage - 1) * limit;
 
     try {
-      const orders = await axiosOrder.get('/fetch_orders', {
+      const { data: orders } = await axiosOrder.get('/fetch_orders', {
         params: { offset, limit }
-      }).then(res => res.data);
+      });
 
       commit('fetchOrders', orders);
     } catch (err) {
@@ -22,8 +22,7 @@ export default {
   },
   async fetchUsersOrder({ commit }, id) {
     try {
-      const orders = await axiosOrder.get(`/fetch_users_order/${id}`)
-        .then(res => res.data);
+      const { data: orders } = await axiosOrder.get(`/fetch_users_order/${id}`);
       commit('fetchOrders', orders);
     } catch (err) {
       errorHandler(err, 'FetchPersonalOrders', commit);
@@ -31,8 +30,7 @@ export default {
   },
   async fetchPersonalOrders({ commit }) {
     try {
-      const orders = await axiosOrder.get('/fetch_personal_orders')
-        .then(res => res.data);
+      const { data: orders } = await axiosOrder.get('/fetch_personal_orders');
       commit('fetchPersonalOrders', orders);
     } catch (err) {
       errorHandler(err, 'FetchPersonalOrders', commit);

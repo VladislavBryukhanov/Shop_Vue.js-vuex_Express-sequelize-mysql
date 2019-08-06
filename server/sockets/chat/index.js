@@ -47,7 +47,7 @@ io.on('connection', async (socket) => {
         message.UserId = user.id;
 
         try {
-            await chat.createMessage(message);
+            message = await chat.createMessage(message);
         } catch (err) {
             socket.emit('error', err.message);
         }

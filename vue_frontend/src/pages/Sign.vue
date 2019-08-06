@@ -204,15 +204,15 @@
       },
       signIn() {
         if (this.$refs.signInForm.validate()) {
-          const user = _.pickBy(this.user, _.identity);
+          const user = _.omitBy(this.user, _.isNil);
           this.signInActions(user)
             .then(() => this.$router.push('top_products'));
         }
       },
       signUp() {
         if (this.$refs.signUpForm.validate()) {
-          const contactInfo = _.pickBy(this.contactInfo, _.identity);
-          const user = _.pickBy(this.user, _.identity);
+          const contactInfo = _.omitBy(this.contactInfo, _.isNil);
+          const user = _.omitBy(this.user, _.isNil);
           user.birthDay = moment(user.birthDay).unix();
 
           this.signUpActions({
@@ -225,9 +225,3 @@
     }
   }
 </script>
-<!--
-
-<style lang="scss">
-  @import url('~@/assets/scss/pages/Sign.scss');
-</style>
--->

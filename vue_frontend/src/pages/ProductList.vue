@@ -232,5 +232,5 @@
 </script>
 
 <style lang="scss">
-  @import '../../assets/scss/components/ProductList';
+  @import '../assets/scss/components/ProductList';
 </style>

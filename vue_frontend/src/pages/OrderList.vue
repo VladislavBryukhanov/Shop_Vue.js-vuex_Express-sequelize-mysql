@@ -34,7 +34,7 @@
 
                   <v-list-tile>
                     <v-list-tile-avatar>
-                      <v-img :src="product.previewPhoto | imagePath('preview_photo', 'thumbnail')">
+                      <v-img :src="product.previewPhoto | imagePath('preview_photo', 'micro_thumbnail')">
                       </v-img>
                     </v-list-tile-avatar>
 

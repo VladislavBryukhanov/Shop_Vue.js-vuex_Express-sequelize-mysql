@@ -8,8 +8,7 @@ const axiosUsers = axios.create({
 export default {
   async fetchRoleList({ commit }) {
     try {
-      const roles = await axiosUsers.get('/fetch_role_list')
-        .then(res => res.data);
+      const { data: roles } = await axiosUsers.get('/fetch_role_list');
       commit('fetchRoleList', roles);
     } catch (err) {
       errorHandler(err, 'FetchRoleList', commit);
@@ -20,9 +19,9 @@ export default {
     const offset = (currentPage - 1) * limit;
 
     try {
-      const users = await axiosUsers.get('/fetch_users', {
+      const { data: users } = await axiosUsers.get('/fetch_users', {
         params: { offset, limit }
-      }).then(res => res.data);
+      });
 
       commit('fetchUsers', users);
     } catch (err) {

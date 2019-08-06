@@ -16,8 +16,7 @@ export default {
     };
 
     try {
-      const products = await axiosProduct.get(`/top_products`, { params })
-        .then(res => res.data);
+      const { data: products } = await axiosProduct.get(`/top_products`, { params });
       commit('fetchProducts', products);
     } catch (err) {
       errorHandler(err, 'FetchProducts', commit);
@@ -34,8 +33,7 @@ export default {
     };
 
     try {
-      const products = await axiosProduct.get(`/products`, { params })
-        .then(res => res.data);
+      const { data: products } = await axiosProduct.get(`/products`, { params });
       commit('fetchProducts', products);
     } catch (err) {
       errorHandler(err, 'FetchProducts', commit);

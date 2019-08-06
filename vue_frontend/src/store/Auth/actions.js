@@ -32,8 +32,7 @@ export default {
   },
   async getMe({ commit }) {
     try {
-      const me = await axiosAuth.get('/me')
-        .then(res => res.data);
+      const { data: me } = await axiosAuth.get('/me');
       commit('getMe', me);
     } catch (err) {
       errorHandler(err, 'getMe', commit);

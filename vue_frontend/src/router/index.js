@@ -6,15 +6,15 @@ import { Roles } from '@/common/constants';
 import Toolbar from '@/components/common/Toolbar.vue';
 import NavigationBar from '@/components/common/NavigationBar.vue'
 
-const Sign = () => import ('@/components/pages/Sign.vue');
-const ProductList = () => import ('@/components/pages/ProductList.vue');
-const PageNotFound = () => import ('@/components/pages/PageNotFound.vue');
+const Sign = () => import ('@/pages/Sign.vue');
+const ProductList = () => import ('@/pages/ProductList.vue');
+const PageNotFound = () => import ('@/pages/PageNotFound.vue');
 
-const CategoriesManager = () => import ('@/components/pages/admin/CategoriesManager.vue');
-const ProductBuilder = () => import ('@/components/pages/admin/ProductBuilder.vue');
-const UserList = () => import ('@/components/pages/admin/UserList.vue');
-const ShoppingCart = () => import ('@/components/pages/ShoppingCart.vue');
-const OrderList = () => import ('@/components/pages/OrderList.vue');
+const CategoriesManager = () => import ('@/pages/admin/CategoriesManager.vue');
+const ProductBuilder = () => import ('@/pages/admin/ProductBuilder.vue');
+const UserList = () => import ('@/pages/admin/UserList.vue');
+const ShoppingCart = () => import ('@/pages/ShoppingCart.vue');
+const OrderList = () => import ('@/pages/OrderList.vue');
 
 Vue.use(Router);
 

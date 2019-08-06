@@ -24,8 +24,7 @@
           </v-container>
 
           <template v-for="message in messages">
-            <div class="message"
-                 :class="isMyMessage(message.UserId) ? 'outcome' : 'incoming'">
+            <div :class="`${getMessageType(message.UserId)} message`">
 
               <span class="content">{{message.textContent}}</span>
 
@@ -109,8 +108,15 @@
         'fetchMessages',
         'closeConnection'
       ]),
-      isMyMessage(owner) {
-        return this.me.id === owner;
+      getMessageType(owner) {
+        if (this.interlocutor && this.interlocutor.id !== owner) {
+          return 'outcome';
+        }
+
+        if (this.me.id === owner) {
+          return 'outcome';
+        }
+        return 'incoming';
       }
     }
   }

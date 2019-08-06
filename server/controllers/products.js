@@ -124,23 +124,32 @@ const savePreviewWithThumbnail = (file) => {
     const dirPath = path.join( __dirname, `/../public/preview_photo/`);
     const fileName = uuid.v1() + path.extname(file.originalname);
 
-    const fileResizing = sharp(file.buffer)
-        .resize(null, productFileSizes.thumbnail.height)
-        .toFile(`${dirPath}/thumbnail/${fileName}`);
+    const fileResizingPromises = [];
+    const fileSavingPromises = [];
 
-    const fileSaving = new Promise((resolve, reject) => {
-        fs.writeFile(
-            dirPath + fileName,
-            file.buffer,
-            (err) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(true);
-            }
+    productFileSizes.forEach(fileMode => {
+        fileResizingPromises.push(
+            sharp(file.buffer)
+                .resize(null, fileMode.height)
+                .toFile(`${dirPath}/${fileMode.name}/${fileName}`)
         );
+
+        fileSavingPromises.push(
+            new Promise((resolve, reject) => {
+                fs.writeFile(
+                    dirPath + fileName,
+                    file.buffer,
+                    (err) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(true);
+                    }
+                );
+            })
+        )
     });
 
-    return Promise.all([fileResizing, fileSaving])
+    return Promise.all([...fileResizingPromises, ...fileSavingPromises])
         .then(() => fileName);
 };

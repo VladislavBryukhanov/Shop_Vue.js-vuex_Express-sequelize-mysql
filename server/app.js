@@ -10,8 +10,18 @@ const sessionMiddleware = require('./auth/session');
 const passport = require('./auth/passport');
 
 const cors = require('cors');
+const corsWhiteList = [
+    process.env.CLIENT_URL_VUE,
+    process.env.CLIENT_URL_REACT,
+    process.env.CLIENT_URL_ANGULAR,
+];
 const corsOptions = {
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+        if (corsWhiteList.indexOf(origin) !== -1) {
+            return callback(null, true);
+        }
+        callback(new Error('Not allowed by CORS'));
+    },
     credentials : true,
 };
 
